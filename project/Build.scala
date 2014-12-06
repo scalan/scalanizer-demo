@@ -63,7 +63,7 @@ object ScalanStartRootBuild extends Build {
 
   def liteProject(name: String) = ProjectRef(file("../scalan-lite"), name)
 
-  def liteDependency(name: String) = "com.huawei.scalan" %% name % "0.2.3"
+  def liteDependency(name: String) = "com.huawei.scalan" %% name % "0.2.5-SNAPSHOT"
 
 //  lazy val all = project.aggregate(start).addTestConfigsAndCommonSettings.
 //    settings(noPublishingSettings: _*)
