@@ -65,25 +65,17 @@ object ScalanStartRootBuild extends Build {
 
   def liteDependency(name: String) = "com.huawei.scalan" %% name % "0.2.5-SNAPSHOT"
 
-//  lazy val all = project.aggregate(start).addTestConfigsAndCommonSettings.
-//    settings(noPublishingSettings: _*)
+  lazy val metaDeps = liteDependency("meta")
+  lazy val startermeta = Project(
+    id = "starter-meta",
+    base = file("meta")).addTestConfigsAndCommonSettings.
+    settings(libraryDependencies ++= Seq(metaDeps))
 
+  lazy val core = liteDependency("core")
   lazy val start = Project(
-    id = "scalan-start",
+    id = "scalan-starter",
     base = file(".")).addTestConfigsAndCommonSettings.
     settings(libraryDependencies ++= Seq(core, core % "test" classifier "tests"))
-
-//  lazy val examples = Project("enterprise-edition-examples", file("examples")).
-//    dependsOn(enterprise.allConfigDependency).addTestConfigsAndCommonSettings
-//
-//  lazy val meta = Project("enterprise-edition-meta", file("meta")).addTestConfigsAndCommonSettings
-//    .settings(noPublishingSettings: _*)
-//    .settings(
-//      fork in run := true,
-//      libraryDependencies += liteDependency("meta"))
-
-  // lazy val core = liteProject("core").allConfigs
-  lazy val core = liteDependency("core")
 
   def itFilter(name: String): Boolean =
     name endsWith "ItTests"
@@ -91,8 +83,6 @@ object ScalanStartRootBuild extends Build {
   def unitFilter(name: String): Boolean = !itFilter(name)
 
   lazy val ItTest = config("it").extend(Test)
-
-  // lazy val community = project.aggregate(core, liteProject("community-edition"), liteProject("lms-backend"))
 
   publishArtifact in Test := true
 
