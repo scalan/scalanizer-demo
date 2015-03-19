@@ -3,6 +3,16 @@ import scala.reflect.macros.whitebox
 import scala.annotation.StaticAnnotation
 
 object ScalanMacros {
+  def toRepStats(c: whitebox.Context)(stats: List[c.Tree]): List[c.Tree] = {
+    import c.universe._
+
+    stats.map((stat: c.Tree) => stat match {
+      case q"$mods def $tname[..$tparams](...$paramss): $tpt = $expr" =>
+        print("paramss = " + showRaw(paramss))
+        q"$mods def $tname[..$tparams](...$paramss): $tpt = $expr"
+      case _ => stat
+    })
+  }
   def toRep(c: whitebox.Context)(tree: c.Tree): c.Tree = {
     import c.universe._
 
@@ -13,11 +23,11 @@ object ScalanMacros {
              """
            =>
         print("Bingo")
-        //print(showRaw(stats))
+        val repStats = toRepStats(c)(stats)
         val res =
            q"""$mods trait $tpname[..$tparams]
             extends { ..$earlydefns } with ..$parents with Base with BaseTypes
-               { self: Scalan => ..$stats }
+               { self: Scalan => ..$repStats }
             """
         println(res)
         res
