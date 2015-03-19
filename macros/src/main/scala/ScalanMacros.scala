@@ -7,11 +7,20 @@ object ScalanMacros {
     import c.universe._
 
     tree match {
-      case q"""
-            trait $tpname extends ..$parents { $self => ..$stats }
-           """ =>
+      case q"""$mods trait $tpname[..$tparams]
+               extends { ..$earlydefns } with ..$parents
+               { $self => ..$stats }
+             """
+           =>
         print("Bingo")
-        tree
+        //print(showRaw(stats))
+        val res =
+           q"""$mods trait $tpname[..$tparams]
+            extends { ..$earlydefns } with ..$parents with Base with BaseTypes
+               { self: Scalan => ..$stats }
+            """
+        println(res)
+        res
       case _ => tree
     }
   }

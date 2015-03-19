@@ -1,6 +1,6 @@
 import scalan._
 
 @staged
-trait Num extends Base with BaseTypes {self: Scalan =>
-  def incInt(x: Int) = x + 1
+trait Num {
+  def incInt(x: Rep[Int]) = x + 1
 }
