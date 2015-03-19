@@ -6,22 +6,17 @@ import sbt.Keys._
 
 object ScalanStartRootBuild extends Build {
   val commonDeps = libraryDependencies ++= Seq(
-    "org.scalaz.stream" %% "scalaz-stream" % "0.6a",
-    //"junit" % "junit" % "4.11" % "test",
-    //("com.novocode" % "junit-interface" % "0.11" % "test").exclude("junit", "junit-dep").exclude("org.scala-tools.testing", "test-interface"),
     "org.scalatest" %% "scalatest" % "2.2.1" % "test",
     "org.scalacheck" %% "scalacheck" % "1.11.5" % "test")
 
   val testSettings = inConfig(ItTest)(Defaults.testTasks /*++ baseAssemblySettings*/) ++ Seq(
     testOptions in Test := Seq(Tests.Argument(TestFrameworks.JUnit, "-a", "-s"), Tests.Filter(unitFilter)),
     testOptions in ItTest := Seq(Tests.Argument(TestFrameworks.JUnit, "-v", "-a", "-s", "-q"), Tests.Filter(itFilter)),
-    // needed thanks to http://stackoverflow.com/questions/7898273/how-to-get-logging-working-in-scala-unit-tests-with-testng-slf4s-and-logback
     parallelExecution in Test := false,
     parallelExecution in ItTest := false,
     publishArtifact in Test := true,
     publishArtifact in(Test, packageDoc) := false
-    //jarName in(ItTest, assembly) := s"${name.value}-test-${version.value}.jar"
-    )
+  )
 
   val buildSettings = Seq(
     organization := "com.huawei.scalan",
@@ -63,7 +58,7 @@ object ScalanStartRootBuild extends Build {
 
   def liteProject(name: String) = ProjectRef(file("../scalan-lite"), name)
 
-  def liteDependency(name: String) = "com.huawei.scalan" %% name % "0.2.5-SNAPSHOT"
+  def liteDependency(name: String) = "com.huawei.scalan" %% name % "0.2.7-SNAPSHOT"
 
   lazy val metaDeps = liteDependency("meta")
   lazy val startermeta = Project(
