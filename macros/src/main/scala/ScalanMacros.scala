@@ -1,16 +1,26 @@
-import scala.reflect.macros._
+import scala.reflect.macros.Context
 import scala.language.experimental.macros
 import scala.annotation.StaticAnnotation
 
-object ScalanMacro {
+object ScalanMacros {
   def impl(c: Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
     import c.universe._
     import Flag._
-
-    annottees.head
+    val result = {
+      annottees.map(_.tree).toList match {
+        case q"object $name extends ..$parents { ..$body }" :: Nil =>
+          q"""
+            object $name extends ..$parents {
+              def hello: ${typeOf[String]} = "hello"
+              ..$body
+            }
+          """
+      }
+    }
+    c.Expr[Any](result)
   }
 }
 
-class staged extends StaticAnnotation {
-  def macroTransform(annottees: Any*) = macro ScalanMacro.impl
+class hello extends StaticAnnotation {
+  def macroTransform(annottees: Any*) = macro ScalanMacros.impl
 }

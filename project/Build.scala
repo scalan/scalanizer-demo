@@ -19,7 +19,7 @@ object ScalanStartRootBuild extends Build {
 
   val buildSettings = Seq(
     organization := "com.huawei.scalan",
-    scalaVersion := "2.10.4",
+    scalaVersion := "2.11.6",
     scalacOptions ++= Seq(
       "-unchecked", "-deprecation",
       "-feature",
