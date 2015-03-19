@@ -2,6 +2,8 @@ import sbt._
 import sbt.Keys._
 
 object ScalanStartRootBuild extends Build {
+  val paradiseVersion = "2.1.0-M5"
+
   val commonDeps = libraryDependencies ++= Seq(
     "org.scalatest" %% "scalatest" % "2.2.1" % "test",
     "org.scalacheck" %% "scalacheck" % "1.11.5" % "test")
@@ -24,7 +26,14 @@ object ScalanStartRootBuild extends Build {
       "-language:higherKinds",
       "-language:implicitConversions",
       "-language:existentials",
-      "-language:postfixOps")
+      "-language:postfixOps"
+    ),
+    crossScalaVersions := Seq("2.10.2", "2.10.3", "2.10.4", "2.10.5",
+                              "2.11.0", "2.11.1", "2.11.2", "2.11.3", "2.11.4", "2.11.5", "2.11.6"
+                             ),
+    resolvers += Resolver.sonatypeRepo("snapshots"),
+    resolvers += Resolver.sonatypeRepo("releases"),
+    addCompilerPlugin("org.scalamacros" % "paradise" % paradiseVersion cross CrossVersion.full)
   )
 
   override lazy val settings = super.settings ++ buildSettings
@@ -43,10 +52,21 @@ object ScalanStartRootBuild extends Build {
     base = file("meta")
   ).addTestConfigsAndCommonSettings.settings(libraryDependencies ++= Seq(metaDeps))
 
+  lazy val macros: Project = Project(
+    id = "macros",
+    base = file("macros"),
+    settings = buildSettings ++ Seq(
+      libraryDependencies <+= (scalaVersion)("org.scala-lang" % "scala-reflect" % _),
+      libraryDependencies ++= (
+        if (scalaVersion.value.startsWith("2.10")) List("org.scalamacros" %% "quasiquotes" % paradiseVersion)
+        else Nil
+        )
+    )
+  )
+
   lazy val core = liteDependency("core")
   lazy val common = liteDependency("common")
   lazy val community = liteDependency("community-edition")
-
   lazy val scalanParadise = Project(
     id = "scalan-paradise",
     base = file(".")
@@ -56,7 +76,7 @@ object ScalanStartRootBuild extends Build {
     common,
     common % "test" classifier "tests",
     community
-  ))
+  )).dependsOn(macros)
 
   def itFilter(name: String): Boolean = name endsWith "ItTests"
   def unitFilter(name: String): Boolean = !itFilter(name)
