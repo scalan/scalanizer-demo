@@ -93,7 +93,7 @@ object ScalanMacros {
             extends { ..$earlydefns } with ..$parents
             { $self => ..$repStats }
             """
-        print(res)
+        //print(res)
         res
       case _ => tree
     }
