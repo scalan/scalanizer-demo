@@ -76,8 +76,8 @@ object ScalanMacros {
         val res =
            q"""
             $mods trait $tpname[..$tparams]
-            extends { ..$earlydefns } with ..$parents with Base with BaseTypes
-               { self: ScalanCommunityDsl => ..$repStats }
+            extends { ..$earlydefns } with ..$parents with Reifiable[$tpname[..$tparams]]
+               { $self => ..$repStats }
             """
         print(res)
         res
@@ -97,6 +97,6 @@ object ScalanMacros {
   }
 }
 
-class staged extends StaticAnnotation {
+class ScalanType extends StaticAnnotation {
   def macroTransform(annottees: Any*) = macro ScalanMacros.impl
 }
