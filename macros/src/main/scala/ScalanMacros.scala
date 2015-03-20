@@ -21,6 +21,7 @@ object ScalanMacros {
         q"$expr: $reptpt"
       case q"if ($cond) $thenexpr else $elseexpr" =>
         q"IF ($cond) THEN {$thenexpr} ELSE {$elseexpr}"
+      case q"${Literal(Constant(c))}" => q"toRep(${Literal(Constant(c))})"
       case _ => expr
     }
   }
