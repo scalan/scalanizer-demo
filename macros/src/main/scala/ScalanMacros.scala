@@ -3,16 +3,40 @@ import scala.reflect.macros.whitebox
 import scala.annotation.StaticAnnotation
 
 object ScalanMacros {
+  def toRepType(c: whitebox.Context)(tp: c.Tree): c.Tree = {
+    import c.universe._
+
+    tp match {
+      case tq"" => tp
+      case tq"$tpname" => tq"Rep[$tpname]"
+    }
+  }
+
+  def toRepParam(c: whitebox.Context)(param: c.Tree): c.Tree = {
+    import c.universe._
+
+    param match {
+      case q"$mods val $name: $tpt = $rhs" =>
+        val reptpt = toRepType(c)(tpt)
+        q"$mods val $name: $reptpt = $rhs"
+      case _ => param
+    }
+  }
+
   def toRepStats(c: whitebox.Context)(stats: List[c.Tree]): List[c.Tree] = {
     import c.universe._
 
     stats.map((stat: c.Tree) => stat match {
       case q"$mods def $tname[..$tparams](...$paramss): $tpt = $expr" =>
-        print("paramss = " + showRaw(paramss))
-        q"$mods def $tname[..$tparams](...$paramss): $tpt = $expr"
+        val reptpt = toRepType(c)(tpt)
+        val repparamss = paramss.map(_.map(param => toRepParam(c)(param)))
+
+        print("expr = " + showRaw(expr))
+        q"$mods def $tname[..$tparams](...$repparamss): $reptpt = $expr"
       case _ => stat
     })
   }
+
   def toRep(c: whitebox.Context)(tree: c.Tree): c.Tree = {
     import c.universe._
 
@@ -29,21 +53,20 @@ object ScalanMacros {
             extends { ..$earlydefns } with ..$parents with Base with BaseTypes
                { self: Scalan => ..$repStats }
             """
-        println(res)
         res
       case _ => tree
     }
   }
 
-  def impl(c: whitebox.Context)(annottees: c.Expr[Any]*): c.Expr[Any] = {
+  def impl(c: whitebox.Context)(annottees: c.Expr[Any]*) = {
     import c.universe._
 
     val wrapped = annottees.map(exp => toRep(c)(exp.tree)).toList
 
     if (wrapped.length <= 1)
-      c.Expr[Any](wrapped.head)
+      c.Expr(wrapped.head)
     else
-      c.Expr[Any](Block(wrapped, Literal(Constant(()))))
+      c.Expr(Block(wrapped, Literal(Constant(()))))
   }
 }
 
