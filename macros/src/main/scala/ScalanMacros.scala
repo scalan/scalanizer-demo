@@ -19,6 +19,8 @@ object ScalanMacros {
       case q"$expr: $tpt" =>
         val reptpt = toRepType(c)(tpt)
         q"$expr: $reptpt"
+      case q"if ($cond) $thenexpr else $elseexpr" =>
+        q"IF ($cond) THEN {$thenexpr} ELSE {$elseexpr}"
       case _ => expr
     }
   }
