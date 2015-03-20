@@ -12,13 +12,26 @@ object ScalanMacros {
     }
   }
 
+  def toRepExpr(c: whitebox.Context)(expr: c.Tree): c.Tree = {
+    import c.universe._
+
+    expr match {
+      case q"$expr: $tpt" =>
+        val reptpt = toRepType(c)(tpt)
+        q"$expr: $reptpt"
+      case _ => expr
+    }
+  }
+
   def toRepParam(c: whitebox.Context)(param: c.Tree): c.Tree = {
     import c.universe._
 
     param match {
       case q"$mods val $name: $tpt = $rhs" =>
         val reptpt = toRepType(c)(tpt)
-        q"$mods val $name: $reptpt = $rhs"
+        val reprhs = toRepExpr(c)(rhs)
+
+        q"$mods val $name: $reptpt = $reprhs"
       case _ => param
     }
   }
@@ -30,16 +43,19 @@ object ScalanMacros {
       case q"$mods def $tname[..$tparams](...$paramss): $tpt = $expr" =>
         val reptpt = toRepType(c)(tpt)
         val repparamss = paramss.map(_.map(param => toRepParam(c)(param)))
+        val repexpr = toRepExpr(c)(expr)
 
-        q"$mods def $tname[..$tparams](...$repparamss): $reptpt = $expr"
+        q"$mods def $tname[..$tparams](...$repparamss): $reptpt = $repexpr"
       case q"$mods var $name: $tpt = $rhs" =>
         val reptpt = toRepType(c)(tpt)
+        val reprhs = toRepExpr(c)(rhs)
 
-        q"$mods var $name: $reptpt = $rhs"
+        q"$mods var $name: $reptpt = $reprhs"
       case q"$mods val $name: $tpt = $rhs" =>
         val reptpt = toRepType(c)(tpt)
+        val reprhs = toRepExpr(c)(rhs)
 
-        q"$mods val $name: $reptpt = $rhs"
+        q"$mods val $name: $reptpt = $reprhs"
       case _ => stat
     })
   }
