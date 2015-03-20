@@ -2,5 +2,6 @@ import scalan._
 
 @staged
 trait Num {
-  def incInt(x: Int = 0)(y: Int = 1): Int = x + y
+  val y: Int = 1
+  def incInt(x: Int = 0): Int = x + y
 }

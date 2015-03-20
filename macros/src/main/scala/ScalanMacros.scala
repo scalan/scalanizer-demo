@@ -31,8 +31,15 @@ object ScalanMacros {
         val reptpt = toRepType(c)(tpt)
         val repparamss = paramss.map(_.map(param => toRepParam(c)(param)))
 
-        print("expr = " + showRaw(expr))
         q"$mods def $tname[..$tparams](...$repparamss): $reptpt = $expr"
+      case q"$mods var $name: $tpt = $rhs" =>
+        val reptpt = toRepType(c)(tpt)
+
+        q"$mods var $name: $reptpt = $rhs"
+      case q"$mods val $name: $tpt = $rhs" =>
+        val reptpt = toRepType(c)(tpt)
+
+        q"$mods val $name: $reptpt = $rhs"
       case _ => stat
     })
   }
@@ -46,13 +53,13 @@ object ScalanMacros {
                { $self => ..$stats }
              """
            =>
-        print("Bingo")
         val repStats = toRepStats(c)(stats)
         val res =
            q"""$mods trait $tpname[..$tparams]
             extends { ..$earlydefns } with ..$parents with Base with BaseTypes
                { self: Scalan => ..$repStats }
             """
+        print(res)
         res
       case _ => tree
     }
