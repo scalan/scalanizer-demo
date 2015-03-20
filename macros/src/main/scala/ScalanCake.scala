@@ -18,7 +18,7 @@ object ScalanCakeMacros {
             extends { ..$earlydefns } with ..$parents with Base with BaseTypes
                { self: ScalanCommunityDsl => ..$stats }
             """
-        print(res)
+        //print(res)
         res
       case _ => tree
     }

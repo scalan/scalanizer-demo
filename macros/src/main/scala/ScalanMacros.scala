@@ -73,11 +73,25 @@ object ScalanMacros {
              """
            =>
         val repStats = toRepStats(c)(stats)
-        val res =
-           q"""
+        val res = q"""
             $mods trait $tpname[..$tparams]
             extends { ..$earlydefns } with ..$parents with Reifiable[$tpname[..$tparams]]
                { $self => ..$repStats }
+            """
+        //print(res)
+        res
+      case q"""
+            $mods class $tpname[..$tparams] $ctorMods(...$paramss)
+            extends { ..$earlydefns } with ..$parents
+            { $self => ..$stats }
+            """
+           =>
+        val repStats = toRepStats(c)(stats)
+        val repparamss = paramss.map(_.map(param => toRepParam(c)(param)))
+        val res = q"""
+            abstract class $tpname[..$tparams] $ctorMods(...$repparamss)
+            extends { ..$earlydefns } with ..$parents
+            { $self => ..$repStats }
             """
         print(res)
         res

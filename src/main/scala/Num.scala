@@ -5,11 +5,14 @@ trait Nums {
 
   @ScalanType
   trait Num {
-    val y: Int = 1
-
-    def incInt(x: Int = 0): Int = x + y
-
-    def abs(x: Int) = if (x < 0) -x else x
+    def a: Int
+    def add(b: Int = 0): Int
+    def abs: Int
   }
 
+  @ScalanType
+  class BaseNum(val a: Int = 1) extends Num {
+    def add(b: Int = 0): Int = a + b
+    def abs: Int = if (a < 0) -a else a
+  }
 }
