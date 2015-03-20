@@ -78,7 +78,7 @@ object ScalanMacros {
             extends { ..$earlydefns } with ..$parents with Reifiable[$tpname[..$tparams]]
                { $self => ..$repStats }
             """
-        //print(res)
+        print(res)
         res
       case q"""
             $mods class $tpname[..$tparams] $ctorMods(...$paramss)
@@ -93,7 +93,7 @@ object ScalanMacros {
             extends { ..$earlydefns } with ..$parents
             { $self => ..$repStats }
             """
-        //print(res)
+        print(res)
         res
       case _ => tree
     }
