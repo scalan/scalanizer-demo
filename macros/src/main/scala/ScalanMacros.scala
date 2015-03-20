@@ -55,9 +55,10 @@ object ScalanMacros {
            =>
         val repStats = toRepStats(c)(stats)
         val res =
-           q"""$mods trait $tpname[..$tparams]
+           q"""
+            $mods trait $tpname[..$tparams]
             extends { ..$earlydefns } with ..$parents with Base with BaseTypes
-               { self: Scalan => ..$repStats }
+               { self: ScalanCommunityDsl => ..$repStats }
             """
         print(res)
         res
