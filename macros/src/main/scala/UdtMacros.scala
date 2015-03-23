@@ -2,7 +2,7 @@ import scala.language.experimental.macros
 import scala.reflect.macros.whitebox
 import scala.annotation.StaticAnnotation
 
-object ScalanMacros {
+object UDTMacros {
   def toRepType(c: whitebox.Context)(tp: c.Tree): c.Tree = {
     import c.universe._
 
@@ -112,5 +112,5 @@ object ScalanMacros {
 }
 
 class UDT extends StaticAnnotation {
-  def macroTransform(annottees: Any*) = macro ScalanMacros.impl
+  def macroTransform(annottees: Any*) = macro UDTMacros.impl
 }
