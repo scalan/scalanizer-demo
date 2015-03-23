@@ -2,7 +2,7 @@ import scala.language.experimental.macros
 import scala.reflect.macros.whitebox
 import scala.annotation.StaticAnnotation
 
-object ScalanCakeMacros {
+object CakeSliceMacros {
   def toCake(c: whitebox.Context)(tree: c.Tree): c.Tree = {
     import c.universe._
 
@@ -31,7 +31,7 @@ object ScalanCakeMacros {
   }
 }
 
-class ScalanCake extends StaticAnnotation {
-  def macroTransform(annottees: Any*) = macro ScalanCakeMacros.impl
+class CakeSlice extends StaticAnnotation {
+  def macroTransform(annottees: Any*) = macro CakeSliceMacros.impl
 }
 

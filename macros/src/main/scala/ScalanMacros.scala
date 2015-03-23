@@ -111,6 +111,6 @@ object ScalanMacros {
   }
 }
 
-class ScalanType extends StaticAnnotation {
+class UDT extends StaticAnnotation {
   def macroTransform(annottees: Any*) = macro ScalanMacros.impl
 }
