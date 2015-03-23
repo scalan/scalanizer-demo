@@ -20,4 +20,15 @@ class SegmentTests extends BaseTests {suite =>
     }
     ctx.emit("length", ctx.length)
   }
+
+  test("simpleSegmentSeq") {
+    val ctx = new ScalanCtxSeq with ParadiseDslSeq with SimpleSegmentTest {
+      def test() = {}
+    }
+    val start: Int = -10
+    val end: Int = 1
+    val len = ctx.length((start, end))
+
+    assertResult(end - start)(len)
+  }
 }
