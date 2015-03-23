@@ -2,7 +2,6 @@ package scalan.meta
 
 object ScalanParadiseBoilerplateTool extends BoilerplateTool {
   val paradiseTypeSynonims = Map[String, String](
-    // declare your type synonims for User Defined types here (see type PA[A] = Rep[PArray[A]])
     "RSeg" -> "Segment"
   )
   lazy val paradiseConfig = CodegenConfig(
