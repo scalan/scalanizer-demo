@@ -1,12 +1,8 @@
 import sbt._
 import sbt.Keys._
 
-object ScalanStartRootBuild extends Build {
+object ScalanParadiseRootBuild extends Build {
   val paradiseVersion = "2.1.0-M5"
-
-  val commonDeps = libraryDependencies ++= Seq(
-    "org.scalatest" %% "scalatest" % "2.2.1" % "test",
-    "org.scalacheck" %% "scalacheck" % "1.11.5" % "test")
 
   val testSettings = inConfig(ItTest)(Defaults.testTasks) ++ Seq(
     testOptions in Test := Seq(Tests.Argument(TestFrameworks.JUnit, "-a", "-s"), Tests.Filter(unitFilter)),
@@ -75,7 +71,9 @@ object ScalanStartRootBuild extends Build {
     core % "test" classifier "tests",
     common,
     common % "test" classifier "tests",
-    community
+    community,
+    "org.scalatest" %% "scalatest" % "2.2.1" % "test",
+    "org.scalacheck" %% "scalacheck" % "1.11.5" % "test"
   )).dependsOn(macros)
 
   def itFilter(name: String): Boolean = name endsWith "ItTests"
