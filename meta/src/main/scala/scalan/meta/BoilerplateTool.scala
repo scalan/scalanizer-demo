@@ -3,6 +3,7 @@ package scalan.meta
 object ScalanParadiseBoilerplateTool extends BoilerplateTool {
   val paradiseTypeSynonims = Map[String, String](
     // declare your type synonims for User Defined types here (see type PA[A] = Rep[PArray[A]])
+    "RSeg" -> "Segment"
   )
   lazy val paradiseConfig = CodegenConfig(
     name = "Scalan Paradise",
@@ -10,9 +11,9 @@ object ScalanParadiseBoilerplateTool extends BoilerplateTool {
     entityFiles = List(
       "Segments.scala"
     ),
-    baseContextTrait = "ScalanCommunityDsl",
-    seqContextTrait = "ScalanCommunityDslSeq",
-    stagedContextTrait = "ScalanCommunityDslExp",
+    baseContextTrait = "ScalanDsl",
+    seqContextTrait = "ScalanSeq",
+    stagedContextTrait = "ScalanExp",
     extraImports = List(
       "scala.reflect.runtime.universe._",
       "scalan.common.Default"),
