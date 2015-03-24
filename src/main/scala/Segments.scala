@@ -35,7 +35,6 @@ trait Segments extends Base with BaseTypes { self: SegmentsDsl =>
   trait CenteredCompanion
 }
 
-
-trait SegmentsDsl extends impl.SegmentsAbs {}
-trait SegmentsDslSeq extends impl.SegmentsSeq {}
-trait SegmentsDslExp extends impl.SegmentsExp {}
+trait SegmentsDsl extends impl.SegmentsAbs
+trait SegmentsDslSeq extends impl.SegmentsSeq
+trait SegmentsDslExp extends impl.SegmentsExp
