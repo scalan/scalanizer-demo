@@ -2,7 +2,7 @@ package scalan.paradise
 
 import scalan._
 
-trait Segments extends Base with BaseTypes { self: ParadiseDsl =>
+trait Segments extends Base with BaseTypes { self: SegmentsDsl =>
 
   type RSeg = Rep[Segment]
   trait Segment extends Reifiable[Segment] { self =>
@@ -36,6 +36,6 @@ trait Segments extends Base with BaseTypes { self: ParadiseDsl =>
 }
 
 
-trait SegmentsDsl extends impl.SegmentsAbs {self: ParadiseDsl => }
-trait SegmentsDslSeq extends impl.SegmentsSeq {self: ParadiseDslSeq => }
-trait SegmentsDslExp extends impl.SegmentsExp {self: ParadiseDslExp => }
+trait SegmentsDsl extends impl.SegmentsAbs {}
+trait SegmentsDslSeq extends impl.SegmentsSeq {}
+trait SegmentsDslExp extends impl.SegmentsExp {}

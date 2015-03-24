@@ -7,7 +7,7 @@ import scalan.common.Default
 
 // Abs -----------------------------------
 trait SegmentsAbs extends ScalanDsl with Segments {
-  self: ParadiseDsl =>
+  self: SegmentsDsl =>
   // single proxy for each type family
   implicit def proxySegment(p: Rep[Segment]): Segment = {
     implicit val tag = weakTypeTag[Segment]
@@ -224,7 +224,7 @@ trait SegmentsAbs extends ScalanDsl with Segments {
 
 // Seq -----------------------------------
 trait SegmentsSeq extends SegmentsDsl with ScalanSeq {
-  self: ParadiseDslSeq =>
+  self: SegmentsDslSeq =>
   lazy val Segment: Rep[SegmentCompanionAbs] = new SegmentCompanionAbs with UserTypeSeq[SegmentCompanionAbs, SegmentCompanionAbs] {
     lazy val selfType = element[SegmentCompanionAbs]
   }
@@ -283,7 +283,7 @@ trait SegmentsSeq extends SegmentsDsl with ScalanSeq {
 
 // Exp -----------------------------------
 trait SegmentsExp extends SegmentsDsl with ScalanExp {
-  self: ParadiseDslExp =>
+  self: SegmentsDslExp =>
   lazy val Segment: Rep[SegmentCompanionAbs] = new SegmentCompanionAbs with UserTypeDef[SegmentCompanionAbs, SegmentCompanionAbs] {
     lazy val selfType = element[SegmentCompanionAbs]
     override def mirror(t: Transformer) = this
