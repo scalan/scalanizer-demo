@@ -1,35 +1,28 @@
-package scalan.paradise
+package segs
 
-import scalan._
+trait Segments {
 
-@CakeSlice
-trait Segs {
-
-  @CommonUDT
-  trait Seg {
+  trait Segment {
     def start: Int
     def length: Int
     def end: Int
-    def shift(ofs: Int): Seg
+    //def shift(ofs: Int): Seg
   }
 
-  @DefaultUDT
-  class Interval(val start: Int, val end: Int) extends Seg {
+  class Interval(val start: Int, val end: Int) extends Segment {
     def length = end - start
-    def shift(ofs: Int) = ??? //new Interval(start + ofs, end + ofs)
+    //def shift(ofs: Int) = new Interval(start + ofs, end + ofs)
   }
 
-  @UDT
-  class Slice(val start: Int, val length: Int) extends Seg {
+  class Slice(val start: Int, val length: Int) extends Segment {
     def end = start + length
-    def shift(ofs: Int) = ??? //new Slice(start + ofs, length)
+    //def shift(ofs: Int) = new Slice(start + ofs, length)
   }
 
-  @UDT
-  class Centered(val center: Int, val radius: Int) extends Seg {
+  class Centered(val center: Int, val radius: Int) extends Segment {
     def start = center - radius
     def end = center + radius
     def length = radius * 2
-    def shift(ofs: Int) = ??? //new Centered(center + ofs, radius)
+    //def shift(ofs: Int) = new Centered(center + ofs, radius)
   }
 }

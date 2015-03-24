@@ -1,4 +1,4 @@
-package scalan.paradise
+package segments
 package impl
 
 import scalan._

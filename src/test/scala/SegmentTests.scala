@@ -2,6 +2,7 @@ package scalan.paradise
 
 import scala.language.reflectiveCalls
 import scalan._
+import segments._
 
 class SegmentTests extends BaseTests {suite =>
 
