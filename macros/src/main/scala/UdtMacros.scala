@@ -1,3 +1,5 @@
+package scalan.paradise
+
 import scala.language.experimental.macros
 import scala.reflect.macros.whitebox
 import scala.annotation.StaticAnnotation
@@ -111,6 +113,14 @@ object UDTMacros {
   }
 }
 
+class CommonUDT extends StaticAnnotation {
+  def macroTransform(annottees: Any*) = macro UDTMacros.impl
+}
+
 class UDT extends StaticAnnotation {
+  def macroTransform(annottees: Any*) = macro UDTMacros.impl
+}
+
+class DefaultUDT extends StaticAnnotation {
   def macroTransform(annottees: Any*) = macro UDTMacros.impl
 }

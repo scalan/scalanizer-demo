@@ -1,3 +1,5 @@
+package scalan.paradise
+
 import scala.language.experimental.macros
 import scala.reflect.macros.whitebox
 import scala.annotation.StaticAnnotation

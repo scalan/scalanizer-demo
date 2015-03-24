@@ -1,9 +1,11 @@
+package scalan.paradise
+
 import scalan._
 
 @CakeSlice
 trait Segs {
 
-  @UDT
+  @CommonUDT
   trait Seg {
     def start: Int
     def length: Int
@@ -11,7 +13,7 @@ trait Segs {
     def shift(ofs: Int): Seg
   }
 
-  @UDT
+  @DefaultUDT
   class Interval(val start: Int, val end: Int) extends Seg {
     def length = end - start
     def shift(ofs: Int) = ??? //new Interval(start + ofs, end + ofs)
