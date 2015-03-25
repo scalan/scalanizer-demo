@@ -18,7 +18,7 @@ object CakeSliceMacros {
           q"""
             $mods trait $tpname[..$tparams]
             extends { ..$earlydefns } with ..$parents with Base with BaseTypes
-               { self: SegsDsl => ..$stats }
+               { self: SegmsDsl => ..$stats }
             """
         print(res)
         res
