@@ -2,11 +2,11 @@ package scalan.paradise
 
 import scala.language.reflectiveCalls
 import scalan._
-import segments._
+import segms._
 
 class SegmentTests extends BaseTests {suite =>
 
-  trait SimpleSegmentTest extends SegmentsDsl {
+  trait SimpleSegmentTest extends SegmsDsl {
     lazy val length = fun {(in: Rep[(Int, Int)]) => {
       val Pair(start, end) = in
       val interval = Interval(start, end)
@@ -16,14 +16,14 @@ class SegmentTests extends BaseTests {suite =>
   }
 
   test("simpleSegmentStaged") {
-    val ctx = new TestContext(this, "simpleSegmentStaged") with SegmentsDslExp with SimpleSegmentTest {
+    val ctx = new TestContext(this, "simpleSegmentStaged") with SegmsDslExp with SimpleSegmentTest {
       def test() = {}
     }
     ctx.emit("length", ctx.length)
   }
 
   test("simpleSegmentSeq") {
-    val ctx = new ScalanCtxSeq with SegmentsDslSeq with SimpleSegmentTest {
+    val ctx = new ScalanCtxSeq with SegmsDslSeq with SimpleSegmentTest {
       def test() = {}
     }
     val start: Int = -10
