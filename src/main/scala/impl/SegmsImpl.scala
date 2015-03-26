@@ -314,6 +314,18 @@ trait SegmsExp extends SegmsDsl with ScalanExp {
         case _ => None
       }
     }
+
+    object shift {
+      def unapply(d: Def[_]): Option[(Rep[Interval], Rep[Int])] = d match {
+        case MethodCall(receiver, method, Seq(ofs, _*), _) if receiver.elem.isInstanceOf[IntervalElem] && method.getName == "shift" =>
+          Some((receiver, ofs)).asInstanceOf[Option[(Rep[Interval], Rep[Int])]]
+        case _ => None
+      }
+      def unapply(exp: Exp[_]): Option[(Rep[Interval], Rep[Int])] = exp match {
+        case Def(d) => unapply(d)
+        case _ => None
+      }
+    }
   }
 
   object IntervalCompanionMethods {
@@ -346,6 +358,18 @@ trait SegmsExp extends SegmsDsl with ScalanExp {
         case _ => None
       }
       def unapply(exp: Exp[_]): Option[Rep[Slice]] = exp match {
+        case Def(d) => unapply(d)
+        case _ => None
+      }
+    }
+
+    object shift {
+      def unapply(d: Def[_]): Option[(Rep[Slice], Rep[Int])] = d match {
+        case MethodCall(receiver, method, Seq(ofs, _*), _) if receiver.elem.isInstanceOf[SliceElem] && method.getName == "shift" =>
+          Some((receiver, ofs)).asInstanceOf[Option[(Rep[Slice], Rep[Int])]]
+        case _ => None
+      }
+      def unapply(exp: Exp[_]): Option[(Rep[Slice], Rep[Int])] = exp match {
         case Def(d) => unapply(d)
         case _ => None
       }
@@ -410,6 +434,18 @@ trait SegmsExp extends SegmsDsl with ScalanExp {
         case _ => None
       }
     }
+
+    object shift {
+      def unapply(d: Def[_]): Option[(Rep[Centered], Rep[Int])] = d match {
+        case MethodCall(receiver, method, Seq(ofs, _*), _) if receiver.elem.isInstanceOf[CenteredElem] && method.getName == "shift" =>
+          Some((receiver, ofs)).asInstanceOf[Option[(Rep[Centered], Rep[Int])]]
+        case _ => None
+      }
+      def unapply(exp: Exp[_]): Option[(Rep[Centered], Rep[Int])] = exp match {
+        case Def(d) => unapply(d)
+        case _ => None
+      }
+    }
   }
 
   object CenteredCompanionMethods {
@@ -453,6 +489,18 @@ trait SegmsExp extends SegmsDsl with ScalanExp {
         case _ => None
       }
       def unapply(exp: Exp[_]): Option[Rep[Segm]] = exp match {
+        case Def(d) => unapply(d)
+        case _ => None
+      }
+    }
+
+    object shift {
+      def unapply(d: Def[_]): Option[(Rep[Segm], Rep[Int])] = d match {
+        case MethodCall(receiver, method, Seq(ofs, _*), _) if receiver.elem.isInstanceOf[SegmElem[_, _]] && method.getName == "shift" =>
+          Some((receiver, ofs)).asInstanceOf[Option[(Rep[Segm], Rep[Int])]]
+        case _ => None
+      }
+      def unapply(exp: Exp[_]): Option[(Rep[Segm], Rep[Int])] = exp match {
         case Def(d) => unapply(d)
         case _ => None
       }
