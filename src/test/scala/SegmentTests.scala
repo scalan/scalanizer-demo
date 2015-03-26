@@ -13,6 +13,14 @@ class SegmentTests extends BaseTests {suite =>
 
       interval.length
     }}
+
+    lazy val shift = fun {(in: Rep[(Int, (Int, Int))]) => {
+      val Pair(start, Pair(end, ofs)) = in
+      val s = Interval(start, end)
+      val shifted = s.shift(ofs)
+
+      shifted.start
+    }}
   }
 
   test("simpleSegmentStaged") {
@@ -20,6 +28,7 @@ class SegmentTests extends BaseTests {suite =>
       def test() = {}
     }
     ctx.emit("length", ctx.length)
+    ctx.emit("shift", ctx.shift)
   }
 
   test("simpleSegmentSeq") {
@@ -27,9 +36,15 @@ class SegmentTests extends BaseTests {suite =>
       def test() = {}
     }
     val start: Int = -10
+    val center = start
     val end: Int = 1
-    val len = ctx.length((start, end))
+    val radius = 5
 
+    val len = ctx.length((start, end))
     assertResult(end - start)(len)
+
+    val ofs = 100
+    val ofstart = ctx.shift((start, (end, ofs)))
+    assertResult(start + ofs)(ofstart)
   }
 }
