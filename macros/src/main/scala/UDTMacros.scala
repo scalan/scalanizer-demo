@@ -24,7 +24,12 @@ object UDTMacros {
       case q"if ($cond) $thenexpr else $elseexpr" =>
         q"IF ($cond) THEN {$thenexpr} ELSE {$elseexpr}"
       case q"${Literal(Constant(c))}" => q"toRep(${Literal(Constant(c))})"
-      case _ => expr
+      case Apply(Select(New(tpt), termNames.CONSTRUCTOR), args) =>
+        val Ident(TypeName(name)) = tpt
+        Apply(Ident(TermName(name)), args)
+      case _ =>
+        //print(showRaw(expr))
+        expr
     }
   }
 
