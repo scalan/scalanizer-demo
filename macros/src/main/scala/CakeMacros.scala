@@ -20,7 +20,7 @@ object CakeSliceMacros {
             extends { ..$earlydefns } with ..$parents with Base with BaseTypes
                { self: SegmsDsl => ..$stats }
             """
-        print(res)
+        //print(res)
         res
       case _ => tree
     }
