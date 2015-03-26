@@ -5,6 +5,12 @@ import scala.reflect.macros.whitebox
 import scala.annotation.StaticAnnotation
 
 object CakeSliceMacros {
+  def addDefaultElem(c: whitebox.Context)(stats: List[c.Tree]) = {
+    import c.universe._
+
+    val defaultElem = q"implicit def defaultSegmElem: Elem[Segm] = element[Interval].asElem[Segm]"
+    stats :+ defaultElem
+  }
   def toCake(c: whitebox.Context)(tree: c.Tree): c.Tree = {
     import c.universe._
 
@@ -14,11 +20,12 @@ object CakeSliceMacros {
                { $self => ..$stats }
              """
       =>
+        val newstats = addDefaultElem(c)(stats)
         val res =
           q"""
             $mods trait $tpname[..$tparams]
             extends { ..$earlydefns } with ..$parents with Base with BaseTypes
-               { self: SegmsDsl => ..$stats }
+               { self: SegmsDsl => ..$newstats }
             """
         //print(res)
         res

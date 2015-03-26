@@ -9,7 +9,6 @@ trait Segms {
     //def shift(ofs: Int): Segm
   }
   trait SegmCompanion
-  implicit def defaultSegmElem: Elem[Segm] = element[Interval].asElem[Segm]
 
   class Interval(val start: Int, val end: Int) extends Segm {
     def length = end - start
