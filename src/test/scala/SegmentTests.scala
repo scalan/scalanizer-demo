@@ -2,7 +2,7 @@ package scalan.paradise
 
 import scala.language.reflectiveCalls
 import scalan._
-import segms._
+import segms.StagedEvaluation._
 
 class SegmentTests extends BaseTests {suite =>
 
