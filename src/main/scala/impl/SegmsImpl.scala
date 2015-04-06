@@ -458,6 +458,9 @@ package segms {
       };
       trait CenteredCompanion extends Reifiable[CenteredCompanion];
       implicit def defaultSegmElem: Elem[Segm] = element[Interval].asElem[Segm]
-    }
+    };
+    trait SegmsDsl extends SegmsAbs;
+    trait SegmsDslSeq extends SegmsSeq;
+    trait SegmsDslExp extends SegmsExp
   }
 }
