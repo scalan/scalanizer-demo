@@ -433,6 +433,7 @@ package segms {
       object SegmCompanionMethods
     };
     trait Segms extends Base with BaseTypes { self: SegmsDsl =>
+      implicit def defaultSegmElem: Elem[Segm] = element[Interval].asElem[Segm];
       trait Segm extends Reifiable[Segm] {
         def start: Rep[Int];
         def length: Rep[Int];
@@ -456,8 +457,7 @@ package segms {
         def length: Rep[Int] = radius.*(2);
         def shift(ofs: Rep[Int]) = Centered(center.+(ofs), radius)
       };
-      trait CenteredCompanion extends Reifiable[CenteredCompanion];
-      implicit def defaultSegmElem: Elem[Segm] = element[Interval].asElem[Segm]
+      trait CenteredCompanion extends Reifiable[CenteredCompanion]
     };
     trait SegmsDsl extends SegmsAbs;
     trait SegmsDslSeq extends SegmsSeq;
