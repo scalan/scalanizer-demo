@@ -440,24 +440,24 @@ package segms {
         def end: Rep[Int];
         def shift(ofs: Rep[Int]): Rep[Segm]
       };
-      trait SegmCompanion extends Reifiable[SegmCompanion];
+      trait SegmCompanion;
       abstract class Interval(val start: Rep[Int], val end: Rep[Int]) extends Segm {
         def length: Rep[Int] = end.-(start);
         def shift(ofs: Rep[Int]) = Interval(start.+(ofs), end.+(ofs))
       };
-      trait IntervalCompanion extends Reifiable[IntervalCompanion];
+      trait IntervalCompanion;
       abstract class Slice(val start: Rep[Int], val length: Rep[Int]) extends Segm {
         def end: Rep[Int] = start.+(length);
         def shift(ofs: Rep[Int]) = Slice(start.+(ofs), length)
       };
-      trait SliceCompanion extends Reifiable[SliceCompanion];
+      trait SliceCompanion;
       abstract class Centered(val center: Rep[Int], val radius: Rep[Int]) extends Segm {
         def start: Rep[Int] = center.-(radius);
         def end: Rep[Int] = center.+(radius);
         def length: Rep[Int] = radius.*(2);
         def shift(ofs: Rep[Int]) = Centered(center.+(ofs), radius)
       };
-      trait CenteredCompanion extends Reifiable[CenteredCompanion]
+      trait CenteredCompanion
     };
     trait SegmsDsl extends SegmsAbs;
     trait SegmsDslSeq extends SegmsSeq;
