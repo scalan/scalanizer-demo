@@ -5,7 +5,7 @@ import scalan._
 import segms._
 import segms.StagedEvaluation._
 
-class SegmentTests extends BaseTests {suite =>
+class SegmTests extends BaseTests {suite =>
 
   trait SimpleSegmentTest extends SegmsDsl {
     lazy val length = fun {(in: Rep[(Int, Int)]) => {
