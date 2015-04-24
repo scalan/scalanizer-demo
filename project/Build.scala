@@ -40,7 +40,7 @@ object ScalanParadiseRootBuild extends Build {
     def addTestConfigsAndCommonSettings =
       p.configs(ItTest).settings(commonSettings: _*)
   }
-  def liteDependency(name: String) = "com.huawei.scalan" %% name % "0.2.7-SNAPSHOT"
+  def liteDependency(name: String) = "com.huawei.scalan" %% name % "0.2.7"
 
   lazy val metaDeps = liteDependency("meta")
   lazy val scalanParadiseMeta = Project(
