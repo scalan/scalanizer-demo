@@ -25,6 +25,7 @@ trait Segms {
     def end: Int = start + length
     def shift(ofs: Int) = shiftBy((x: Int) => x + ofs)
     def shiftBy(f: Int => Int) = new Slice(f(start), length)
+    def id = Slice.this
   }
 
   class Centered(val center: Int, val radius: Int) extends Segm {
@@ -32,5 +33,6 @@ trait Segms {
     def end: Int = center + radius
     def length: Int = radius * 2
     def shift(ofs: Int) = new Centered(center + ofs, radius)
+    def id = this
   }
 }
