@@ -22,7 +22,8 @@ trait Segms {
   }
 
   class Slice(val start: Int, val length: Int) extends Segm {
-    def end: Int = start + length
+    class StartBox(val value: Int = 1)
+    def end: Int = new StartBox(start).value + length
     def shift(ofs: Int) = shiftBy((x: Int) => x + ofs)
     def shiftBy(f: Int => Int) = new Slice(f(start), length)
     def id = Slice.this
