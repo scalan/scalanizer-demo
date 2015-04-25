@@ -12,11 +12,11 @@ trait Segms {
   class Interval(val start: Int, val end: Int) extends Segm {
     def length: Int = {
       val flag: Boolean = true
-      def foo: (Int, Long, Double) = (0, 1, 2.0)
+      def foo[T <: Double](sec: Long): (Int, Long, Double) = (0, sec, 2.asInstanceOf[Double])
       if (flag) {
         val diff: Int = end - start
         diff: Int
-      } else foo._1
+      } else foo[Double](10)._1
     }
     def shift(ofs: Int) = new Interval(start + ofs, end + ofs)
   }
@@ -28,11 +28,12 @@ trait Segms {
     def id = Slice.this
   }
 
-  class Centered(val center: Int, val radius: Int) extends Segm {
+  @SerialVersionUID(value = 1)
+  class Centered(@SerialVersionUID(2) val center: Int, val radius: Int) extends Segm {
     def start: Int = center - radius
     def end: Int = center + radius
-    def length: Int = radius * 2
-    def shift(ofs: Int) = new Centered(center + ofs, radius)
-    def id = this
+    def length: Int = radius * 2: @inline
+    def shift(ofs: Int) = new Centered(center = center + ofs, radius)
+    @SerialVersionUID(3) def id = this
   }
 }
