@@ -2,7 +2,7 @@ package segms {
   object StagedEvaluation {
     import scalan._;
     import scala.reflect.runtime.universe._;
-    import scala.reflect._
+    import scala.reflect._;
     import scalan.common.Default;
     trait SegmsAbs extends Segms with ScalanDsl { self: SegmsDsl =>
       implicit def proxySegm(p: Rep[Segm]): Segm = proxyOps[Segm](p)(classTag[Segm]);
