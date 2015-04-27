@@ -15,6 +15,7 @@ object ScalanParadiseBoilerplateTool extends BoilerplateTool {
     stagedContextTrait = "ScalanExp",
     extraImports = List(
       "scala.reflect.runtime.universe._",
+      "scala.reflect._",
       "scalan.common.Default"),
     paradiseTypeSynonims
   )

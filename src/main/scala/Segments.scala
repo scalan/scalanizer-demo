@@ -2,7 +2,7 @@ package segments
 
 import scalan._
 
-trait Segments extends Base with BaseTypes { self: SegmentsDsl =>
+trait Segments extends Base { self: SegmentsDsl =>
 
   type RSeg = Rep[Segment]
   trait Segment extends Reifiable[Segment] { self =>

@@ -23,7 +23,7 @@ class SegmTests extends BaseTests {suite =>
       shifted.start
     }}
   }
-
+/*
   test("simpleSegmentStaged") {
     val ctx = new TestContext(this, "simpleSegmentStaged") with SegmsDslExp with SimpleSegmentTest {
       def test() = {}
@@ -31,7 +31,7 @@ class SegmTests extends BaseTests {suite =>
     ctx.emit("length", ctx.length)
     ctx.emit("shift", ctx.shift)
   }
-
+*/
   test("simpleSegmentSeq") {
     val ctx = new ScalanCtxSeq with SegmsDslSeq with SimpleSegmentTest {
       def test() = {}
