@@ -10,7 +10,9 @@ trait Segms {
   }
 
   class Interval(val start: Int, val end: Int) extends Segm {
+
     def length: Int = {
+      type IT = segms.Segms#Interval
       val flag: Boolean = true
       def foo[T <: Double](sec: Long): (Int, Long, Double) = (0, sec, 2.asInstanceOf[Double])
       if (flag) {
@@ -18,12 +20,15 @@ trait Segms {
         diff: Int
       } else foo[Double](10)._1
     }
-    def shift(ofs: Int) = new Interval(start + ofs, end + ofs)
+    def shift(ofs: Int) = {
+      val res = new Interval(start + ofs, end + ofs)
+
+      res
+    }
   }
 
   class Slice(val start: Int, val length: Int) extends Segm {
-    class StartBox(val value: Int = 1)
-    def end: Int = new StartBox(start).value + length
+    def end: Int = start + length
     def shift(ofs: Int) = shiftBy((x: Int) => x + ofs)
     def shiftBy(f: Int => Int) = new Slice(f(start), length)
     def id = Slice.this
