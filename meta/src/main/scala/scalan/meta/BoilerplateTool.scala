@@ -3,12 +3,14 @@ package scalan.meta
 object ScalanParadiseBoilerplateTool extends BoilerplateTool {
   val paradiseTypeSynonims = Map[String, String](
     "RSeg" -> "Segment"
+    ,"RKind" -> "Kind"
   )
   lazy val paradiseConfig = CodegenConfig(
     name = "Scalan Paradise",
     srcPath = "src/main/scala",
     entityFiles = List(
       "Segments.scala"
+      ,"Kinds.scala"
     ),
     baseContextTrait = "ScalanDsl",
     seqContextTrait = "ScalanSeq",
