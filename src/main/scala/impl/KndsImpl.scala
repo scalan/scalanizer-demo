@@ -1,10 +1,9 @@
 package knds {
   object StagedEvaluation {
-    import scalan._
-    import scala.reflect.runtime.universe._
-    import scala.reflect._
-    import scalan.common.Default
-
+    import scalan._;
+    import scala.reflect.runtime.universe._;
+    import scala.reflect._;
+    import scalan.common.Default;
     // Abs -----------------------------------
     trait KndsAbs extends Knds with ScalanDsl {
       self: KndsDsl =>
@@ -316,17 +315,18 @@ package knds {
       object KndCompanionMethods {
       }
     }
+
     trait Knds extends Base { self: KndsDsl =>
       trait Knd[F[_], A] extends Reifiable[Knd[F, A]] {
-        implicit def elementOfA: Elem[A];
         implicit def containerOfF: Cont[F];
+        implicit def elementOfA: Elem[A];
         def flatMap[B](f: Rep[scala.Function1[A, Knd[F, B]]])(implicit elementOfB: Elem[B]): Rep[Knd[F, B]] = Bind(self, f);
         def mapBy[B](f: Rep[scala.Function1[A, B]])(implicit elementOfB: Elem[B]): Rep[Knd[F, B]] = flatMap(fun ((a) => Return(f(a))))
       };
-      abstract class Return[F[_], A](val a: Rep[A])(implicit val elementOfA: Elem[A], val containerOfF: Cont[F]) extends Knd[F, A] {
+      abstract class Return[F[_], A](val a: Rep[A])(implicit val containerOfF: Cont[F], val elementOfA: Elem[A]) extends Knd[F, A] {
         override def flatMap[B](f: Rep[scala.Function1[A, Knd[F, B]]])(implicit elementOfB: Elem[B]): Rep[Knd[F, B]] = f(a)
       };
-      abstract class Bind[F[_], S, B](val a: Rep[Knd[F, S]], val f: Rep[scala.Function1[S, Knd[F, B]]])(implicit val elementOfS: Elem[S], val elementOfA: Elem[B], val containerOfF: Cont[F]) extends Knd[F, B] {
+      abstract class Bind[F[_], S, B](val a: Rep[Knd[F, S]], val f: Rep[scala.Function1[S, Knd[F, B]]])(implicit val containerOfF: Cont[F], val elementOfS: Elem[S], val elementOfA: Elem[B]) extends Knd[F, B] {
         override def flatMap[R](f1: Rep[scala.Function1[B, Knd[F, R]]])(implicit elementOfR: Elem[R]): Rep[Knd[F, R]] = a.flatMap(((s: Rep[S]) => f(s).flatMap(f1)))
       };
       trait KndCompanion;
