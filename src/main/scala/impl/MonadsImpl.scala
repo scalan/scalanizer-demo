@@ -136,6 +136,8 @@ trait MonadsExp extends MonadsDsl with ScalanExp {
         case _ => None
       }
     }
+
+    // WARNING: Cannot generate matcher for method `traverse`: Method has function arguments f
   }
 
   object MonadCompanionMethods {

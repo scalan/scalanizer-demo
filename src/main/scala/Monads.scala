@@ -34,9 +34,16 @@ trait Monads extends Base with ListOps {self: MonadsDsl =>
 
     def sequence[A:Elem](lma: Rep[List[F[A]]]): Rep[F[List[A]]] =
       lma.foldRight[F[List[A]]](unit(SList.empty[A])) { (p: Rep[(F[A],F[List[A]])]) =>
-        //val Pair(ma, mla) = p
-        //map2(ma, mla)(_ :: _)
-        map2(p._1, p._2)(_ :: _)
+        val ma = p._1
+        val mla = p._2
+        map2(ma, mla)(_ :: _)
+      }
+
+    def traverse[A:Elem,B:Elem](la: Lst[A])(f: Rep[A] => Rep[F[B]]): Rep[F[List[B]]] =
+      la.foldRight[F[List[B]]](unit(SList.empty[B])){ (in: Rep[(A,F[List[B]])]) =>
+        val a = in._1
+        val mlb = in._2
+        map2(f(a), mlb)(_ :: _)
       }
   }
   trait MonadCompanion

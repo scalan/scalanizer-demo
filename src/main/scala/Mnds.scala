@@ -30,6 +30,11 @@ trait Mnds {
         map2(ma, mla)((a: A, la: List[A]) => a :: la)
       }
     }
+
+    def traverse[A,B](la: List[A])(f: A => F[B]): F[List[B]] =
+      la.foldRight[F[List[B]]](unit(List.empty[B])){ (a:A, mlb: F[List[B]]) =>
+        map2(f(a), mlb)((fa: B, lb: List[B]) => fa :: lb)
+      }
   }
 }
 
