@@ -10,13 +10,12 @@ trait Monads extends Base {self: MonadsDsl =>
 
     def unit[A: Elem](a: Rep[A]): Rep[F[A]]
 
-//    def flatMap[A:Elem,B:Elem](ma: Rep[F[A]])(f: Rep[A] => Rep[F[B]]): Rep[F[B]] =
-//      join(map(ma)(f))
-//
-//    def map[A:Elem,B:Elem](ma: Rep[F[A]])(f: Rep[A] => Rep[B]): Rep[F[B]] =
-//      flatMap(ma)(a => unit(f(a)))
-//
-//    def join[A:Elem](mma: Rep[F[F[A]]]): Rep[F[A]] = flatMap(mma)(ma => ma)
+    def flatMap[A: Elem, B: Elem](ma: Rep[F[A]])(f: Rep[A] => Rep[F[B]]): Rep[F[B]] = join(map(ma)(f))
+
+    def map[A: Elem, B: Elem](ma: Rep[F[A]])(f: Rep[A] => Rep[B]): Rep[F[B]] =
+      flatMap(ma)(a => unit(f(a)))
+
+    def join[A:Elem](mma: Rep[F[F[A]]]): Rep[F[A]] = flatMap(mma)(ma => ma)
   }
   trait MonadCompanion
 }

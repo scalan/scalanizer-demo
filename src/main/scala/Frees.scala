@@ -1,3 +1,4 @@
+/*
 package monads
 
 import scalan._
@@ -76,3 +77,4 @@ trait Frees extends Base { self: FreesDsl =>
 trait FreesDsl extends impl.FreesAbs
 trait FreesDslSeq extends impl.FreesSeq
 trait FreesDslExp extends impl.FreesExp
+*/
