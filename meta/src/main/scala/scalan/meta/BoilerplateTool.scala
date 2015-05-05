@@ -5,6 +5,7 @@ object ScalanParadiseBoilerplateTool extends BoilerplateTool {
     "RSeg" -> "Segment"
     ,"RKind" -> "Kind"
     ,"RCoproduct" -> "Coproduct"
+    ,"RMonad" -> "Monad"
   )
   lazy val paradiseConfig = CodegenConfig(
     name = "Scalan Paradise",
@@ -13,6 +14,7 @@ object ScalanParadiseBoilerplateTool extends BoilerplateTool {
       "Segments.scala"
       ,"Kinds.scala"
       ,"Coproducts.scala"
+      ,"Monads.scala"
     ),
     baseContextTrait = "ScalanDsl",
     seqContextTrait = "ScalanSeq",
