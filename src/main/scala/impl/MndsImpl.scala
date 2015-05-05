@@ -6,7 +6,7 @@ package mnds {
     import scalan.common.Default;
     trait MndsAbs extends Mnds with ScalanDsl { self: MndsDsl =>
       implicit def proxyMnd[F[_]](p: Rep[Mnd[F]]): Mnd[F] = proxyOps[Mnd[F]](p)(classTag[Mnd[F]]);
-      class MndElem[F[_], To <: Mnd[F]](implicit val containerOfF: Cont[F]) extends EntityElem[To] {
+      class MndElem[F[_], To <: Mnd[F]](implicit val cF: Cont[F]) extends EntityElem[To] {
         override def isEntityType = true;
         override def tag = weakTypeTag[Mnd[F]].asInstanceOf[WeakTypeTag[To]];
         override def convert(x: Rep[(Reifiable[_$1] forSome { 
@@ -15,7 +15,7 @@ package mnds {
         def convertMnd(x: Rep[Mnd[F]]): Rep[To] = x.asRep[To];
         override def getDefaultRep: Rep[To] = ???
       };
-      implicit def mndElement[F[_]](implicit containerOfF: Cont[F]): Elem[Mnd[F]] = {
+      implicit def mndElement[F[_]](implicit cF: Cont[F]): Elem[Mnd[F]] = {
         final class $anon extends MndElem[F, Mnd[F]];
         new $anon()
       };
@@ -57,13 +57,13 @@ package mnds {
             type F[_];
             type A
           })] = d match {
-            case MethodCall((receiver @ _), (method @ _), Seq((a @ _), (elementOfA @ _), _*), _) if (receiver.elem match {
+            case MethodCall((receiver @ _), (method @ _), Seq((a @ _), (eA @ _), _*), _) if (receiver.elem match {
   case (ve @ ((_): ViewElem[(_), (_)])) => (ve match {
     case ((_): MndElem[(_), (_)]) => true
     case _ => false
   })
   case _ => false
-}).&&(method.getName.==("unit")) => Some(scala.Tuple3(receiver, a, elementOfA)).asInstanceOf[Option[(scala.Tuple3[Rep[Mnd[F]], Rep[A], Rep[Elem[A]]] forSome { 
+}).&&(method.getName.==("unit")) => Some(scala.Tuple3(receiver, a, eA)).asInstanceOf[Option[(scala.Tuple3[Rep[Mnd[F]], Rep[A], Rep[Elem[A]]] forSome { 
               type F[_];
               type A
             })]]
@@ -86,13 +86,13 @@ package mnds {
             type F[_];
             type A
           })] = d match {
-            case MethodCall((receiver @ _), (method @ _), Seq((mma @ _), (elementOfA @ _), _*), _) if (receiver.elem match {
+            case MethodCall((receiver @ _), (method @ _), Seq((mma @ _), (eA @ _), _*), _) if (receiver.elem match {
   case (ve @ ((_): ViewElem[(_), (_)])) => (ve match {
     case ((_): MndElem[(_), (_)]) => true
     case _ => false
   })
   case _ => false
-}).&&(method.getName.==("join")) => Some(scala.Tuple3(receiver, mma, elementOfA)).asInstanceOf[Option[(scala.Tuple3[Rep[Mnd[F]], Rep[F[F[A]]], Rep[Elem[A]]] forSome { 
+}).&&(method.getName.==("join")) => Some(scala.Tuple3(receiver, mma, eA)).asInstanceOf[Option[(scala.Tuple3[Rep[Mnd[F]], Rep[F[F[A]]], Rep[Elem[A]]] forSome { 
               type F[_];
               type A
             })]]
@@ -113,11 +113,11 @@ package mnds {
     };
     trait Mnds extends Base { self: MndsDsl =>
       trait Mnd[F[_]] extends Reifiable[Mnd[F]] {
-        implicit def containerOfF: Cont[F];
-        def unit[A](a: Rep[A])(implicit elementOfA: Elem[A]): Rep[F[A]];
-        def flatMap[A, B](ma: Rep[F[A]])(f: Rep[scala.Function1[A, F[B]]])(implicit elementOfA: Elem[A], elementOfB: Elem[B]): Rep[F[B]] = join(map(ma)(f));
-        def map[A, B](ma: Rep[F[A]])(f: Rep[scala.Function1[A, B]])(implicit elementOfA: Elem[A], elementOfB: Elem[B]): Rep[F[B]] = flatMap(ma)(fun(((a) => unit(f(a)))));
-        def join[A](mma: Rep[F[F[A]]])(implicit elementOfA: Elem[A]): Rep[F[A]] = flatMap(mma)(fun(((ma) => ma)))
+        implicit def cF: Cont[F];
+        def unit[A](a: Rep[A])(implicit eA: Elem[A]): Rep[F[A]];
+        def flatMap[A, B](ma: Rep[F[A]])(f: Rep[scala.Function1[A, F[B]]])(implicit eA: Elem[A], eB: Elem[B]): Rep[F[B]] = join(map(ma)(f));
+        def map[A, B](ma: Rep[F[A]])(f: Rep[scala.Function1[A, B]])(implicit eA: Elem[A], eB: Elem[B]): Rep[F[B]] = flatMap(ma)(fun(((a) => unit(f(a)))));
+        def join[A](mma: Rep[F[F[A]]])(implicit eA: Elem[A]): Rep[F[A]] = flatMap(mma)(fun(((ma) => ma)))
       };
       trait MndCompanion
     };
