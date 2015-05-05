@@ -28,8 +28,8 @@ object ScalanParadiseRootBuild extends Build {
                               "2.11.0", "2.11.1", "2.11.2", "2.11.3", "2.11.4", "2.11.5", "2.11.6"
                              ),
     resolvers += Resolver.sonatypeRepo("snapshots"),
-    resolvers += Resolver.sonatypeRepo("releases"),
-    addCompilerPlugin("org.scalamacros" % "paradise" % paradiseVersion cross CrossVersion.full)
+    resolvers += Resolver.sonatypeRepo("releases")
+    //addCompilerPlugin("org.scalamacros" % "paradise" % paradiseVersion cross CrossVersion.full)
   )
 
   override lazy val settings = super.settings ++ buildSettings
