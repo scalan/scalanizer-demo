@@ -1,4 +1,3 @@
-/*
 package monads
 
 import scalan._
@@ -61,20 +60,18 @@ trait Frees extends Base { self: FreesDsl =>
 //      case Def(d) => !!!(s"Should be eliminated by method step: Unexpected $this where symbol $a of type ${a.selfType1} has def $d")
 //      case _ => !!!(s"Should be eliminated by method step: Unexpected $this where symbol $a of type ${a.selfType1}")
 //    }
-    //      Monad[G].flatMap(trans(a)) { s =>
-    //        f(s).foldMap(trans)
-    //      }
-    override lazy val step: Rep[Free[F,B]] = a match {
-      case Def(b: Bind[F,s,S]) => b.a.flatMap((a: Rep[s]) => b.f(a).flatMapBy(f)).step
-      case Def(ret: Return[F,S]) => f(ret.a).step
-      case _ => self
-    }
+//          Monad[G].flatMap(trans(a)) { s =>
+//            f(s).foldMap(trans)
+//          }
+//    override lazy val step: Rep[Free[F,B]] = a match {
+//      case Def(b: Bind[F,s,S]) => b.a.flatMap((a: Rep[s]) => b.f(a).flatMapBy(f)).step
+//      case Def(ret: Return[F,S]) => f(ret.a).step
+//      case _ => self
+//    }
   }
   trait BindCompanion
-
 }
 
 trait FreesDsl extends impl.FreesAbs
 trait FreesDslSeq extends impl.FreesSeq
 trait FreesDslExp extends impl.FreesExp
-*/

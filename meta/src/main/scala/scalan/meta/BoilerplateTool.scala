@@ -16,7 +16,7 @@ object ScalanParadiseBoilerplateTool extends BoilerplateTool {
       ,"Kinds.scala"
       ,"Coproducts.scala"
       ,"Monads.scala"
-      //,"Frees.scala"
+      ,"Frees.scala"
     ),
     baseContextTrait = "ScalanDsl",
     seqContextTrait = "ScalanSeq",
