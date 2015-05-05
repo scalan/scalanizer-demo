@@ -12,11 +12,11 @@ object ScalanParadiseBoilerplateTool extends BoilerplateTool {
     name = "Scalan Paradise",
     srcPath = "src/main/scala",
     entityFiles = List(
-//      "Segments.scala"
-//      ,"Kinds.scala"
-//      ,"Coproducts.scala"
-      "Monads.scala"
-//      ,"Frees.scala"
+      "Segments.scala"
+      ,"Kinds.scala"
+      ,"Coproducts.scala"
+      ,"Monads.scala"
+      //,"Frees.scala"
     ),
     baseContextTrait = "ScalanDsl",
     seqContextTrait = "ScalanSeq",

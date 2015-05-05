@@ -77,6 +77,22 @@ trait MonadsExp extends MonadsDsl with ScalanExp {
         case _ => None
       }
     }
+
+    // WARNING: Cannot generate matcher for method `flatMap`: Method has function arguments f
+
+    // WARNING: Cannot generate matcher for method `map`: Method has function arguments f
+
+    object join {
+      def unapply(d: Def[_]): Option[(Rep[Monad[F]], Rep[F[F[A]]]) forSome {type F[_]; type A}] = d match {
+        case MethodCall(receiver, method, Seq(mma, _*), _) if (receiver.elem match { case ve: ViewElem[_, _] => ve match { case _: MonadElem[_, _] => true; case _ => false }; case _ => false }) && method.getName == "join" =>
+          Some((receiver, mma)).asInstanceOf[Option[(Rep[Monad[F]], Rep[F[F[A]]]) forSome {type F[_]; type A}]]
+        case _ => None
+      }
+      def unapply(exp: Exp[_]): Option[(Rep[Monad[F]], Rep[F[F[A]]]) forSome {type F[_]; type A}] = exp match {
+        case Def(d) => unapply(d)
+        case _ => None
+      }
+    }
   }
 
   object MonadCompanionMethods {
