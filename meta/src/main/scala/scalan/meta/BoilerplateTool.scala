@@ -4,6 +4,7 @@ object ScalanParadiseBoilerplateTool extends BoilerplateTool {
   val paradiseTypeSynonims = Map[String, String](
     "RSeg" -> "Segment"
     ,"RKind" -> "Kind"
+    ,"RCoproduct" -> "Coproduct"
   )
   lazy val paradiseConfig = CodegenConfig(
     name = "Scalan Paradise",
@@ -11,6 +12,7 @@ object ScalanParadiseBoilerplateTool extends BoilerplateTool {
     entityFiles = List(
       "Segments.scala"
       ,"Kinds.scala"
+      ,"Coproducts.scala"
     ),
     baseContextTrait = "ScalanDsl",
     seqContextTrait = "ScalanSeq",
