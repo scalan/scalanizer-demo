@@ -124,6 +124,18 @@ trait MonadsExp extends MonadsDsl with ScalanExp {
     }
 
     // WARNING: Cannot generate matcher for method `compose`: Method has function arguments f, g
+
+    object sequence {
+      def unapply(d: Def[_]): Option[(Rep[Monad[F]], Rep[List[F[A]]]) forSome {type F[_]; type A}] = d match {
+        case MethodCall(receiver, method, Seq(lma, _*), _) if (receiver.elem match { case ve: ViewElem[_, _] => ve match { case _: MonadElem[_, _] => true; case _ => false }; case _ => false }) && method.getName == "sequence" =>
+          Some((receiver, lma)).asInstanceOf[Option[(Rep[Monad[F]], Rep[List[F[A]]]) forSome {type F[_]; type A}]]
+        case _ => None
+      }
+      def unapply(exp: Exp[_]): Option[(Rep[Monad[F]], Rep[List[F[A]]]) forSome {type F[_]; type A}] = exp match {
+        case Def(d) => unapply(d)
+        case _ => None
+      }
+    }
   }
 
   object MonadCompanionMethods {

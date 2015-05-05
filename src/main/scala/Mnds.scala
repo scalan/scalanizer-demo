@@ -24,6 +24,12 @@ trait Mnds {
 //      if (b) { as(fa)(true) } else { unit(false) }
 
     def compose[A,B,C](f: A => F[B], g: B => F[C]): A => F[C] = a => flatMap(f(a))(g)
+
+    def sequence[A](lma: List[F[A]]): F[List[A]] = {
+      lma.foldRight[F[List[A]]](unit(List.empty[A])) {(ma: F[A], mla: F[List[A]]) =>
+        map2(ma, mla)((a: A, la: List[A]) => a :: la)
+      }
+    }
   }
 }
 

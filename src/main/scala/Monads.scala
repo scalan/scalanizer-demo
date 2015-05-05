@@ -32,11 +32,12 @@ trait Monads extends Base with ListOps {self: MonadsDsl =>
     def compose[A:Elem,B:Elem,C:Elem](f: Rep[A] => Rep[F[B]], g: Rep[B] => Rep[F[C]]): Rep[A => F[C]] =
       fun {a => flatMap(f(a))(g)}
 
-//    def sequence[A:Elem](lma: Rep[List[F[A]]]): Rep[F[List[A]]] =
-//      lma.foldRight[F[List[A]]](unit(SList.empty[A])) { (p: Rep[(F[A],F[List[A]])]) =>
-//        val Pair(ma, mla) = p
-//        map2(ma, mla)(_ :: _)
-//      }
+    def sequence[A:Elem](lma: Rep[List[F[A]]]): Rep[F[List[A]]] =
+      lma.foldRight[F[List[A]]](unit(SList.empty[A])) { (p: Rep[(F[A],F[List[A]])]) =>
+        //val Pair(ma, mla) = p
+        //map2(ma, mla)(_ :: _)
+        map2(p._1, p._2)(_ :: _)
+      }
   }
   trait MonadCompanion
 }
