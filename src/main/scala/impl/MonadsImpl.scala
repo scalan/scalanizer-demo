@@ -2,6 +2,7 @@ package monads
 package impl
 
 import scalan._
+import scalan.collections.ListOps
 import scala.reflect.runtime.universe._
 import scala.reflect._
 import scalan.common.Default
@@ -93,6 +94,36 @@ trait MonadsExp extends MonadsDsl with ScalanExp {
         case _ => None
       }
     }
+
+    // WARNING: Cannot generate matcher for method `map2`: Method has function arguments f
+
+    // WARNING: Cannot generate matcher for method `seq`: Method has function arguments f, g
+
+    object as {
+      def unapply(d: Def[_]): Option[(Rep[Monad[F]], Rep[F[A]], Rep[B]) forSome {type F[_]; type A; type B}] = d match {
+        case MethodCall(receiver, method, Seq(a, b, _*), _) if (receiver.elem match { case ve: ViewElem[_, _] => ve match { case _: MonadElem[_, _] => true; case _ => false }; case _ => false }) && method.getName == "as" =>
+          Some((receiver, a, b)).asInstanceOf[Option[(Rep[Monad[F]], Rep[F[A]], Rep[B]) forSome {type F[_]; type A; type B}]]
+        case _ => None
+      }
+      def unapply(exp: Exp[_]): Option[(Rep[Monad[F]], Rep[F[A]], Rep[B]) forSome {type F[_]; type A; type B}] = exp match {
+        case Def(d) => unapply(d)
+        case _ => None
+      }
+    }
+
+    object skip {
+      def unapply(d: Def[_]): Option[(Rep[Monad[F]], Rep[F[A]]) forSome {type F[_]; type A}] = d match {
+        case MethodCall(receiver, method, Seq(a, _*), _) if (receiver.elem match { case ve: ViewElem[_, _] => ve match { case _: MonadElem[_, _] => true; case _ => false }; case _ => false }) && method.getName == "skip" =>
+          Some((receiver, a)).asInstanceOf[Option[(Rep[Monad[F]], Rep[F[A]]) forSome {type F[_]; type A}]]
+        case _ => None
+      }
+      def unapply(exp: Exp[_]): Option[(Rep[Monad[F]], Rep[F[A]]) forSome {type F[_]; type A}] = exp match {
+        case Def(d) => unapply(d)
+        case _ => None
+      }
+    }
+
+    // WARNING: Cannot generate matcher for method `compose`: Method has function arguments f, g
   }
 
   object MonadCompanionMethods {

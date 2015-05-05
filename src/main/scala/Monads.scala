@@ -26,13 +26,17 @@ trait Monads extends Base with ListOps {self: MonadsDsl =>
 
     def as[A:Elem,B:Elem](a: Rep[F[A]])(b: Rep[B]): Rep[F[B]] = map(a)(_ => b)
     def skip[A:Elem](a: Rep[F[A]]): Rep[F[Unit]] = as(a)(())
-    def when[A:Elem](b: Rep[Boolean])(fa: => Rep[F[A]]): Rep[F[Boolean]] =
-      IF (b) { as(fa)(true) } ELSE { unit(false) }
+//    def when[A:Elem](b: Rep[Boolean])(fa: => Rep[F[A]]): Rep[F[Boolean]] =
+//      IF (b) { as(fa)(true) } ELSE { unit(false) }
 
     def compose[A:Elem,B:Elem,C:Elem](f: Rep[A] => Rep[F[B]], g: Rep[B] => Rep[F[C]]): Rep[A => F[C]] =
       fun {a => flatMap(f(a))(g)}
 
-    override def toString = "Monad"
+//    def sequence[A:Elem](lma: Rep[List[F[A]]]): Rep[F[List[A]]] =
+//      lma.foldRight[F[List[A]]](unit(SList.empty[A])) { (p: Rep[(F[A],F[List[A]])]) =>
+//        val Pair(ma, mla) = p
+//        map2(ma, mla)(_ :: _)
+//      }
   }
   trait MonadCompanion
 }
