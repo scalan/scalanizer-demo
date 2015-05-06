@@ -48,18 +48,6 @@ object ScalanParadiseRootBuild extends Build {
     base = file("meta")
   ).addTestConfigsAndCommonSettings.settings(libraryDependencies ++= Seq(metaDeps))
 
-  lazy val macros: Project = Project(
-    id = "macros",
-    base = file("macros"),
-    settings = buildSettings ++ Seq(
-      libraryDependencies <+= (scalaVersion)("org.scala-lang" % "scala-reflect" % _),
-      libraryDependencies ++= (
-        if (scalaVersion.value.startsWith("2.10")) List("org.scalamacros" %% "quasiquotes" % paradiseVersion)
-        else Nil
-        )
-    )
-  )
-
   lazy val core = liteDependency("core")
   lazy val common = liteDependency("common")
   lazy val community = liteDependency("community-edition")
@@ -74,7 +62,7 @@ object ScalanParadiseRootBuild extends Build {
     community,
     "org.scalatest" %% "scalatest" % "2.2.1" % "test",
     "org.scalacheck" %% "scalacheck" % "1.11.5" % "test"
-  )).dependsOn(macros)
+  ))
 
   def itFilter(name: String): Boolean = name endsWith "ItTests"
   def unitFilter(name: String): Boolean = !itFilter(name)
