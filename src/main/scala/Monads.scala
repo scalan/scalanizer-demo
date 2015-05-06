@@ -45,6 +45,33 @@ trait Monads extends Base with ListOps {self: MonadsDsl =>
         val mlb = in._2
         map2(f(a), mlb)(_ :: _)
       }
+
+    def replicateM[A:Elem](n: Rep[Int])(ma: Rep[F[A]]): Rep[F[List[A]]] =
+      sequence(SList.replicate(n, ma))
+    def replicateM_[A:Elem](n: Rep[Int])(f: Rep[F[A]]): Rep[F[Unit]] =
+      foreachM(SList.replicate(n, f))(skip)
+
+    def foldM[A:Elem,B:Elem](la: Lst[A])(z: Rep[B])(f: (Rep[B],Rep[A]) => Rep[F[B]]): Rep[F[B]] =
+      la.foldLeft[F[B]](unit(z)){ (in: Rep[(F[B],A)]) =>
+        //val Pair(fb, a) = in
+        val fb = in._1
+        val a = in._2
+        flatMap(fb)(b => f(b,a))
+      }
+    def foldM_[A:Elem,B:Elem](l: Lst[A])(z: Rep[B])(f: (Rep[B],Rep[A]) => Rep[F[B]]): Rep[F[Unit]] =
+      skip { foldM(l)(z)(f) }
+
+    def foreachM[A:Elem](l: Rep[List[A]])(f: Rep[A] => Rep[F[Unit]]): Rep[F[Unit]] =
+      foldM_(l)(())((u,a) => skip(f(a)))
+
+    def filterM[A:Elem](ms: Lst[A])(f: Rep[A] => Rep[F[Boolean]]): Rep[F[List[A]]] =
+      ms.foldRight(unit(SList.empty[A])){ (in: Rep[(A,F[List[A]])]) =>
+        //val Pair(x, y) = in
+        val x = in._1
+        val y = in._2
+        val h = compose(f, (b: Rep[Boolean]) => IF (b) THEN {map2(unit(x),y)(_ :: _)} ELSE { y })
+        h(x)
+      }
   }
   trait MonadCompanion
 }

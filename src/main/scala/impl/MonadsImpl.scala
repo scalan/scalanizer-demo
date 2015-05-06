@@ -138,6 +138,38 @@ trait MonadsExp extends MonadsDsl with ScalanExp {
     }
 
     // WARNING: Cannot generate matcher for method `traverse`: Method has function arguments f
+
+    object replicateM {
+      def unapply(d: Def[_]): Option[(Rep[Monad[F]], Rep[Int], Rep[F[A]]) forSome {type F[_]; type A}] = d match {
+        case MethodCall(receiver, method, Seq(n, ma, _*), _) if (receiver.elem match { case ve: ViewElem[_, _] => ve match { case _: MonadElem[_, _] => true; case _ => false }; case _ => false }) && method.getName == "replicateM" =>
+          Some((receiver, n, ma)).asInstanceOf[Option[(Rep[Monad[F]], Rep[Int], Rep[F[A]]) forSome {type F[_]; type A}]]
+        case _ => None
+      }
+      def unapply(exp: Exp[_]): Option[(Rep[Monad[F]], Rep[Int], Rep[F[A]]) forSome {type F[_]; type A}] = exp match {
+        case Def(d) => unapply(d)
+        case _ => None
+      }
+    }
+
+    object replicateM_ {
+      def unapply(d: Def[_]): Option[(Rep[Monad[F]], Rep[Int], Rep[F[A]]) forSome {type F[_]; type A}] = d match {
+        case MethodCall(receiver, method, Seq(n, f, _*), _) if (receiver.elem match { case ve: ViewElem[_, _] => ve match { case _: MonadElem[_, _] => true; case _ => false }; case _ => false }) && method.getName == "replicateM_" =>
+          Some((receiver, n, f)).asInstanceOf[Option[(Rep[Monad[F]], Rep[Int], Rep[F[A]]) forSome {type F[_]; type A}]]
+        case _ => None
+      }
+      def unapply(exp: Exp[_]): Option[(Rep[Monad[F]], Rep[Int], Rep[F[A]]) forSome {type F[_]; type A}] = exp match {
+        case Def(d) => unapply(d)
+        case _ => None
+      }
+    }
+
+    // WARNING: Cannot generate matcher for method `foldM`: Method has function arguments f
+
+    // WARNING: Cannot generate matcher for method `foldM_`: Method has function arguments f
+
+    // WARNING: Cannot generate matcher for method `foreachM`: Method has function arguments f
+
+    // WARNING: Cannot generate matcher for method `filterM`: Method has function arguments f
   }
 
   object MonadCompanionMethods {
