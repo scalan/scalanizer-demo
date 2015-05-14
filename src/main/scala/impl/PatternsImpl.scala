@@ -77,7 +77,7 @@ package patterns {
   val optionName = OnePat.unapply(deadbeef);
   IF(optionName.isEmpty.`unary_!`).THEN({
   val y = optionName.get;
-  IF(toRep(true)).THEN(toRep("one").+(y.toString)).ELSE(restPatterns)
+  toRep("one").+(y.toString)
 }).ELSE(restPatterns)
 }).ELSE(toRep("Unknown"))
       };
