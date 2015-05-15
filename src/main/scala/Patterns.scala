@@ -16,7 +16,7 @@ trait Patterns {
         case `b` => "b"
         case scala.math.Pi => "3.14"
         case 42 => "42"
-        case _ => "Unknown"
+        case unknown => "Unknown"
       }
     }
   }
