@@ -12,7 +12,7 @@ trait Patterns {
 //        case ZeroPat() => "Zero"
 //        case OnePat(y) => "one" + y.toString
 //        case 0 | 1 => "0 or 1"
-        case _: Int => "Int"
+        case c: Int => c.toString
 //        case `b` => "b"
 //        case scala.math.Pi => "3.14"
 //        case 42 => "42"
