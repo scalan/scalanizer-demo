@@ -9,12 +9,13 @@ trait Patterns {
     def get(a: Any, b: Int): String = {
       a match {
         //case MultiPat(0, 1) => "Multi"
-        case ZeroPat() => "Zero"
-        case OnePat(y) => "one" + y.toString
-        case c: Int => "Int"
-        case 0 | 1 => "0 or 1"
+//        case ZeroPat() => "Zero"
+//        case OnePat(y) => "one" + y.toString
+//        case c: Int => "Int"
+//        case 0 | 1 => "0 or 1"
         case `b` => "b"
         case scala.math.Pi => "3.14"
+        case 42 => "42"
         case _ => "Unknown"
       }
     }
