@@ -11,12 +11,12 @@ trait Patterns {
         //case MultiPat(0, 1) => "Multi"
 //        case ZeroPat() => "Zero"
 //        case OnePat(y) => "one" + y.toString
-//        case c: Int => "Int"
 //        case 0 | 1 => "0 or 1"
-        case `b` => "b"
-        case scala.math.Pi => "3.14"
-        case 42 => "42"
-        case unknown => "Unknown"
+        case _: Int => "Int"
+//        case `b` => "b"
+//        case scala.math.Pi => "3.14"
+//        case 42 => "42"
+        case _ => "Unknown"
       }
     }
   }
