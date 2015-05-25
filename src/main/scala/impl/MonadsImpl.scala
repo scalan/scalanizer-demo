@@ -20,23 +20,25 @@ trait MonadsAbs extends Monads with ScalanDsl {
   class MonadElem[F[_], To <: Monad[F]](implicit val cF: Cont[F])
     extends EntityElem[To] {
     override def isEntityType = true
-    override def tag = {
+    override lazy val tag = {
       weakTypeTag[Monad[F]].asInstanceOf[WeakTypeTag[To]]
     }
-    override def convert(x: Rep[Reifiable[_]]) = convertMonad(x.asRep[Monad[F]])
+    override def convert(x: Rep[Reifiable[_]]) = {
+      val conv = fun {x: Rep[Monad[F]] =>  convertMonad(x) }
+      tryConvert(element[Monad[F]], this, x, conv)
+    }
+
     def convertMonad(x : Rep[Monad[F]]): Rep[To] = {
-      //assert(x.selfType1.isInstanceOf[MonadElem[_,_]])
+      assert(x.selfType1.asInstanceOf[Element[_]] match { case _: MonadElem[_, _] => true; case _ => false })
       x.asRep[To]
     }
     override def getDefaultRep: Rep[To] = ???
   }
 
   implicit def monadElement[F[_]](implicit cF: Cont[F]): Elem[Monad[F]] =
-    new MonadElem[F, Monad[F]] {
-    }
+    new MonadElem[F, Monad[F]]
 
-  trait MonadCompanionElem extends CompanionElem[MonadCompanionAbs]
-  implicit lazy val MonadCompanionElem: MonadCompanionElem = new MonadCompanionElem {
+  implicit case object MonadCompanionElem extends CompanionElem[MonadCompanionAbs] {
     lazy val tag = weakTypeTag[MonadCompanionAbs]
     protected def getDefaultRep = Monad
   }
@@ -69,7 +71,7 @@ trait MonadsExp extends MonadsDsl with ScalanExp {
   object MonadMethods {
     object unit {
       def unapply(d: Def[_]): Option[(Rep[Monad[F]], Rep[A]) forSome {type F[_]; type A}] = d match {
-        case MethodCall(receiver, method, Seq(a, _*), _) if (receiver.elem match { case ve: ViewElem[_, _] => ve match { case _: MonadElem[_, _] => true; case _ => false }; case _ => false }) && method.getName == "unit" =>
+        case MethodCall(receiver, method, Seq(a, _*), _) if (receiver.elem.asInstanceOf[Element[_]] match { case _: MonadElem[_, _] => true; case _ => false }) && method.getName == "unit" =>
           Some((receiver, a)).asInstanceOf[Option[(Rep[Monad[F]], Rep[A]) forSome {type F[_]; type A}]]
         case _ => None
       }
@@ -85,7 +87,7 @@ trait MonadsExp extends MonadsDsl with ScalanExp {
 
     object join {
       def unapply(d: Def[_]): Option[(Rep[Monad[F]], Rep[F[F[A]]]) forSome {type F[_]; type A}] = d match {
-        case MethodCall(receiver, method, Seq(mma, _*), _) if (receiver.elem match { case ve: ViewElem[_, _] => ve match { case _: MonadElem[_, _] => true; case _ => false }; case _ => false }) && method.getName == "join" =>
+        case MethodCall(receiver, method, Seq(mma, _*), _) if (receiver.elem.asInstanceOf[Element[_]] match { case _: MonadElem[_, _] => true; case _ => false }) && method.getName == "join" =>
           Some((receiver, mma)).asInstanceOf[Option[(Rep[Monad[F]], Rep[F[F[A]]]) forSome {type F[_]; type A}]]
         case _ => None
       }
@@ -101,7 +103,7 @@ trait MonadsExp extends MonadsDsl with ScalanExp {
 
     object as {
       def unapply(d: Def[_]): Option[(Rep[Monad[F]], Rep[F[A]], Rep[B]) forSome {type F[_]; type A; type B}] = d match {
-        case MethodCall(receiver, method, Seq(a, b, _*), _) if (receiver.elem match { case ve: ViewElem[_, _] => ve match { case _: MonadElem[_, _] => true; case _ => false }; case _ => false }) && method.getName == "as" =>
+        case MethodCall(receiver, method, Seq(a, b, _*), _) if (receiver.elem.asInstanceOf[Element[_]] match { case _: MonadElem[_, _] => true; case _ => false }) && method.getName == "as" =>
           Some((receiver, a, b)).asInstanceOf[Option[(Rep[Monad[F]], Rep[F[A]], Rep[B]) forSome {type F[_]; type A; type B}]]
         case _ => None
       }
@@ -113,7 +115,7 @@ trait MonadsExp extends MonadsDsl with ScalanExp {
 
     object skip {
       def unapply(d: Def[_]): Option[(Rep[Monad[F]], Rep[F[A]]) forSome {type F[_]; type A}] = d match {
-        case MethodCall(receiver, method, Seq(a, _*), _) if (receiver.elem match { case ve: ViewElem[_, _] => ve match { case _: MonadElem[_, _] => true; case _ => false }; case _ => false }) && method.getName == "skip" =>
+        case MethodCall(receiver, method, Seq(a, _*), _) if (receiver.elem.asInstanceOf[Element[_]] match { case _: MonadElem[_, _] => true; case _ => false }) && method.getName == "skip" =>
           Some((receiver, a)).asInstanceOf[Option[(Rep[Monad[F]], Rep[F[A]]) forSome {type F[_]; type A}]]
         case _ => None
       }
@@ -127,7 +129,7 @@ trait MonadsExp extends MonadsDsl with ScalanExp {
 
     object sequence {
       def unapply(d: Def[_]): Option[(Rep[Monad[F]], Rep[List[F[A]]]) forSome {type F[_]; type A}] = d match {
-        case MethodCall(receiver, method, Seq(lma, _*), _) if (receiver.elem match { case ve: ViewElem[_, _] => ve match { case _: MonadElem[_, _] => true; case _ => false }; case _ => false }) && method.getName == "sequence" =>
+        case MethodCall(receiver, method, Seq(lma, _*), _) if (receiver.elem.asInstanceOf[Element[_]] match { case _: MonadElem[_, _] => true; case _ => false }) && method.getName == "sequence" =>
           Some((receiver, lma)).asInstanceOf[Option[(Rep[Monad[F]], Rep[List[F[A]]]) forSome {type F[_]; type A}]]
         case _ => None
       }
@@ -141,7 +143,7 @@ trait MonadsExp extends MonadsDsl with ScalanExp {
 
     object replicateM {
       def unapply(d: Def[_]): Option[(Rep[Monad[F]], Rep[Int], Rep[F[A]]) forSome {type F[_]; type A}] = d match {
-        case MethodCall(receiver, method, Seq(n, ma, _*), _) if (receiver.elem match { case ve: ViewElem[_, _] => ve match { case _: MonadElem[_, _] => true; case _ => false }; case _ => false }) && method.getName == "replicateM" =>
+        case MethodCall(receiver, method, Seq(n, ma, _*), _) if (receiver.elem.asInstanceOf[Element[_]] match { case _: MonadElem[_, _] => true; case _ => false }) && method.getName == "replicateM" =>
           Some((receiver, n, ma)).asInstanceOf[Option[(Rep[Monad[F]], Rep[Int], Rep[F[A]]) forSome {type F[_]; type A}]]
         case _ => None
       }
@@ -153,7 +155,7 @@ trait MonadsExp extends MonadsDsl with ScalanExp {
 
     object replicateM_ {
       def unapply(d: Def[_]): Option[(Rep[Monad[F]], Rep[Int], Rep[F[A]]) forSome {type F[_]; type A}] = d match {
-        case MethodCall(receiver, method, Seq(n, f, _*), _) if (receiver.elem match { case ve: ViewElem[_, _] => ve match { case _: MonadElem[_, _] => true; case _ => false }; case _ => false }) && method.getName == "replicateM_" =>
+        case MethodCall(receiver, method, Seq(n, f, _*), _) if (receiver.elem.asInstanceOf[Element[_]] match { case _: MonadElem[_, _] => true; case _ => false }) && method.getName == "replicateM_" =>
           Some((receiver, n, f)).asInstanceOf[Option[(Rep[Monad[F]], Rep[Int], Rep[F[A]]) forSome {type F[_]; type A}]]
         case _ => None
       }
