@@ -8,27 +8,31 @@ package fres {
       implicit def proxyFree[F[_], A](p: Rep[Free[F, A]]): Free[F, A] = proxyOps[Free[F, A]](p)(classTag[Free[F, A]]);
       class FreeElem[F[_], A, To <: Free[F, A]](implicit val cF: Cont[F], val eA: Elem[A]) extends EntityElem[To] {
         override def isEntityType = true;
-        override def tag = {
+        override lazy val tag = {
           implicit val tagA = eA.tag;
           weakTypeTag[Free[F, A]].asInstanceOf[WeakTypeTag[To]]
         };
         override def convert(x: Rep[(Reifiable[_$1] forSome { 
           type _$1
-        })]) = convertFree(x.asRep[Free[F, A]]);
-        def convertFree(x: Rep[Free[F, A]]): Rep[To] = x.asRep[To];
+        })]) = {
+          val conv = fun(((x: Rep[Free[F, A]]) => convertFree(x)));
+          tryConvert(element[Free[F, A]], this, x, conv)
+        };
+        def convertFree(x: Rep[Free[F, A]]): Rep[To] = {
+          assert(x.selfType1.asInstanceOf[(Element[_$2] forSome { 
+            type _$2
+          })] match {
+            case ((_): FreeElem[(_), (_), (_)]) => true
+            case _ => false
+          });
+          x.asRep[To]
+        };
         override def getDefaultRep: Rep[To] = ???
       };
-      implicit def freeElement[F[_], A](implicit cF: Cont[F], eA: Elem[A]): Elem[Free[F, A]] = {
-        final class $anon extends FreeElem[F, A, Free[F, A]];
-        new $anon()
-      };
-      trait FreeCompanionElem extends CompanionElem[FreeCompanionAbs];
-      implicit lazy val FreeCompanionElem: FreeCompanionElem = {
-        final class $anon extends FreeCompanionElem {
-          lazy val tag = weakTypeTag[FreeCompanionAbs];
-          protected def getDefaultRep = Free
-        };
-        new $anon()
+      implicit def freeElement[F[_], A](implicit cF: Cont[F], eA: Elem[A]): Elem[Free[F, A]] = new FreeElem[F, A, Free[F, A]]();
+      implicit case object FreeCompanionElem extends CompanionElem[FreeCompanionAbs] with scala.Product with scala.Serializable {
+        lazy val tag = weakTypeTag[FreeCompanionAbs];
+        protected def getDefaultRep = Free
       };
       abstract class FreeCompanionAbs extends CompanionBase[FreeCompanionAbs] with FreeCompanion {
         override def toString = "Free"
@@ -38,7 +42,10 @@ package fres {
       class ReturnElem[F[_], A](val iso: Iso[ReturnData[F, A], Return[F, A]])(implicit cF: Cont[F], eA: Elem[A]) extends FreeElem[F, A, Return[F, A]] with ConcreteElem[ReturnData[F, A], Return[F, A]] {
         override def convertFree(x: Rep[Free[F, A]]) = !!!("Cannot convert from Free to Return: missing fields List(a)");
         override def getDefaultRep = super[ConcreteElem].getDefaultRep;
-        override lazy val tag = super[ConcreteElem].tag
+        override lazy val tag = {
+          implicit val tagA = eA.tag;
+          weakTypeTag[Return[F, A]]
+        }
       };
       type ReturnData[F[_], A] = A;
       class ReturnIso[F[_], A](implicit cF: Cont[F], eA: Elem[A]) extends Iso[ReturnData[F, A], Return[F, A]] {
@@ -46,10 +53,6 @@ package fres {
         override def to(p: Rep[A]) = {
           val a = p;
           Return(a)
-        };
-        lazy val tag = {
-          implicit val tagA = eA.tag;
-          weakTypeTag[Return[F, A]]
         };
         lazy val defaultRepTo = Default.defaultVal[Rep[Return[F, A]]](Return(element[A].defaultRepValue));
         lazy val eTo = new ReturnElem[F, A](this)
@@ -63,11 +66,10 @@ package fres {
       };
       def Return: Rep[ReturnCompanionAbs];
       implicit def proxyReturnCompanion(p: Rep[ReturnCompanionAbs]): ReturnCompanionAbs = proxyOps[ReturnCompanionAbs](p);
-      class ReturnCompanionElem extends CompanionElem[ReturnCompanionAbs] {
+      implicit case object ReturnCompanionElem extends CompanionElem[ReturnCompanionAbs] with scala.Product with scala.Serializable {
         lazy val tag = weakTypeTag[ReturnCompanionAbs];
         protected def getDefaultRep = Return
       };
-      implicit lazy val ReturnCompanionElem: ReturnCompanionElem = new ReturnCompanionElem();
       implicit def proxyReturn[F[_], A](p: Rep[Return[F, A]]): Return[F, A] = proxyOps[Return[F, A]](p);
       implicit class ExtendedReturn[F[_], A](p: Rep[Return[F, A]])(implicit cF: Cont[F], eA: Elem[A]) {
         def toData: Rep[ReturnData[F, A]] = isoReturn(cF, eA).from(p)
@@ -78,7 +80,10 @@ package fres {
       class SuspendElem[F[_], A](val iso: Iso[SuspendData[F, A], Suspend[F, A]])(implicit cF: Cont[F], eA: Elem[A]) extends FreeElem[F, A, Suspend[F, A]] with ConcreteElem[SuspendData[F, A], Suspend[F, A]] {
         override def convertFree(x: Rep[Free[F, A]]) = !!!("Cannot convert from Free to Suspend: missing fields List(a)");
         override def getDefaultRep = super[ConcreteElem].getDefaultRep;
-        override lazy val tag = super[ConcreteElem].tag
+        override lazy val tag = {
+          implicit val tagA = eA.tag;
+          weakTypeTag[Suspend[F, A]]
+        }
       };
       type SuspendData[F[_], A] = F[A];
       class SuspendIso[F[_], A](implicit cF: Cont[F], eA: Elem[A]) extends Iso[SuspendData[F, A], Suspend[F, A]] {
@@ -86,10 +91,6 @@ package fres {
         override def to(p: Rep[F[A]]) = {
           val a = p;
           Suspend(a)
-        };
-        lazy val tag = {
-          implicit val tagA = eA.tag;
-          weakTypeTag[Suspend[F, A]]
         };
         lazy val defaultRepTo = Default.defaultVal[Rep[Suspend[F, A]]](Suspend(cF.lift(eA).defaultRepValue));
         lazy val eTo = new SuspendElem[F, A](this)
@@ -103,11 +104,10 @@ package fres {
       };
       def Suspend: Rep[SuspendCompanionAbs];
       implicit def proxySuspendCompanion(p: Rep[SuspendCompanionAbs]): SuspendCompanionAbs = proxyOps[SuspendCompanionAbs](p);
-      class SuspendCompanionElem extends CompanionElem[SuspendCompanionAbs] {
+      implicit case object SuspendCompanionElem extends CompanionElem[SuspendCompanionAbs] with scala.Product with scala.Serializable {
         lazy val tag = weakTypeTag[SuspendCompanionAbs];
         protected def getDefaultRep = Suspend
       };
-      implicit lazy val SuspendCompanionElem: SuspendCompanionElem = new SuspendCompanionElem();
       implicit def proxySuspend[F[_], A](p: Rep[Suspend[F, A]]): Suspend[F, A] = proxyOps[Suspend[F, A]](p);
       implicit class ExtendedSuspend[F[_], A](p: Rep[Suspend[F, A]])(implicit cF: Cont[F], eA: Elem[A]) {
         def toData: Rep[SuspendData[F, A]] = isoSuspend(cF, eA).from(p)
@@ -118,10 +118,14 @@ package fres {
       class BindElem[F[_], S, B](val iso: Iso[BindData[F, S, B], Bind[F, S, B]])(implicit cF: Cont[F], eS: Elem[S], eA: Elem[B]) extends FreeElem[F, B, Bind[F, S, B]] with ConcreteElem[BindData[F, S, B], Bind[F, S, B]] {
         override def convertFree(x: Rep[Free[F, B]]) = !!!("Cannot convert from Free to Bind: missing fields List(a, f)");
         override def getDefaultRep = super[ConcreteElem].getDefaultRep;
-        override lazy val tag = super[ConcreteElem].tag
+        override lazy val tag = {
+          implicit val tagS = eS.tag;
+          implicit val tagB = eA.tag;
+          weakTypeTag[Bind[F, S, B]]
+        }
       };
       type BindData[F[_], S, B] = scala.Tuple2[Free[F, S], _root_.scala.Function1[S, Free[F, B]]];
-      class BindIso[F[_], S, B](implicit cF: Cont[F], eS: Elem[S], eA: Elem[B]) extends Iso[BindData[F, S, B], Bind[F, S, B]] {
+      class BindIso[F[_], S, B](implicit cF: Cont[F], eS: Elem[S], eA: Elem[B]) extends Iso[BindData[F, S, B], Bind[F, S, B]]()(pairElement(implicitly[Elem[Free[F, S]]], implicitly[Elem[_root_.scala.Function1[S, Free[F, B]]]])) {
         override def from(p: Rep[Bind[F, S, B]]) = scala.Tuple2(p.a, p.f);
         override def to(p: Rep[scala.Tuple2[Free[F, S], _root_.scala.Function1[S, Free[F, B]]]]) = {
           val x$1 = (p: @scala.unchecked) match {
@@ -130,11 +134,6 @@ package fres {
           val a = x$1._1;
           val f = x$1._2;
           Bind(a, f)
-        };
-        lazy val tag = {
-          implicit val tagS = eS.tag;
-          implicit val tagB = eA.tag;
-          weakTypeTag[Bind[F, S, B]]
         };
         lazy val defaultRepTo = Default.defaultVal[Rep[Bind[F, S, B]]](Bind(element[Free[F, S]].defaultRepValue, fun(((x: Rep[S]) => element[Free[F, B]].defaultRepValue))));
         lazy val eTo = new BindElem[F, S, B](this)
@@ -149,11 +148,10 @@ package fres {
       };
       def Bind: Rep[BindCompanionAbs];
       implicit def proxyBindCompanion(p: Rep[BindCompanionAbs]): BindCompanionAbs = proxyOps[BindCompanionAbs](p);
-      class BindCompanionElem extends CompanionElem[BindCompanionAbs] {
+      implicit case object BindCompanionElem extends CompanionElem[BindCompanionAbs] with scala.Product with scala.Serializable {
         lazy val tag = weakTypeTag[BindCompanionAbs];
         protected def getDefaultRep = Bind
       };
-      implicit lazy val BindCompanionElem: BindCompanionElem = new BindCompanionElem();
       implicit def proxyBind[F[_], S, B](p: Rep[Bind[F, S, B]]): Bind[F, S, B] = proxyOps[Bind[F, S, B]](p);
       implicit class ExtendedBind[F[_], S, B](p: Rep[Bind[F, S, B]])(implicit cF: Cont[F], eS: Elem[S], eA: Elem[B]) {
         def toData: Rep[BindData[F, S, B]] = isoBind(cF, eS, eA).from(p)
@@ -234,8 +232,8 @@ package fres {
       object ReturnMethods;
       object ReturnCompanionMethods;
       def mkReturn[F[_], A](a: Rep[A])(implicit cF: Cont[F], eA: Elem[A]): Rep[Return[F, A]] = new ExpReturn[F, A](a);
-      def unmkReturn[F[_], A](p: Rep[Free[F, A]]) = p.elem.asInstanceOf[(Elem[_$2] forSome { 
-        type _$2
+      def unmkReturn[F[_], A](p: Rep[Free[F, A]]) = p.elem.asInstanceOf[(Elem[_$3] forSome { 
+        type _$3
       })] match {
         case ((_): ReturnElem[F, A] @unchecked) => Some(p.asRep[Return[F, A]].a)
         case _ => None
@@ -254,8 +252,8 @@ package fres {
       object SuspendMethods;
       object SuspendCompanionMethods;
       def mkSuspend[F[_], A](a: Rep[F[A]])(implicit cF: Cont[F], eA: Elem[A]): Rep[Suspend[F, A]] = new ExpSuspend[F, A](a);
-      def unmkSuspend[F[_], A](p: Rep[Free[F, A]]) = p.elem.asInstanceOf[(Elem[_$3] forSome { 
-        type _$3
+      def unmkSuspend[F[_], A](p: Rep[Free[F, A]]) = p.elem.asInstanceOf[(Elem[_$4] forSome { 
+        type _$4
       })] match {
         case ((_): SuspendElem[F, A] @unchecked) => Some(p.asRep[Suspend[F, A]].a)
         case _ => None
@@ -274,25 +272,24 @@ package fres {
       object BindMethods;
       object BindCompanionMethods;
       def mkBind[F[_], S, B](a: Rep[Free[F, S]], f: Rep[_root_.scala.Function1[S, Free[F, B]]])(implicit cF: Cont[F], eS: Elem[S], eA: Elem[B]): Rep[Bind[F, S, B]] = new ExpBind[F, S, B](a, f);
-      def unmkBind[F[_], S, B](p: Rep[Free[F, B]]) = p.elem.asInstanceOf[(Elem[_$4] forSome { 
-        type _$4
+      def unmkBind[F[_], S, B](p: Rep[Free[F, B]]) = p.elem.asInstanceOf[(Elem[_$5] forSome { 
+        type _$5
       })] match {
         case ((_): BindElem[F, S, B] @unchecked) => Some(scala.Tuple2(p.asRep[Bind[F, S, B]].a, p.asRep[Bind[F, S, B]].f))
         case _ => None
       };
       object FreeMethods {
         object step {
-          def unapply(d: (Def[_$5] forSome { 
-            type _$5
+          def unapply(d: (Def[_$6] forSome { 
+            type _$6
           })): Option[(Rep[Free[F, A]] forSome { 
             type F[_];
             type A
           })] = d match {
-            case MethodCall((receiver @ _), (method @ _), _, _) if (receiver.elem match {
-  case (ve @ ((_): ViewElem[(_), (_)])) => (ve match {
-    case ((_): FreeElem[(_), (_), (_)]) => true
-    case _ => false
-  })
+            case MethodCall((receiver @ _), (method @ _), _, _) if (receiver.elem.asInstanceOf[(Element[_$7] forSome { 
+  type _$7
+})] match {
+  case ((_): FreeElem[(_), (_), (_)]) => true
   case _ => false
 }).&&(method.getName.==("step")) => Some(receiver).asInstanceOf[Option[(Rep[Free[F, A]] forSome { 
               type F[_];
@@ -300,8 +297,8 @@ package fres {
             })]]
             case _ => None
           };
-          def unapply(exp: (Exp[_$6] forSome { 
-            type _$6
+          def unapply(exp: (Exp[_$8] forSome { 
+            type _$8
           })): Option[(Rep[Free[F, A]] forSome { 
             type F[_];
             type A

@@ -8,27 +8,31 @@ package knds {
       implicit def proxyKnd[F[_], A](p: Rep[Knd[F, A]]): Knd[F, A] = proxyOps[Knd[F, A]](p)(classTag[Knd[F, A]]);
       class KndElem[F[_], A, To <: Knd[F, A]](implicit val cF: Cont[F], val eA: Elem[A]) extends EntityElem[To] {
         override def isEntityType = true;
-        override def tag = {
+        override lazy val tag = {
           implicit val tagA = eA.tag;
           weakTypeTag[Knd[F, A]].asInstanceOf[WeakTypeTag[To]]
         };
         override def convert(x: Rep[(Reifiable[_$1] forSome { 
           type _$1
-        })]) = convertKnd(x.asRep[Knd[F, A]]);
-        def convertKnd(x: Rep[Knd[F, A]]): Rep[To] = x.asRep[To];
+        })]) = {
+          val conv = fun(((x: Rep[Knd[F, A]]) => convertKnd(x)));
+          tryConvert(element[Knd[F, A]], this, x, conv)
+        };
+        def convertKnd(x: Rep[Knd[F, A]]): Rep[To] = {
+          assert(x.selfType1.asInstanceOf[(Element[_$2] forSome { 
+            type _$2
+          })] match {
+            case ((_): KndElem[(_), (_), (_)]) => true
+            case _ => false
+          });
+          x.asRep[To]
+        };
         override def getDefaultRep: Rep[To] = ???
       };
-      implicit def kndElement[F[_], A](implicit cF: Cont[F], eA: Elem[A]): Elem[Knd[F, A]] = {
-        final class $anon extends KndElem[F, A, Knd[F, A]];
-        new $anon()
-      };
-      trait KndCompanionElem extends CompanionElem[KndCompanionAbs];
-      implicit lazy val KndCompanionElem: KndCompanionElem = {
-        final class $anon extends KndCompanionElem {
-          lazy val tag = weakTypeTag[KndCompanionAbs];
-          protected def getDefaultRep = Knd
-        };
-        new $anon()
+      implicit def kndElement[F[_], A](implicit cF: Cont[F], eA: Elem[A]): Elem[Knd[F, A]] = new KndElem[F, A, Knd[F, A]]();
+      implicit case object KndCompanionElem extends CompanionElem[KndCompanionAbs] with scala.Product with scala.Serializable {
+        lazy val tag = weakTypeTag[KndCompanionAbs];
+        protected def getDefaultRep = Knd
       };
       abstract class KndCompanionAbs extends CompanionBase[KndCompanionAbs] with KndCompanion {
         override def toString = "Knd"
@@ -38,7 +42,10 @@ package knds {
       class ReturnElem[F[_], A](val iso: Iso[ReturnData[F, A], Return[F, A]])(implicit cF: Cont[F], eA: Elem[A]) extends KndElem[F, A, Return[F, A]] with ConcreteElem[ReturnData[F, A], Return[F, A]] {
         override def convertKnd(x: Rep[Knd[F, A]]) = !!!("Cannot convert from Knd to Return: missing fields List(a)");
         override def getDefaultRep = super[ConcreteElem].getDefaultRep;
-        override lazy val tag = super[ConcreteElem].tag
+        override lazy val tag = {
+          implicit val tagA = eA.tag;
+          weakTypeTag[Return[F, A]]
+        }
       };
       type ReturnData[F[_], A] = A;
       class ReturnIso[F[_], A](implicit cF: Cont[F], eA: Elem[A]) extends Iso[ReturnData[F, A], Return[F, A]] {
@@ -46,10 +53,6 @@ package knds {
         override def to(p: Rep[A]) = {
           val a = p;
           Return(a)
-        };
-        lazy val tag = {
-          implicit val tagA = eA.tag;
-          weakTypeTag[Return[F, A]]
         };
         lazy val defaultRepTo = Default.defaultVal[Rep[Return[F, A]]](Return(element[A].defaultRepValue));
         lazy val eTo = new ReturnElem[F, A](this)
@@ -63,11 +66,10 @@ package knds {
       };
       def Return: Rep[ReturnCompanionAbs];
       implicit def proxyReturnCompanion(p: Rep[ReturnCompanionAbs]): ReturnCompanionAbs = proxyOps[ReturnCompanionAbs](p);
-      class ReturnCompanionElem extends CompanionElem[ReturnCompanionAbs] {
+      implicit case object ReturnCompanionElem extends CompanionElem[ReturnCompanionAbs] with scala.Product with scala.Serializable {
         lazy val tag = weakTypeTag[ReturnCompanionAbs];
         protected def getDefaultRep = Return
       };
-      implicit lazy val ReturnCompanionElem: ReturnCompanionElem = new ReturnCompanionElem();
       implicit def proxyReturn[F[_], A](p: Rep[Return[F, A]]): Return[F, A] = proxyOps[Return[F, A]](p);
       implicit class ExtendedReturn[F[_], A](p: Rep[Return[F, A]])(implicit cF: Cont[F], eA: Elem[A]) {
         def toData: Rep[ReturnData[F, A]] = isoReturn(cF, eA).from(p)
@@ -78,10 +80,14 @@ package knds {
       class BindElem[F[_], S, B](val iso: Iso[BindData[F, S, B], Bind[F, S, B]])(implicit cF: Cont[F], eS: Elem[S], eA: Elem[B]) extends KndElem[F, B, Bind[F, S, B]] with ConcreteElem[BindData[F, S, B], Bind[F, S, B]] {
         override def convertKnd(x: Rep[Knd[F, B]]) = !!!("Cannot convert from Knd to Bind: missing fields List(a, f)");
         override def getDefaultRep = super[ConcreteElem].getDefaultRep;
-        override lazy val tag = super[ConcreteElem].tag
+        override lazy val tag = {
+          implicit val tagS = eS.tag;
+          implicit val tagB = eA.tag;
+          weakTypeTag[Bind[F, S, B]]
+        }
       };
       type BindData[F[_], S, B] = scala.Tuple2[Knd[F, S], _root_.scala.Function1[S, Knd[F, B]]];
-      class BindIso[F[_], S, B](implicit cF: Cont[F], eS: Elem[S], eA: Elem[B]) extends Iso[BindData[F, S, B], Bind[F, S, B]] {
+      class BindIso[F[_], S, B](implicit cF: Cont[F], eS: Elem[S], eA: Elem[B]) extends Iso[BindData[F, S, B], Bind[F, S, B]]()(pairElement(implicitly[Elem[Knd[F, S]]], implicitly[Elem[_root_.scala.Function1[S, Knd[F, B]]]])) {
         override def from(p: Rep[Bind[F, S, B]]) = scala.Tuple2(p.a, p.f);
         override def to(p: Rep[scala.Tuple2[Knd[F, S], _root_.scala.Function1[S, Knd[F, B]]]]) = {
           val x$1 = (p: @scala.unchecked) match {
@@ -90,11 +96,6 @@ package knds {
           val a = x$1._1;
           val f = x$1._2;
           Bind(a, f)
-        };
-        lazy val tag = {
-          implicit val tagS = eS.tag;
-          implicit val tagB = eA.tag;
-          weakTypeTag[Bind[F, S, B]]
         };
         lazy val defaultRepTo = Default.defaultVal[Rep[Bind[F, S, B]]](Bind(element[Knd[F, S]].defaultRepValue, fun(((x: Rep[S]) => element[Knd[F, B]].defaultRepValue))));
         lazy val eTo = new BindElem[F, S, B](this)
@@ -109,11 +110,10 @@ package knds {
       };
       def Bind: Rep[BindCompanionAbs];
       implicit def proxyBindCompanion(p: Rep[BindCompanionAbs]): BindCompanionAbs = proxyOps[BindCompanionAbs](p);
-      class BindCompanionElem extends CompanionElem[BindCompanionAbs] {
+      implicit case object BindCompanionElem extends CompanionElem[BindCompanionAbs] with scala.Product with scala.Serializable {
         lazy val tag = weakTypeTag[BindCompanionAbs];
         protected def getDefaultRep = Bind
       };
-      implicit lazy val BindCompanionElem: BindCompanionElem = new BindCompanionElem();
       implicit def proxyBind[F[_], S, B](p: Rep[Bind[F, S, B]]): Bind[F, S, B] = proxyOps[Bind[F, S, B]](p);
       implicit class ExtendedBind[F[_], S, B](p: Rep[Bind[F, S, B]])(implicit cF: Cont[F], eS: Elem[S], eA: Elem[B]) {
         def toData: Rep[BindData[F, S, B]] = isoBind(cF, eS, eA).from(p)
@@ -180,8 +180,8 @@ package knds {
       object ReturnMethods;
       object ReturnCompanionMethods;
       def mkReturn[F[_], A](a: Rep[A])(implicit cF: Cont[F], eA: Elem[A]): Rep[Return[F, A]] = new ExpReturn[F, A](a);
-      def unmkReturn[F[_], A](p: Rep[Knd[F, A]]) = p.elem.asInstanceOf[(Elem[_$2] forSome { 
-        type _$2
+      def unmkReturn[F[_], A](p: Rep[Knd[F, A]]) = p.elem.asInstanceOf[(Elem[_$3] forSome { 
+        type _$3
       })] match {
         case ((_): ReturnElem[F, A] @unchecked) => Some(p.asRep[Return[F, A]].a)
         case _ => None
@@ -200,8 +200,8 @@ package knds {
       object BindMethods;
       object BindCompanionMethods;
       def mkBind[F[_], S, B](a: Rep[Knd[F, S]], f: Rep[_root_.scala.Function1[S, Knd[F, B]]])(implicit cF: Cont[F], eS: Elem[S], eA: Elem[B]): Rep[Bind[F, S, B]] = new ExpBind[F, S, B](a, f);
-      def unmkBind[F[_], S, B](p: Rep[Knd[F, B]]) = p.elem.asInstanceOf[(Elem[_$3] forSome { 
-        type _$3
+      def unmkBind[F[_], S, B](p: Rep[Knd[F, B]]) = p.elem.asInstanceOf[(Elem[_$4] forSome { 
+        type _$4
       })] match {
         case ((_): BindElem[F, S, B] @unchecked) => Some(scala.Tuple2(p.asRep[Bind[F, S, B]].a, p.asRep[Bind[F, S, B]].f))
         case _ => None

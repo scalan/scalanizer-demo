@@ -8,27 +8,31 @@ package coprods {
       implicit def proxyCoprod[F[_], G[_], A](p: Rep[Coprod[F, G, A]]): Coprod[F, G, A] = proxyOps[Coprod[F, G, A]](p)(classTag[Coprod[F, G, A]]);
       class CoprodElem[F[_], G[_], A, To <: Coprod[F, G, A]](implicit val cF: Cont[F], val cG: Cont[G], val eA: Elem[A]) extends EntityElem[To] {
         override def isEntityType = true;
-        override def tag = {
+        override lazy val tag = {
           implicit val tagA = eA.tag;
           weakTypeTag[Coprod[F, G, A]].asInstanceOf[WeakTypeTag[To]]
         };
         override def convert(x: Rep[(Reifiable[_$1] forSome { 
           type _$1
-        })]) = convertCoprod(x.asRep[Coprod[F, G, A]]);
-        def convertCoprod(x: Rep[Coprod[F, G, A]]): Rep[To] = x.asRep[To];
+        })]) = {
+          val conv = fun(((x: Rep[Coprod[F, G, A]]) => convertCoprod(x)));
+          tryConvert(element[Coprod[F, G, A]], this, x, conv)
+        };
+        def convertCoprod(x: Rep[Coprod[F, G, A]]): Rep[To] = {
+          assert(x.selfType1.asInstanceOf[(Element[_$2] forSome { 
+            type _$2
+          })] match {
+            case ((_): CoprodElem[(_), (_), (_), (_)]) => true
+            case _ => false
+          });
+          x.asRep[To]
+        };
         override def getDefaultRep: Rep[To] = ???
       };
-      implicit def coprodElement[F[_], G[_], A](implicit cF: Cont[F], cG: Cont[G], eA: Elem[A]): Elem[Coprod[F, G, A]] = {
-        final class $anon extends CoprodElem[F, G, A, Coprod[F, G, A]];
-        new $anon()
-      };
-      trait CoprodCompanionElem extends CompanionElem[CoprodCompanionAbs];
-      implicit lazy val CoprodCompanionElem: CoprodCompanionElem = {
-        final class $anon extends CoprodCompanionElem {
-          lazy val tag = weakTypeTag[CoprodCompanionAbs];
-          protected def getDefaultRep = Coprod
-        };
-        new $anon()
+      implicit def coprodElement[F[_], G[_], A](implicit cF: Cont[F], cG: Cont[G], eA: Elem[A]): Elem[Coprod[F, G, A]] = new CoprodElem[F, G, A, Coprod[F, G, A]]();
+      implicit case object CoprodCompanionElem extends CompanionElem[CoprodCompanionAbs] with scala.Product with scala.Serializable {
+        lazy val tag = weakTypeTag[CoprodCompanionAbs];
+        protected def getDefaultRep = Coprod
       };
       abstract class CoprodCompanionAbs extends CompanionBase[CoprodCompanionAbs] with CoprodCompanion {
         override def toString = "Coprod"
@@ -38,7 +42,10 @@ package coprods {
       class CoproductImplElem[F[_], G[_], A](val iso: Iso[CoproductImplData[F, G, A], CoproductImpl[F, G, A]])(implicit cF: Cont[F], cG: Cont[G], eA: Elem[A]) extends CoprodElem[F, G, A, CoproductImpl[F, G, A]] with ConcreteElem[CoproductImplData[F, G, A], CoproductImpl[F, G, A]] {
         override def convertCoprod(x: Rep[Coprod[F, G, A]]) = CoproductImpl(x.run);
         override def getDefaultRep = super[ConcreteElem].getDefaultRep;
-        override lazy val tag = super[ConcreteElem].tag
+        override lazy val tag = {
+          implicit val tagA = eA.tag;
+          weakTypeTag[CoproductImpl[F, G, A]]
+        }
       };
       type CoproductImplData[F[_], G[_], A] = Either[F[A], G[A]];
       class CoproductImplIso[F[_], G[_], A](implicit cF: Cont[F], cG: Cont[G], eA: Elem[A]) extends Iso[CoproductImplData[F, G, A], CoproductImpl[F, G, A]] {
@@ -46,10 +53,6 @@ package coprods {
         override def to(p: Rep[Either[F[A], G[A]]]) = {
           val run = p;
           CoproductImpl(run)
-        };
-        lazy val tag = {
-          implicit val tagA = eA.tag;
-          weakTypeTag[CoproductImpl[F, G, A]]
         };
         lazy val defaultRepTo = Default.defaultVal[Rep[CoproductImpl[F, G, A]]](CoproductImpl(element[Either[F[A], G[A]]].defaultRepValue));
         lazy val eTo = new CoproductImplElem[F, G, A](this)
@@ -63,11 +66,10 @@ package coprods {
       };
       def CoproductImpl: Rep[CoproductImplCompanionAbs];
       implicit def proxyCoproductImplCompanion(p: Rep[CoproductImplCompanionAbs]): CoproductImplCompanionAbs = proxyOps[CoproductImplCompanionAbs](p);
-      class CoproductImplCompanionElem extends CompanionElem[CoproductImplCompanionAbs] {
+      implicit case object CoproductImplCompanionElem extends CompanionElem[CoproductImplCompanionAbs] with scala.Product with scala.Serializable {
         lazy val tag = weakTypeTag[CoproductImplCompanionAbs];
         protected def getDefaultRep = CoproductImpl
       };
-      implicit lazy val CoproductImplCompanionElem: CoproductImplCompanionElem = new CoproductImplCompanionElem();
       implicit def proxyCoproductImpl[F[_], G[_], A](p: Rep[CoproductImpl[F, G, A]]): CoproductImpl[F, G, A] = proxyOps[CoproductImpl[F, G, A]](p);
       implicit class ExtendedCoproductImpl[F[_], G[_], A](p: Rep[CoproductImpl[F, G, A]])(implicit cF: Cont[F], cG: Cont[G], eA: Elem[A]) {
         def toData: Rep[CoproductImplData[F, G, A]] = isoCoproductImpl(cF, cG, eA).from(p)
@@ -120,26 +122,25 @@ package coprods {
       object CoproductImplMethods;
       object CoproductImplCompanionMethods;
       def mkCoproductImpl[F[_], G[_], A](run: Rep[Either[F[A], G[A]]])(implicit cF: Cont[F], cG: Cont[G], eA: Elem[A]): Rep[CoproductImpl[F, G, A]] = new ExpCoproductImpl[F, G, A](run);
-      def unmkCoproductImpl[F[_], G[_], A](p: Rep[Coprod[F, G, A]]) = p.elem.asInstanceOf[(Elem[_$2] forSome { 
-        type _$2
+      def unmkCoproductImpl[F[_], G[_], A](p: Rep[Coprod[F, G, A]]) = p.elem.asInstanceOf[(Elem[_$3] forSome { 
+        type _$3
       })] match {
         case ((_): CoproductImplElem[F, G, A] @unchecked) => Some(p.asRep[CoproductImpl[F, G, A]].run)
         case _ => None
       };
       object CoprodMethods {
         object run {
-          def unapply(d: (Def[_$3] forSome { 
-            type _$3
+          def unapply(d: (Def[_$4] forSome { 
+            type _$4
           })): Option[(Rep[Coprod[F, G, A]] forSome { 
             type F[_];
             type G[_];
             type A
           })] = d match {
-            case MethodCall((receiver @ _), (method @ _), _, _) if (receiver.elem match {
-  case (ve @ ((_): ViewElem[(_), (_)])) => (ve match {
-    case ((_): CoprodElem[(_), (_), (_), (_)]) => true
-    case _ => false
-  })
+            case MethodCall((receiver @ _), (method @ _), _, _) if (receiver.elem.asInstanceOf[(Element[_$5] forSome { 
+  type _$5
+})] match {
+  case ((_): CoprodElem[(_), (_), (_), (_)]) => true
   case _ => false
 }).&&(method.getName.==("run")) => Some(receiver).asInstanceOf[Option[(Rep[Coprod[F, G, A]] forSome { 
               type F[_];
@@ -148,8 +149,8 @@ package coprods {
             })]]
             case _ => None
           };
-          def unapply(exp: (Exp[_$4] forSome { 
-            type _$4
+          def unapply(exp: (Exp[_$6] forSome { 
+            type _$6
           })): Option[(Rep[Coprod[F, G, A]] forSome { 
             type F[_];
             type G[_];

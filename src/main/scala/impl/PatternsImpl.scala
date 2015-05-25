@@ -8,24 +8,26 @@ package patterns {
       implicit def proxyPattern(p: Rep[Pattern]): Pattern = proxyOps[Pattern](p)(classTag[Pattern]);
       class PatternElem[To <: Pattern] extends EntityElem[To] {
         override def isEntityType = true;
-        override def tag = weakTypeTag[Pattern].asInstanceOf[WeakTypeTag[To]];
+        override lazy val tag = weakTypeTag[Pattern].asInstanceOf[WeakTypeTag[To]];
         override def convert(x: Rep[(Reifiable[_$1] forSome { 
           type _$1
-        })]) = convertPattern(x.asRep[Pattern]);
-        def convertPattern(x: Rep[Pattern]): Rep[To] = x.asRep[To];
+        })]) = {
+          val conv = fun(((x: Rep[Pattern]) => convertPattern(x)));
+          tryConvert(element[Pattern], this, x, conv)
+        };
+        def convertPattern(x: Rep[Pattern]): Rep[To] = {
+          assert(x.selfType1 match {
+            case ((_): PatternElem[(_)]) => true
+            case _ => false
+          });
+          x.asRep[To]
+        };
         override def getDefaultRep: Rep[To] = ???
       };
-      implicit def patternElement: Elem[Pattern] = {
-        final class $anon extends PatternElem[Pattern];
-        new $anon()
-      };
-      trait PatternCompanionElem extends CompanionElem[PatternCompanionAbs];
-      implicit lazy val PatternCompanionElem: PatternCompanionElem = {
-        final class $anon extends PatternCompanionElem {
-          lazy val tag = weakTypeTag[PatternCompanionAbs];
-          protected def getDefaultRep = Pattern
-        };
-        new $anon()
+      implicit def patternElement: Elem[Pattern] = new PatternElem[Pattern]();
+      implicit case object PatternCompanionElem extends CompanionElem[PatternCompanionAbs] with scala.Product with scala.Serializable {
+        lazy val tag = weakTypeTag[PatternCompanionAbs];
+        protected def getDefaultRep = Pattern
       };
       abstract class PatternCompanionAbs extends CompanionBase[PatternCompanionAbs] with PatternCompanion {
         override def toString = "Pattern"

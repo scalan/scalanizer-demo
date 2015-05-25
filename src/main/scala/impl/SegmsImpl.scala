@@ -8,24 +8,26 @@ package segms {
       implicit def proxySegm(p: Rep[Segm]): Segm = proxyOps[Segm](p)(classTag[Segm]);
       class SegmElem[To <: Segm] extends EntityElem[To] {
         override def isEntityType = true;
-        override def tag = weakTypeTag[Segm].asInstanceOf[WeakTypeTag[To]];
+        override lazy val tag = weakTypeTag[Segm].asInstanceOf[WeakTypeTag[To]];
         override def convert(x: Rep[(Reifiable[_$1] forSome { 
           type _$1
-        })]) = convertSegm(x.asRep[Segm]);
-        def convertSegm(x: Rep[Segm]): Rep[To] = x.asRep[To];
+        })]) = {
+          val conv = fun(((x: Rep[Segm]) => convertSegm(x)));
+          tryConvert(element[Segm], this, x, conv)
+        };
+        def convertSegm(x: Rep[Segm]): Rep[To] = {
+          assert(x.selfType1 match {
+            case ((_): SegmElem[(_)]) => true
+            case _ => false
+          });
+          x.asRep[To]
+        };
         override def getDefaultRep: Rep[To] = ???
       };
-      implicit def segmElement: Elem[Segm] = {
-        final class $anon extends SegmElem[Segm];
-        new $anon()
-      };
-      trait SegmCompanionElem extends CompanionElem[SegmCompanionAbs];
-      implicit lazy val SegmCompanionElem: SegmCompanionElem = {
-        final class $anon extends SegmCompanionElem {
-          lazy val tag = weakTypeTag[SegmCompanionAbs];
-          protected def getDefaultRep = Segm
-        };
-        new $anon()
+      implicit def segmElement: Elem[Segm] = new SegmElem[Segm]();
+      implicit case object SegmCompanionElem extends CompanionElem[SegmCompanionAbs] with scala.Product with scala.Serializable {
+        lazy val tag = weakTypeTag[SegmCompanionAbs];
+        protected def getDefaultRep = Segm
       };
       abstract class SegmCompanionAbs extends CompanionBase[SegmCompanionAbs] with SegmCompanion {
         override def toString = "Segm"
@@ -35,10 +37,10 @@ package segms {
       class IntervalElem(val iso: Iso[IntervalData, Interval]) extends SegmElem[Interval] with ConcreteElem[IntervalData, Interval] {
         override def convertSegm(x: Rep[Segm]) = Interval(x.start, x.end);
         override def getDefaultRep = super[ConcreteElem].getDefaultRep;
-        override lazy val tag = super[ConcreteElem].tag
+        override lazy val tag = weakTypeTag[Interval]
       };
       type IntervalData = scala.Tuple2[Int, Int];
-      class IntervalIso extends Iso[IntervalData, Interval] {
+      class IntervalIso extends Iso[IntervalData, Interval]()(pairElement(implicitly[Elem[Int]], implicitly[Elem[Int]])) {
         override def from(p: Rep[Interval]) = scala.Tuple2(p.start, p.end);
         override def to(p: Rep[scala.Tuple2[Int, Int]]) = {
           val x$1 = (p: @scala.unchecked) match {
@@ -48,7 +50,6 @@ package segms {
           val end = x$1._2;
           Interval(start, end)
         };
-        lazy val tag = weakTypeTag[Interval];
         lazy val defaultRepTo = Default.defaultVal[Rep[Interval]](Interval(0, 0));
         lazy val eTo = new IntervalElem(this)
       };
@@ -62,11 +63,10 @@ package segms {
       };
       def Interval: Rep[IntervalCompanionAbs];
       implicit def proxyIntervalCompanion(p: Rep[IntervalCompanionAbs]): IntervalCompanionAbs = proxyOps[IntervalCompanionAbs](p);
-      class IntervalCompanionElem extends CompanionElem[IntervalCompanionAbs] {
+      implicit case object IntervalCompanionElem extends CompanionElem[IntervalCompanionAbs] with scala.Product with scala.Serializable {
         lazy val tag = weakTypeTag[IntervalCompanionAbs];
         protected def getDefaultRep = Interval
       };
-      implicit lazy val IntervalCompanionElem: IntervalCompanionElem = new IntervalCompanionElem();
       implicit def proxyInterval(p: Rep[Interval]): Interval = proxyOps[Interval](p);
       implicit class ExtendedInterval(p: Rep[Interval]) {
         def toData: Rep[IntervalData] = isoInterval.from(p)
@@ -77,10 +77,10 @@ package segms {
       class SliceElem(val iso: Iso[SliceData, Slice]) extends SegmElem[Slice] with ConcreteElem[SliceData, Slice] {
         override def convertSegm(x: Rep[Segm]) = Slice(x.start, x.length);
         override def getDefaultRep = super[ConcreteElem].getDefaultRep;
-        override lazy val tag = super[ConcreteElem].tag
+        override lazy val tag = weakTypeTag[Slice]
       };
       type SliceData = scala.Tuple2[Int, Int];
-      class SliceIso extends Iso[SliceData, Slice] {
+      class SliceIso extends Iso[SliceData, Slice]()(pairElement(implicitly[Elem[Int]], implicitly[Elem[Int]])) {
         override def from(p: Rep[Slice]) = scala.Tuple2(p.start, p.length);
         override def to(p: Rep[scala.Tuple2[Int, Int]]) = {
           val x$2 = (p: @scala.unchecked) match {
@@ -90,7 +90,6 @@ package segms {
           val length = x$2._2;
           Slice(start, length)
         };
-        lazy val tag = weakTypeTag[Slice];
         lazy val defaultRepTo = Default.defaultVal[Rep[Slice]](Slice(0, 0));
         lazy val eTo = new SliceElem(this)
       };
@@ -104,11 +103,10 @@ package segms {
       };
       def Slice: Rep[SliceCompanionAbs];
       implicit def proxySliceCompanion(p: Rep[SliceCompanionAbs]): SliceCompanionAbs = proxyOps[SliceCompanionAbs](p);
-      class SliceCompanionElem extends CompanionElem[SliceCompanionAbs] {
+      implicit case object SliceCompanionElem extends CompanionElem[SliceCompanionAbs] with scala.Product with scala.Serializable {
         lazy val tag = weakTypeTag[SliceCompanionAbs];
         protected def getDefaultRep = Slice
       };
-      implicit lazy val SliceCompanionElem: SliceCompanionElem = new SliceCompanionElem();
       implicit def proxySlice(p: Rep[Slice]): Slice = proxyOps[Slice](p);
       implicit class ExtendedSlice(p: Rep[Slice]) {
         def toData: Rep[SliceData] = isoSlice.from(p)
@@ -119,10 +117,10 @@ package segms {
       class CenteredElem(val iso: Iso[CenteredData, Centered]) extends SegmElem[Centered] with ConcreteElem[CenteredData, Centered] {
         override def convertSegm(x: Rep[Segm]) = !!!("Cannot convert from Segm to Centered: missing fields List(center, radius)");
         override def getDefaultRep = super[ConcreteElem].getDefaultRep;
-        override lazy val tag = super[ConcreteElem].tag
+        override lazy val tag = weakTypeTag[Centered]
       };
       type CenteredData = scala.Tuple2[Int, Int];
-      class CenteredIso extends Iso[CenteredData, Centered] {
+      class CenteredIso extends Iso[CenteredData, Centered]()(pairElement(implicitly[Elem[Int]], implicitly[Elem[Int]])) {
         override def from(p: Rep[Centered]) = scala.Tuple2(p.center, p.radius);
         override def to(p: Rep[scala.Tuple2[Int, Int]]) = {
           val x$3 = (p: @scala.unchecked) match {
@@ -132,7 +130,6 @@ package segms {
           val radius = x$3._2;
           Centered(center, radius)
         };
-        lazy val tag = weakTypeTag[Centered];
         lazy val defaultRepTo = Default.defaultVal[Rep[Centered]](Centered(0, 0));
         lazy val eTo = new CenteredElem(this)
       };
@@ -146,11 +143,10 @@ package segms {
       };
       def Centered: Rep[CenteredCompanionAbs];
       implicit def proxyCenteredCompanion(p: Rep[CenteredCompanionAbs]): CenteredCompanionAbs = proxyOps[CenteredCompanionAbs](p);
-      class CenteredCompanionElem extends CompanionElem[CenteredCompanionAbs] {
+      implicit case object CenteredCompanionElem extends CompanionElem[CenteredCompanionAbs] with scala.Product with scala.Serializable {
         lazy val tag = weakTypeTag[CenteredCompanionAbs];
         protected def getDefaultRep = Centered
       };
-      implicit lazy val CenteredCompanionElem: CenteredCompanionElem = new CenteredCompanionElem();
       implicit def proxyCentered(p: Rep[Centered]): Centered = proxyOps[Centered](p);
       implicit class ExtendedCentered(p: Rep[Centered]) {
         def toData: Rep[CenteredData] = isoCentered.from(p)

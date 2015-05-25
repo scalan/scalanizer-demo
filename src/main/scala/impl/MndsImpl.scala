@@ -8,24 +8,28 @@ package mnds {
       implicit def proxyMnd[F[_]](p: Rep[Mnd[F]]): Mnd[F] = proxyOps[Mnd[F]](p)(classTag[Mnd[F]]);
       class MndElem[F[_], To <: Mnd[F]](implicit val cF: Cont[F]) extends EntityElem[To] {
         override def isEntityType = true;
-        override def tag = weakTypeTag[Mnd[F]].asInstanceOf[WeakTypeTag[To]];
+        override lazy val tag = weakTypeTag[Mnd[F]].asInstanceOf[WeakTypeTag[To]];
         override def convert(x: Rep[(Reifiable[_$1] forSome { 
           type _$1
-        })]) = convertMnd(x.asRep[Mnd[F]]);
-        def convertMnd(x: Rep[Mnd[F]]): Rep[To] = x.asRep[To];
+        })]) = {
+          val conv = fun(((x: Rep[Mnd[F]]) => convertMnd(x)));
+          tryConvert(element[Mnd[F]], this, x, conv)
+        };
+        def convertMnd(x: Rep[Mnd[F]]): Rep[To] = {
+          assert(x.selfType1.asInstanceOf[(Element[_$2] forSome { 
+            type _$2
+          })] match {
+            case ((_): MndElem[(_), (_)]) => true
+            case _ => false
+          });
+          x.asRep[To]
+        };
         override def getDefaultRep: Rep[To] = ???
       };
-      implicit def mndElement[F[_]](implicit cF: Cont[F]): Elem[Mnd[F]] = {
-        final class $anon extends MndElem[F, Mnd[F]];
-        new $anon()
-      };
-      trait MndCompanionElem extends CompanionElem[MndCompanionAbs];
-      implicit lazy val MndCompanionElem: MndCompanionElem = {
-        final class $anon extends MndCompanionElem {
-          lazy val tag = weakTypeTag[MndCompanionAbs];
-          protected def getDefaultRep = Mnd
-        };
-        new $anon()
+      implicit def mndElement[F[_]](implicit cF: Cont[F]): Elem[Mnd[F]] = new MndElem[F, Mnd[F]]();
+      implicit case object MndCompanionElem extends CompanionElem[MndCompanionAbs] with scala.Product with scala.Serializable {
+        lazy val tag = weakTypeTag[MndCompanionAbs];
+        protected def getDefaultRep = Mnd
       };
       abstract class MndCompanionAbs extends CompanionBase[MndCompanionAbs] with MndCompanion {
         override def toString = "Mnd"
@@ -51,17 +55,16 @@ package mnds {
       };
       object MndMethods {
         object unit {
-          def unapply(d: (Def[_$2] forSome { 
-            type _$2
+          def unapply(d: (Def[_$3] forSome { 
+            type _$3
           })): Option[(scala.Tuple3[Rep[Mnd[F]], Rep[A], Rep[Elem[A]]] forSome { 
             type F[_];
             type A
           })] = d match {
-            case MethodCall((receiver @ _), (method @ _), Seq((a @ _), (eA @ _), _*), _) if (receiver.elem match {
-  case (ve @ ((_): ViewElem[(_), (_)])) => (ve match {
-    case ((_): MndElem[(_), (_)]) => true
-    case _ => false
-  })
+            case MethodCall((receiver @ _), (method @ _), Seq((a @ _), (eA @ _), _*), _) if (receiver.elem.asInstanceOf[(Element[_$4] forSome { 
+  type _$4
+})] match {
+  case ((_): MndElem[(_), (_)]) => true
   case _ => false
 }).&&(method.getName.==("unit")) => Some(scala.Tuple3(receiver, a, eA)).asInstanceOf[Option[(scala.Tuple3[Rep[Mnd[F]], Rep[A], Rep[Elem[A]]] forSome { 
               type F[_];
@@ -69,8 +72,8 @@ package mnds {
             })]]
             case _ => None
           };
-          def unapply(exp: (Exp[_$3] forSome { 
-            type _$3
+          def unapply(exp: (Exp[_$5] forSome { 
+            type _$5
           })): Option[(scala.Tuple3[Rep[Mnd[F]], Rep[A], Rep[Elem[A]]] forSome { 
             type F[_];
             type A
@@ -80,17 +83,16 @@ package mnds {
           }
         };
         object sequence {
-          def unapply(d: (Def[_$4] forSome { 
-            type _$4
+          def unapply(d: (Def[_$6] forSome { 
+            type _$6
           })): Option[(scala.Tuple3[Rep[Mnd[F]], Rep[List[F[A]]], Rep[Elem[A]]] forSome { 
             type F[_];
             type A
           })] = d match {
-            case MethodCall((receiver @ _), (method @ _), Seq((lma @ _), (eA @ _), _*), _) if (receiver.elem match {
-  case (ve @ ((_): ViewElem[(_), (_)])) => (ve match {
-    case ((_): MndElem[(_), (_)]) => true
-    case _ => false
-  })
+            case MethodCall((receiver @ _), (method @ _), Seq((lma @ _), (eA @ _), _*), _) if (receiver.elem.asInstanceOf[(Element[_$7] forSome { 
+  type _$7
+})] match {
+  case ((_): MndElem[(_), (_)]) => true
   case _ => false
 }).&&(method.getName.==("sequence")) => Some(scala.Tuple3(receiver, lma, eA)).asInstanceOf[Option[(scala.Tuple3[Rep[Mnd[F]], Rep[List[F[A]]], Rep[Elem[A]]] forSome { 
               type F[_];
@@ -98,8 +100,8 @@ package mnds {
             })]]
             case _ => None
           };
-          def unapply(exp: (Exp[_$5] forSome { 
-            type _$5
+          def unapply(exp: (Exp[_$8] forSome { 
+            type _$8
           })): Option[(scala.Tuple3[Rep[Mnd[F]], Rep[List[F[A]]], Rep[Elem[A]]] forSome { 
             type F[_];
             type A
@@ -109,17 +111,16 @@ package mnds {
           }
         };
         object replicateM {
-          def unapply(d: (Def[_$6] forSome { 
-            type _$6
+          def unapply(d: (Def[_$9] forSome { 
+            type _$9
           })): Option[(scala.Tuple4[Rep[Mnd[F]], Rep[Int], Rep[F[A]], Rep[Elem[A]]] forSome { 
             type F[_];
             type A
           })] = d match {
-            case MethodCall((receiver @ _), (method @ _), Seq((n @ _), (ma @ _), (eA @ _), _*), _) if (receiver.elem match {
-  case (ve @ ((_): ViewElem[(_), (_)])) => (ve match {
-    case ((_): MndElem[(_), (_)]) => true
-    case _ => false
-  })
+            case MethodCall((receiver @ _), (method @ _), Seq((n @ _), (ma @ _), (eA @ _), _*), _) if (receiver.elem.asInstanceOf[(Element[_$10] forSome { 
+  type _$10
+})] match {
+  case ((_): MndElem[(_), (_)]) => true
   case _ => false
 }).&&(method.getName.==("replicateM")) => Some(scala.Tuple4(receiver, n, ma, eA)).asInstanceOf[Option[(scala.Tuple4[Rep[Mnd[F]], Rep[Int], Rep[F[A]], Rep[Elem[A]]] forSome { 
               type F[_];
@@ -127,8 +128,8 @@ package mnds {
             })]]
             case _ => None
           };
-          def unapply(exp: (Exp[_$7] forSome { 
-            type _$7
+          def unapply(exp: (Exp[_$11] forSome { 
+            type _$11
           })): Option[(scala.Tuple4[Rep[Mnd[F]], Rep[Int], Rep[F[A]], Rep[Elem[A]]] forSome { 
             type F[_];
             type A
@@ -138,17 +139,16 @@ package mnds {
           }
         };
         object replicateM_ {
-          def unapply(d: (Def[_$8] forSome { 
-            type _$8
+          def unapply(d: (Def[_$12] forSome { 
+            type _$12
           })): Option[(scala.Tuple4[Rep[Mnd[F]], Rep[Int], Rep[F[A]], Rep[Elem[A]]] forSome { 
             type F[_];
             type A
           })] = d match {
-            case MethodCall((receiver @ _), (method @ _), Seq((n @ _), (f @ _), (eA @ _), _*), _) if (receiver.elem match {
-  case (ve @ ((_): ViewElem[(_), (_)])) => (ve match {
-    case ((_): MndElem[(_), (_)]) => true
-    case _ => false
-  })
+            case MethodCall((receiver @ _), (method @ _), Seq((n @ _), (f @ _), (eA @ _), _*), _) if (receiver.elem.asInstanceOf[(Element[_$13] forSome { 
+  type _$13
+})] match {
+  case ((_): MndElem[(_), (_)]) => true
   case _ => false
 }).&&(method.getName.==("replicateM_")) => Some(scala.Tuple4(receiver, n, f, eA)).asInstanceOf[Option[(scala.Tuple4[Rep[Mnd[F]], Rep[Int], Rep[F[A]], Rep[Elem[A]]] forSome { 
               type F[_];
@@ -156,8 +156,8 @@ package mnds {
             })]]
             case _ => None
           };
-          def unapply(exp: (Exp[_$9] forSome { 
-            type _$9
+          def unapply(exp: (Exp[_$14] forSome { 
+            type _$14
           })): Option[(scala.Tuple4[Rep[Mnd[F]], Rep[Int], Rep[F[A]], Rep[Elem[A]]] forSome { 
             type F[_];
             type A
@@ -167,18 +167,17 @@ package mnds {
           }
         };
         object as {
-          def unapply(d: (Def[_$10] forSome { 
-            type _$10
+          def unapply(d: (Def[_$15] forSome { 
+            type _$15
           })): Option[(scala.Tuple5[Rep[Mnd[F]], Rep[F[A]], Rep[B], Rep[Elem[A]], Rep[Elem[B]]] forSome { 
             type F[_];
             type A;
             type B
           })] = d match {
-            case MethodCall((receiver @ _), (method @ _), Seq((a @ _), (b @ _), (eA @ _), (eB @ _), _*), _) if (receiver.elem match {
-  case (ve @ ((_): ViewElem[(_), (_)])) => (ve match {
-    case ((_): MndElem[(_), (_)]) => true
-    case _ => false
-  })
+            case MethodCall((receiver @ _), (method @ _), Seq((a @ _), (b @ _), (eA @ _), (eB @ _), _*), _) if (receiver.elem.asInstanceOf[(Element[_$16] forSome { 
+  type _$16
+})] match {
+  case ((_): MndElem[(_), (_)]) => true
   case _ => false
 }).&&(method.getName.==("as")) => Some(scala.Tuple5(receiver, a, b, eA, eB)).asInstanceOf[Option[(scala.Tuple5[Rep[Mnd[F]], Rep[F[A]], Rep[B], Rep[Elem[A]], Rep[Elem[B]]] forSome { 
               type F[_];
@@ -187,8 +186,8 @@ package mnds {
             })]]
             case _ => None
           };
-          def unapply(exp: (Exp[_$11] forSome { 
-            type _$11
+          def unapply(exp: (Exp[_$17] forSome { 
+            type _$17
           })): Option[(scala.Tuple5[Rep[Mnd[F]], Rep[F[A]], Rep[B], Rep[Elem[A]], Rep[Elem[B]]] forSome { 
             type F[_];
             type A;
@@ -199,17 +198,16 @@ package mnds {
           }
         };
         object skip {
-          def unapply(d: (Def[_$12] forSome { 
-            type _$12
+          def unapply(d: (Def[_$18] forSome { 
+            type _$18
           })): Option[(scala.Tuple3[Rep[Mnd[F]], Rep[F[A]], Rep[Elem[A]]] forSome { 
             type F[_];
             type A
           })] = d match {
-            case MethodCall((receiver @ _), (method @ _), Seq((a @ _), (eA @ _), _*), _) if (receiver.elem match {
-  case (ve @ ((_): ViewElem[(_), (_)])) => (ve match {
-    case ((_): MndElem[(_), (_)]) => true
-    case _ => false
-  })
+            case MethodCall((receiver @ _), (method @ _), Seq((a @ _), (eA @ _), _*), _) if (receiver.elem.asInstanceOf[(Element[_$19] forSome { 
+  type _$19
+})] match {
+  case ((_): MndElem[(_), (_)]) => true
   case _ => false
 }).&&(method.getName.==("skip")) => Some(scala.Tuple3(receiver, a, eA)).asInstanceOf[Option[(scala.Tuple3[Rep[Mnd[F]], Rep[F[A]], Rep[Elem[A]]] forSome { 
               type F[_];
@@ -217,8 +215,8 @@ package mnds {
             })]]
             case _ => None
           };
-          def unapply(exp: (Exp[_$13] forSome { 
-            type _$13
+          def unapply(exp: (Exp[_$20] forSome { 
+            type _$20
           })): Option[(scala.Tuple3[Rep[Mnd[F]], Rep[F[A]], Rep[Elem[A]]] forSome { 
             type F[_];
             type A
@@ -228,17 +226,16 @@ package mnds {
           }
         };
         object join {
-          def unapply(d: (Def[_$14] forSome { 
-            type _$14
+          def unapply(d: (Def[_$21] forSome { 
+            type _$21
           })): Option[(scala.Tuple3[Rep[Mnd[F]], Rep[F[F[A]]], Rep[Elem[A]]] forSome { 
             type F[_];
             type A
           })] = d match {
-            case MethodCall((receiver @ _), (method @ _), Seq((mma @ _), (eA @ _), _*), _) if (receiver.elem match {
-  case (ve @ ((_): ViewElem[(_), (_)])) => (ve match {
-    case ((_): MndElem[(_), (_)]) => true
-    case _ => false
-  })
+            case MethodCall((receiver @ _), (method @ _), Seq((mma @ _), (eA @ _), _*), _) if (receiver.elem.asInstanceOf[(Element[_$22] forSome { 
+  type _$22
+})] match {
+  case ((_): MndElem[(_), (_)]) => true
   case _ => false
 }).&&(method.getName.==("join")) => Some(scala.Tuple3(receiver, mma, eA)).asInstanceOf[Option[(scala.Tuple3[Rep[Mnd[F]], Rep[F[F[A]]], Rep[Elem[A]]] forSome { 
               type F[_];
@@ -246,8 +243,8 @@ package mnds {
             })]]
             case _ => None
           };
-          def unapply(exp: (Exp[_$15] forSome { 
-            type _$15
+          def unapply(exp: (Exp[_$23] forSome { 
+            type _$23
           })): Option[(scala.Tuple3[Rep[Mnd[F]], Rep[F[F[A]]], Rep[Elem[A]]] forSome { 
             type F[_];
             type A
