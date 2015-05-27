@@ -1,7 +1,5 @@
 package paradise.linalgebra
 
-import scala.annotation.unchecked.uncheckedVariance
-
 trait Vectors { self: LinearAlgebra =>
   type Vector[T] = AbstractVector[T]
   trait AbstractVector[T] {
