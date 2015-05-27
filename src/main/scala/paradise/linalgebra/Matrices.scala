@@ -17,7 +17,9 @@ trait Matrices { self: LinearAlgebra =>
 
     def numRows = rows.length
     def columns(implicit n: Numeric[T]): Collection[Vector[T]] = {
-      ??? //Collection(SArray.tabulate(numColumns) { j => DenseVector(rows.map(_(j)))})
+      Collection((0 to numColumns map { (j: Int) =>
+        DenseVector(rows.map((vec: Vector[T]) => vec(j))): Vector[T]
+      }).toArray)
     }
 
     def *(matrix: Matrix[T])(implicit n: Numeric[T]): Matrix[T] = {
