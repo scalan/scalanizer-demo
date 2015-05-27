@@ -1,4 +1,6 @@
-package paradise.linalgebra
+package paradise.linalgebra.matrices
+
+import paradise.linalgebra.LinearAlgebra
 
 trait Matrices { self: LinearAlgebra =>
   type Matrix[T] = AbstractMatrix[T]

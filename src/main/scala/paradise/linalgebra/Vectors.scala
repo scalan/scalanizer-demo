@@ -1,4 +1,6 @@
-package paradise.linalgebra
+package paradise.linalgebra.vectors
+
+import paradise.linalgebra.LinearAlgebra
 
 trait Vectors { self: LinearAlgebra =>
   type Vector[T] = AbstractVector[T]
