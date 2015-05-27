@@ -14,12 +14,10 @@ trait Vectors { self: LinearAlgebra =>
 
   case class DenseVector[T](val items: Collection[T]) extends AbstractVector[T] {
     def length = items.length
-
     def apply(i: Int): T = items(i)
     def map[R](f: T => R): Vector[R] = DenseVector(items.map(f))
     def dot(other: Vector[T])(implicit n: Numeric[T]): T = {
-      //(other.items zip items).map { case Pair(v1, v2) => v1 * v2 }.reduce
-      ???
+      (other.items zip items).map((v: (T, T)) => n.times(v._1, v._2)).reduce
     }
   }
 }
