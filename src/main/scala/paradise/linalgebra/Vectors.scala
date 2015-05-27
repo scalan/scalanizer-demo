@@ -18,10 +18,11 @@ trait Vectors { self: LinearAlgebra =>
     def length = items.length
 
     def apply(i: Int): T = items(i)
-    def mapBy[R](f: T => R @uncheckedVariance): Vector[R] = DenseVector(items.mapBy(f))
+    def mapBy[R](f: T => R @uncheckedVariance): Vector[R] = DenseVector(items.map(f))
 
     def dot(other: Vector[T])(implicit n: Numeric[T]): T = {
-      (other.items zip items).map { case Pair(v1, v2) => v1 * v2 }.reduce
+      //(other.items zip items).map { case Pair(v1, v2) => v1 * v2 }.reduce
+      ???
     }
   }
 }

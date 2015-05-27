@@ -8,7 +8,7 @@ trait Matrices { self: LinearAlgebra =>
     def rows: Collection[AbstractVector[T]]
     def columns(implicit n: Numeric[T]): Collection[AbstractVector[T]]
     def *(vector: Vector[T])(implicit n: Numeric[T]): Vector[T] = {
-      DenseVector(rows.mapBy { r: AbstractVector[T] => r.dot(vector) })
+      DenseVector(rows.map { r: AbstractVector[T] => r.dot(vector) })
     }
   }
 
