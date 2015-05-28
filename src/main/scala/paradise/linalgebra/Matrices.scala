@@ -1,6 +1,4 @@
-package paradise.linalgebra.matrices
-
-import paradise.linalgebra.LinearAlgebra
+package paradise.linalgebra
 
 import scala.reflect.ClassTag
 

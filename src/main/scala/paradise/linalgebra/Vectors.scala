@@ -1,6 +1,4 @@
-package paradise.linalgebra.vectors
-
-import paradise.linalgebra.LinearAlgebra
+package paradise.linalgebra
 
 import scala.reflect.ClassTag
 
