@@ -27,11 +27,5 @@ trait Matrices { self: LinearAlgebra =>
         DenseVector(rows.map((vec: Vector[T]) => vec(j))): Vector[T]
       }).toArray)
     }
-
-    def *(matrix: Matrix[T])(implicit n: Numeric[T], m: Monoid[T]): Matrix[T] = {
-      implicit val plusMonoid = PlusMonoid[Double]
-      val mT = CompoundMatrix(matrix.columns, matrix.numRows)
-      CompoundMatrix(this.rows.map((row: Vector[T]) => mT * row), matrix.numColumns)
-    }
   }
 }
