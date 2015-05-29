@@ -1,6 +1,6 @@
 package paradise
 
-import linalgebra._
+import paradise.linalgebra._
 
 trait LinearAlgebraExamples extends LinearAlgebra {
 
