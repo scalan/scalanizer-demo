@@ -3,25 +3,25 @@ package paradise.linalgebra {
     object StagedEvaluation {
 
       import scalan._
-      import paradise.implOfMonoids.StagedEvaluation._
+      import paradise.implOfNumMonoids.StagedEvaluation._
       import paradise.collections.implOfCollections.StagedEvaluation._
       import paradise.linalgebra.implOfVectors.StagedEvaluation._
       import paradise.linalgebra.implOfMatrices.StagedEvaluation._
 
       trait LinearAlgebraDsl extends Scalan
-      with MonoidsDsl
+      with NumMonoidsDsl
       with CollectionsDsl
       with VectorsDsl
       with MatricesDsl
 
       trait LinearAlgebraDslSeq extends ScalanSeq with LinearAlgebraDsl
-      with MonoidsDslSeq
+      with NumMonoidsDslSeq
       with CollectionsDslSeq
       with VectorsDslSeq
       with MatricesDslSeq
 
       trait LinearAlgebraDslExp extends ScalanExp with LinearAlgebraDsl
-      with MonoidsDslExp
+      with NumMonoidsDslExp
       with CollectionsDslExp
       with VectorsDslExp
       with MatricesDslExp
