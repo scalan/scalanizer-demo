@@ -5,6 +5,7 @@ import paradise.linalgebra._
 trait LinearAlgebraExamples extends LinearAlgebra {
 
   trait LinearAlgebraExample {
+    implicit val doubleNumer = DoubleNumer()
     implicit val plusMonoid = PlusMonoid[Double]
 
     def ddmvm(m: Array[Array[Double]], v: Array[Double]) = {

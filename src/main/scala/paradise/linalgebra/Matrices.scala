@@ -8,8 +8,8 @@ trait Matrices { self: LinearAlgebra =>
     def numColumns: Int
     def numRows: Int
     def rows: Collection[AbstractVector[T]]
-    def columns(implicit n: Numeric[T]): Collection[AbstractVector[T]]
-    def *(vector: AbstractVector[T])(implicit n: Numeric[T], m: NumMonoid[T]): AbstractVector[T] = {
+    def columns(implicit n: Numer[T]): Collection[AbstractVector[T]]
+    def *(vector: AbstractVector[T])(implicit n: Numer[T], m: NumMonoid[T]): AbstractVector[T] = {
       DenseVector(rows.map { r: AbstractVector[T] => r.dot(vector) })
     }
   }
@@ -19,7 +19,7 @@ trait Matrices { self: LinearAlgebra =>
     extends AbstractMatrix[T] {
 
     def numRows = rows.length
-    def columns(implicit n: Numeric[T]): Collection[AbstractVector[T]] = {
+    def columns(implicit n: Numer[T]): Collection[AbstractVector[T]] = {
       Collection((0 to numColumns map { (j: Int) =>
         DenseVector(rows.map((vec: AbstractVector[T]) => vec(j))): AbstractVector[T]
       }).toArray)
