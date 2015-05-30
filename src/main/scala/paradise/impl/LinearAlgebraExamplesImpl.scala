@@ -77,7 +77,7 @@ package paradise {
         };
         object LinearAlgebraExampleCompanionMethods
       };
-      trait LinearAlgebraExamples extends Base with LinearAlgebra { self: LinearAlgebraExamplesDsl =>
+      trait LinearAlgebraExamples extends Base with LinearAlgebraDsl { self: LinearAlgebraExamplesDsl =>
         trait LinearAlgebraExample extends Reifiable[LinearAlgebraExample] {
           lazy val plusMonoid = PlusMonoid[Double];
           def ddmvm(m: Rep[Array[Array[Double]]], v: Rep[Array[Double]]) = {
