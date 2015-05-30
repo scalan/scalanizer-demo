@@ -16,7 +16,7 @@ trait Matrices { self: LinearAlgebra =>
   }
 
   case class CompoundMatrix[T](val rows: Collection[Vector[T]], val numColumns: Int)
-                                        (implicit val ctT: ClassTag[T])
+                              (implicit val ctT: ClassTag[T])
     extends AbstractMatrix[T] {
 
     def numRows = rows.length
