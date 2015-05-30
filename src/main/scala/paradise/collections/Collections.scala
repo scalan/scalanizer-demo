@@ -1,10 +1,10 @@
 package paradise.collections
 
-import paradise.Monoids
+import paradise.NumMonoids
 import scala.collection.generic.CanBuildFrom
 import scala.reflect.ClassTag
 
-trait Collections extends Monoids {
+trait Collections extends NumMonoids {
 
   trait Collection[A] {
     def arr: Array[A]
@@ -12,7 +12,7 @@ trait Collections extends Monoids {
     def apply(i: Int): A
     def map[B: ClassTag](f: A => B): Collection[B] =
       Collection(arr.map(f)(implicitly[CanBuildFrom[Array[A], B, Array[B]]]))
-    def reduce(implicit m: Monoid[A]): A = arr.reduce(m.append)
+    def reduce(implicit m: NumMonoid[A]): A = arr.reduce(m.append)
     def zip[B](ys: Collection[B]): PairCollection[A, B] = PairCollection(this, ys)
   }
 

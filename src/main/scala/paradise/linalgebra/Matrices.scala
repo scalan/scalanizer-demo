@@ -10,7 +10,7 @@ trait Matrices { self: LinearAlgebra =>
     def numRows: Int
     def rows: Collection[Vector[T]]
     def columns(implicit n: Numeric[T]): Collection[Vector[T]]
-    def *(vector: Vector[T])(implicit n: Numeric[T], m: Monoid[T]): Vector[T] = {
+    def *(vector: Vector[T])(implicit n: Numeric[T], m: NumMonoid[T]): Vector[T] = {
       DenseVector(rows.map { r: Vector[T] => r.dot(vector) })
     }
   }
