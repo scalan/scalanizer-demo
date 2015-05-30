@@ -9,7 +9,7 @@ trait LinearAlgebraExamples extends LinearAlgebra {
 
     def ddmvm(m: Array[Array[Double]], v: Array[Double]) = {
       val width = m(0).length
-      val matrix: Matrix[Double] = CompoundMatrix(Collection(m.map { r: Array[Double] => DenseVector(Collection(r)) }), width)
+      val matrix: AbstractMatrix[Double] = CompoundMatrix(Collection(m.map { r: Array[Double] => DenseVector(Collection(r)) }), width)
       val vector: AbstractVector[Double] = DenseVector(Collection(v))
 
       (matrix * vector).items.arr

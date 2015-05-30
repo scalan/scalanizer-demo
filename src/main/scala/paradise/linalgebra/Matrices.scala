@@ -3,7 +3,6 @@ package paradise.linalgebra
 import scala.reflect.ClassTag
 
 trait Matrices { self: LinearAlgebra =>
-  type Matrix[T] = AbstractMatrix[T]
   trait AbstractMatrix[T] {
     implicit def ctT: ClassTag[T]
     def numColumns: Int
