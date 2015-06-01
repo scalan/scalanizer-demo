@@ -471,7 +471,10 @@ package paradise.collections {
           def length = as.length;
           def apply(i: Rep[Int]) = Tuple(as(i), bs(i))
         };
-        trait CollectionCompanion;
+        trait CollectionCompanion {
+          def apply[T: Elem](arr: Rep[Array[T]]): Rep[Collection[T]] = fromArray(arr)
+          def fromArray[T: Elem](arr: Rep[Array[T]]): Rep[Collection[T]] = ???
+        }
         trait CollectionOverArrayCompanion;
         trait PairCollectionCompanion
       };
