@@ -335,7 +335,8 @@ package paradise.linalgebra {
         };
         abstract class CompoundMatrix[T](val rows: Rep[Collection[AbstractVector[T]]], val numColumns: Rep[Int])(implicit val eT: Elem[T]) extends AbstractMatrix[T] with Product with Serializable {
           def numRows = rows.length;
-          def columns(implicit n: Numer[T]): Rep[Collection[AbstractVector[T]]] = Collection(toRep(0).to(numColumns).map(fun(((j: Rep[Int]) => ((DenseVector(rows.map(fun(((vec: Rep[AbstractVector[T]]) => vec(j)))))): Rep[AbstractVector[T]])))).toArray)
+          def columns(implicit n: Numer[T]): Rep[Collection[AbstractVector[T]]] =
+            ??? //Collection(toRep(0).to(numColumns).map(fun(((j: Rep[Int]) => ((DenseVector(rows.map(fun(((vec: Rep[AbstractVector[T]]) => vec(j)))))): Rep[AbstractVector[T]])))).toArray)
         };
         trait AbstractMatrixCompanion;
         trait CompoundMatrixCompanion
