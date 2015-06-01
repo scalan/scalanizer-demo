@@ -17,7 +17,8 @@ trait Collections extends NumMonoids {
   }
 
   object Collection {
-    def apply[T: ClassTag](arr: Array[T]): Collection[T] = CollectionOverArray(arr)
+    def apply[T: ClassTag](arr: Array[T]): Collection[T] = fromArray(arr)
+    def fromArray[T: ClassTag](arr: Array[T]): Collection[T] = CollectionOverArray(arr)
   }
 
   case class CollectionOverArray[A: ClassTag](val arr: Array[A]) extends Collection[A] {
