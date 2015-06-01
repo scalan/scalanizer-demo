@@ -326,7 +326,7 @@ package paradise.linalgebra {
       trait Matrices extends Base { self: LinearAlgebraDsl =>
         trait AbstractMatrix[T] extends Reifiable[AbstractMatrix[T]] {
           implicit def eT: Elem[T];
-          implicit def ctT: Rep[ClassTag[T]];
+//          implicit def ctT: Rep[ClassTag[T]];
           def numColumns: Rep[Int];
           def numRows: Rep[Int];
           def rows: Rep[Collection[AbstractVector[T]]];
