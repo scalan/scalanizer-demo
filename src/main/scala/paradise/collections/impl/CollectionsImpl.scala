@@ -458,8 +458,8 @@ package paradise.collections {
           def arr: Rep[Array[A]];
           def length: Rep[Int];
           def apply(i: Rep[Int]): Rep[A];
-          def map[B](f: Rep[scala.Function1[A, B]])(implicit eB: Elem[B]): Rep[Collection[B]] = ??? //Collection(arr.map(f)(implicitly[CanBuildFrom[Array[A], B, Array[B]]]));
-          def reduce(implicit m: Rep[NumMonoid[A]]): Rep[A] = ??? //arr.reduce(m.append);
+          def map[B](f: Rep[scala.Function1[A, B]])(implicit eB: Elem[B]): Rep[Collection[B]] = Collection(arr.map(f)(implicitly[CanBuildFrom[Array[A], B, Array[B]]]));
+          def reduce(implicit m: NumMonoid[A]): Rep[A] = arr.reduce(m.append);
           def zip[B](ys: Rep[Collection[B]])(implicit eB: Elem[B]): Rep[PairCollection[A, B]] = PairCollection(this, ys)
         };
         abstract class CollectionOverArray[A](val arr: Rep[Array[A]])(implicit val eA: Elem[A]) extends Collection[A] with Product with Serializable {
@@ -475,7 +475,7 @@ package paradise.collections {
         trait CollectionOverArrayCompanion;
         trait PairCollectionCompanion
       };
-      trait CollectionsDsl extends CollectionsAbs with NumMonoidsAbs { self: CollectionsDsl =>
+      trait CollectionsDsl extends CollectionsAbs with NumMonoidsDsl { self: CollectionsDsl =>
         
       };
       trait CollectionsDslSeq extends CollectionsSeq with NumMonoidsDslSeq { self: CollectionsDslSeq =>

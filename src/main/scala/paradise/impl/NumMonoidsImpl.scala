@@ -322,7 +322,7 @@ package paradise {
           def append: Rep[scala.Function1[scala.Tuple2[A, A], A]];
           def isCommutative: Rep[Boolean]
         };
-        abstract class PlusMonoid[A](implicit val n: Rep[Numer[A]], val eA: Elem[A]) extends NumMonoid[A] with Product with Serializable {
+        abstract class PlusMonoid[A](implicit val n: Numer[A], val eA: Elem[A]) extends NumMonoid[A] with Product with Serializable {
           def opName = toRep("+");
           def zero = n.zero;
           def append = fun(((in: Rep[scala.Tuple2[A, A]]) => {
@@ -335,7 +335,7 @@ package paradise {
         trait NumMonoidCompanion;
         trait PlusMonoidCompanion
       };
-      trait NumMonoidsDsl extends NumMonoidsAbs with NumersAbs { self: NumMonoidsDsl =>
+      trait NumMonoidsDsl extends NumMonoidsAbs with NumersDsl { self: NumMonoidsDsl =>
         
       };
       trait NumMonoidsDslSeq extends NumMonoidsSeq with NumersDslSeq { self: NumMonoidsDslSeq =>

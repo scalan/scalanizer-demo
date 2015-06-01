@@ -286,8 +286,7 @@ package paradise {
           def plus(a: Rep[T], b: Rep[T]): Rep[T];
           def times(a: Rep[T], b: Rep[T]): Rep[T]
         };
-        abstract class DoubleNumer() extends Numer[Double] with Product with Serializable {
-          def eT = element[Double]
+        abstract class DoubleNumer extends Numer[Double] with Product with Serializable {
           def zero: Rep[Double] = toRep(0.0);
           def one: Rep[Double] = toRep(1.0);
           def plus(a: Rep[Double], b: Rep[Double]) = a.+(b);

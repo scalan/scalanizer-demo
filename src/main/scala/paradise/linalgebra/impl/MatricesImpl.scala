@@ -42,7 +42,7 @@ package paradise.linalgebra {
         };
         def AbstractMatrix: Rep[AbstractMatrixCompanionAbs];
         implicit def proxyAbstractMatrixCompanion(p: Rep[AbstractMatrixCompanion]): AbstractMatrixCompanion = proxyOps[AbstractMatrixCompanion](p);
-        class CompoundMatrixElem[T](val iso: Iso[CompoundMatrixData[T], CompoundMatrix[T]])(implicit ctT: ClassTag[T], eT: Elem[T]) extends AbstractMatrixElem[T, CompoundMatrix[T]] with ConcreteElem[CompoundMatrixData[T], CompoundMatrix[T]] {
+        class CompoundMatrixElem[T](val iso: Iso[CompoundMatrixData[T], CompoundMatrix[T]])(implicit eT: Elem[T]) extends AbstractMatrixElem[T, CompoundMatrix[T]] with ConcreteElem[CompoundMatrixData[T], CompoundMatrix[T]] {
           override def convertAbstractMatrix(x: Rep[AbstractMatrix[T]]) = CompoundMatrix(x.rows, x.numColumns);
           override def getDefaultRep = super[ConcreteElem].getDefaultRep;
           override lazy val tag = {
@@ -51,7 +51,7 @@ package paradise.linalgebra {
           }
         };
         type CompoundMatrixData[T] = scala.Tuple2[Collection[AbstractVector[T]], Int];
-        class CompoundMatrixIso[T](implicit ctT: ClassTag[T], eT: Elem[T]) extends Iso[CompoundMatrixData[T], CompoundMatrix[T]]()(pairElement(implicitly[Elem[Collection[AbstractVector[T]]]], implicitly[Elem[Int]])) {
+        class CompoundMatrixIso[T](implicit eT: Elem[T]) extends Iso[CompoundMatrixData[T], CompoundMatrix[T]]()(pairElement(implicitly[Elem[Collection[AbstractVector[T]]]], implicitly[Elem[Int]])) {
           override def from(p: Rep[CompoundMatrix[T]]) = scala.Tuple2(p.rows, p.numColumns);
           override def to(p: Rep[scala.Tuple2[Collection[AbstractVector[T]], Int]]) = {
             val x$1 = (p: @scala.unchecked) match {
@@ -66,8 +66,8 @@ package paradise.linalgebra {
         };
         abstract class CompoundMatrixCompanionAbs extends CompanionBase[CompoundMatrixCompanionAbs] with CompoundMatrixCompanion {
           override def toString = "CompoundMatrix";
-          def apply[T](p: Rep[CompoundMatrixData[T]])(implicit ctT: ClassTag[T], eT: Elem[T]): Rep[CompoundMatrix[T]] = isoCompoundMatrix(ctT, eT).to(p);
-          def apply[T](rows: Rep[Collection[AbstractVector[T]]], numColumns: Rep[Int])(implicit ctT: ClassTag[T], eT: Elem[T]): Rep[CompoundMatrix[T]] = mkCompoundMatrix(rows, numColumns)
+          def apply[T](p: Rep[CompoundMatrixData[T]])(implicit eT: Elem[T]): Rep[CompoundMatrix[T]] = isoCompoundMatrix(eT).to(p);
+          def apply[T](rows: Rep[Collection[AbstractVector[T]]], numColumns: Rep[Int])(implicit eT: Elem[T]): Rep[CompoundMatrix[T]] = mkCompoundMatrix(rows, numColumns)
         };
         object CompoundMatrixMatcher {
           def unapply[T](p: Rep[AbstractMatrix[T]]) = unmkCompoundMatrix(p)
@@ -79,11 +79,11 @@ package paradise.linalgebra {
           protected def getDefaultRep = CompoundMatrix
         };
         implicit def proxyCompoundMatrix[T](p: Rep[CompoundMatrix[T]]): CompoundMatrix[T] = proxyOps[CompoundMatrix[T]](p);
-        implicit class ExtendedCompoundMatrix[T](p: Rep[CompoundMatrix[T]])(implicit ctT: ClassTag[T], eT: Elem[T]) {
-          def toData: Rep[CompoundMatrixData[T]] = isoCompoundMatrix(ctT, eT).from(p)
+        implicit class ExtendedCompoundMatrix[T](p: Rep[CompoundMatrix[T]])(implicit eT: Elem[T]) {
+          def toData: Rep[CompoundMatrixData[T]] = isoCompoundMatrix(eT).from(p)
         };
-        implicit def isoCompoundMatrix[T](implicit ctT: ClassTag[T], eT: Elem[T]): Iso[CompoundMatrixData[T], CompoundMatrix[T]] = new CompoundMatrixIso[T]();
-        def mkCompoundMatrix[T](rows: Rep[Collection[AbstractVector[T]]], numColumns: Rep[Int])(implicit ctT: ClassTag[T], eT: Elem[T]): Rep[CompoundMatrix[T]];
+        implicit def isoCompoundMatrix[T](implicit eT: Elem[T]): Iso[CompoundMatrixData[T], CompoundMatrix[T]] = new CompoundMatrixIso[T]();
+        def mkCompoundMatrix[T](rows: Rep[Collection[AbstractVector[T]]], numColumns: Rep[Int])(implicit eT: Elem[T]): Rep[CompoundMatrix[T]];
         def unmkCompoundMatrix[T](p: Rep[AbstractMatrix[T]]): Option[scala.Tuple2[Rep[Collection[AbstractVector[T]]], Rep[Int]]]
       };
       trait MatricesSeq extends MatricesDsl with ScalanSeq { self: LinearAlgebraDslSeq =>
@@ -93,7 +93,7 @@ package paradise.linalgebra {
           };
           new $anon()
         };
-        case class SeqCompoundMatrix[T](override val rows: Rep[Collection[AbstractVector[T]]], override val numColumns: Rep[Int])(implicit ctT: ClassTag[T], eT: Elem[T]) extends CompoundMatrix[T](rows, numColumns) with UserTypeSeq[CompoundMatrix[T]] {
+        case class SeqCompoundMatrix[T](override val rows: Rep[Collection[AbstractVector[T]]], override val numColumns: Rep[Int])(implicit eT: Elem[T]) extends CompoundMatrix[T](rows, numColumns) with UserTypeSeq[CompoundMatrix[T]] {
           lazy val selfType = element[CompoundMatrix[T]]
         };
         lazy val CompoundMatrix = {
@@ -102,7 +102,7 @@ package paradise.linalgebra {
           };
           new $anon()
         };
-        def mkCompoundMatrix[T](rows: Rep[Collection[AbstractVector[T]]], numColumns: Rep[Int])(implicit ctT: ClassTag[T], eT: Elem[T]): Rep[CompoundMatrix[T]] = new SeqCompoundMatrix[T](rows, numColumns);
+        def mkCompoundMatrix[T](rows: Rep[Collection[AbstractVector[T]]], numColumns: Rep[Int])(implicit eT: Elem[T]): Rep[CompoundMatrix[T]] = new SeqCompoundMatrix[T](rows, numColumns);
         def unmkCompoundMatrix[T](p: Rep[AbstractMatrix[T]]) = p match {
           case (p @ ((_): CompoundMatrix[T] @unchecked)) => Some(scala.Tuple2(p.rows, p.numColumns))
           case _ => None
@@ -116,7 +116,7 @@ package paradise.linalgebra {
           };
           new $anon()
         };
-        case class ExpCompoundMatrix[T](override val rows: Rep[Collection[AbstractVector[T]]], override val numColumns: Rep[Int])(implicit ctT: ClassTag[T], eT: Elem[T]) extends CompoundMatrix[T](rows, numColumns) with UserTypeDef[CompoundMatrix[T]] {
+        case class ExpCompoundMatrix[T](override val rows: Rep[Collection[AbstractVector[T]]], override val numColumns: Rep[Int])(implicit eT: Elem[T]) extends CompoundMatrix[T](rows, numColumns) with UserTypeDef[CompoundMatrix[T]] {
           lazy val selfType = element[CompoundMatrix[T]];
           override def mirror(t: Transformer) = ExpCompoundMatrix[T](t(rows), t(numColumns))
         };
@@ -174,7 +174,7 @@ package paradise.linalgebra {
           }
         };
         object CompoundMatrixCompanionMethods;
-        def mkCompoundMatrix[T](rows: Rep[Collection[AbstractVector[T]]], numColumns: Rep[Int])(implicit ctT: ClassTag[T], eT: Elem[T]): Rep[CompoundMatrix[T]] = new ExpCompoundMatrix[T](rows, numColumns);
+        def mkCompoundMatrix[T](rows: Rep[Collection[AbstractVector[T]]], numColumns: Rep[Int])(implicit eT: Elem[T]): Rep[CompoundMatrix[T]] = new ExpCompoundMatrix[T](rows, numColumns);
         def unmkCompoundMatrix[T](p: Rep[AbstractMatrix[T]]) = p.elem.asInstanceOf[(Elem[_$8] forSome { 
           type _$8
         })] match {
@@ -330,12 +330,12 @@ package paradise.linalgebra {
           def numColumns: Rep[Int];
           def numRows: Rep[Int];
           def rows: Rep[Collection[AbstractVector[T]]];
-          def columns(implicit n: Rep[Numer[T]]): Rep[Collection[AbstractVector[T]]];
-          def *(vector: Rep[AbstractVector[T]])(implicit n: Rep[Numer[T]], m: Rep[NumMonoid[T]]): Rep[AbstractVector[T]] = DenseVector(rows.map(fun(((r: Rep[AbstractVector[T]]) => r.dot(vector)))))
+          def columns(implicit n: Numer[T]): Rep[Collection[AbstractVector[T]]];
+          def *(vector: Rep[AbstractVector[T]])(implicit n: Numer[T], m: NumMonoid[T]): Rep[AbstractVector[T]] = DenseVector(rows.map(fun(((r: Rep[AbstractVector[T]]) => r.dot(vector)))))
         };
-        abstract class CompoundMatrix[T](val rows: Rep[Collection[AbstractVector[T]]], val numColumns: Rep[Int])(implicit val ctT: Rep[ClassTag[T]], val eT: Elem[T]) extends AbstractMatrix[T] with Product with Serializable {
+        abstract class CompoundMatrix[T](val rows: Rep[Collection[AbstractVector[T]]], val numColumns: Rep[Int])(implicit val eT: Elem[T]) extends AbstractMatrix[T] with Product with Serializable {
           def numRows = rows.length;
-          def columns(implicit n: Rep[Numer[T]]): Rep[Collection[AbstractVector[T]]] = Collection(toRep(0).to(numColumns).map(fun(((j: Rep[Int]) => ((DenseVector(rows.map(fun(((vec: Rep[AbstractVector[T]]) => vec(j)))))): Rep[AbstractVector[T]])))).toArray)
+          def columns(implicit n: Numer[T]): Rep[Collection[AbstractVector[T]]] = Collection(toRep(0).to(numColumns).map(fun(((j: Rep[Int]) => ((DenseVector(rows.map(fun(((vec: Rep[AbstractVector[T]]) => vec(j)))))): Rep[AbstractVector[T]])))).toArray)
         };
         trait AbstractMatrixCompanion;
         trait CompoundMatrixCompanion
