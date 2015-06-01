@@ -86,7 +86,7 @@ package paradise {
           };
           new $anon()
         };
-        case class SeqPlusMonoid[A](implicit n: Numer[A], eA: Elem[A]) extends PlusMonoid[A]() with UserTypeSeq[PlusMonoid[A]] {
+        case class SeqPlusMonoid[A](implicit override val n: Numer[A], override val eA: Elem[A]) extends PlusMonoid[A]() with UserTypeSeq[PlusMonoid[A]] {
           lazy val selfType = element[PlusMonoid[A]]
         };
         lazy val PlusMonoid = {
@@ -109,7 +109,7 @@ package paradise {
           };
           new $anon()
         };
-        case class ExpPlusMonoid[A](implicit n: Numer[A], eA: Elem[A]) extends PlusMonoid[A]() with UserTypeDef[PlusMonoid[A]] {
+        case class ExpPlusMonoid[A](implicit override val n: Numer[A], override val eA: Elem[A]) extends PlusMonoid[A]() with UserTypeDef[PlusMonoid[A]] {
           lazy val selfType = element[PlusMonoid[A]];
           override def mirror(t: Transformer) = ExpPlusMonoid[A]()
         };
@@ -316,6 +316,7 @@ package paradise {
       };
       trait NumMonoids extends Base with NumersDsl { self: NumMonoidsDsl =>
         trait NumMonoid[A] extends Reifiable[NumMonoid[A]] {
+          implicit def n: Numer[A]
           implicit def eA: Elem[A];
           def opName: Rep[String];
           def zero: Rep[A];
