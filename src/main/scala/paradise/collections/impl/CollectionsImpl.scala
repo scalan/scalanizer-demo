@@ -466,8 +466,8 @@ package paradise.collections {
           def zip[B](ys: Rep[Collection[B]])(implicit eB: Elem[B]): Rep[PairCollection[A, B]] = PairCollection(this, ys)
         };
         abstract class CollectionOverArray[A](val arr: Rep[Array[A]])(implicit val eA: Elem[A]) extends Collection[A] with Product with Serializable {
-          def length = arr.length;
-          def apply(i: Rep[Int]) = arr(i)
+          def length = array_length(arr);
+          def apply(i: Rep[Int]) = array_apply(arr, i)
         };
         abstract class PairCollection[A, B](val as: Rep[Collection[A]], val bs: Rep[Collection[B]])(implicit val eA: Elem[scala.Tuple2[A, B]], val eB: Elem[B]) extends Collection[scala.Tuple2[A, B]] with Product with Serializable {
           def arr: Rep[Array[scala.Tuple2[A, B]]] = array_zip(as.arr, bs.arr)
