@@ -473,7 +473,7 @@ package paradise.collections {
         };
         trait CollectionCompanion {
           def apply[T: Elem](arr: Rep[Array[T]]): Rep[Collection[T]] = fromArray(arr)
-          def fromArray[T: Elem](arr: Rep[Array[T]]): Rep[Collection[T]] = ???
+          def fromArray[T: Elem](arr: Rep[Array[T]]): Rep[Collection[T]] = CollectionOverArray(arr)
         }
         trait CollectionOverArrayCompanion;
         trait PairCollectionCompanion
