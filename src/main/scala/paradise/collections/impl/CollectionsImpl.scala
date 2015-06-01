@@ -458,7 +458,7 @@ package paradise.collections {
           def arr: Rep[Array[A]];
           def length: Rep[Int];
           def apply(i: Rep[Int]): Rep[A];
-          def map[B](f: Rep[scala.Function1[A, B]])(implicit eB: Elem[B]): Rep[Collection[B]] = ??? //Collection(arr.map(f)(implicitly[CanBuildFrom[Array[A], B, Array[B]]]));
+          def map[B](f: Rep[scala.Function1[A, B]])(implicit eB: Elem[B]): Rep[Collection[B]] = Collection(array_map(arr, f));
           def reduce(implicit m: NumMonoid[A]): Rep[A] = ??? //arr.reduce(m.append);
           def zip[B](ys: Rep[Collection[B]])(implicit eB: Elem[B]): Rep[PairCollection[A, B]] = PairCollection(this, ys)
         };
