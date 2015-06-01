@@ -10,6 +10,6 @@ trait StagedLinearAlgebraTests extends BaseTests {
   test("simple") {
     val ctx = new LaStaged("mvm")
 
-    //ctx.emit("ddmvm", ctx.ddmvm)
+    ctx.emit("ddmvm", ctx.LinearAlgebraExample)
   }
 }
