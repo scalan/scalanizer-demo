@@ -83,7 +83,7 @@ package paradise {
           implicit val plusMonoid: NumMonoid[Double] = PlusMonoid[Double];
           def ddmvm(m: Rep[Array[Array[Double]]], v: Rep[Array[Double]]) = {
             val width = m(toRep(0)).length;
-            val matrix: Rep[AbstractMatrix[Double]] = CompoundMatrix(Collection(m.mapBy(fun(((r: Rep[Array[Double]]) => DenseVector(Collection(r)))))), width);
+            val matrix: Rep[AbstractMatrix[Double]] = CompoundMatrix(Collection(array_map(m,fun(((r: Rep[Array[Double]]) => DenseVector(Collection(r)))))), width);
             val vector: Rep[AbstractVector[Double]] = DenseVector(Collection(v));
 
             matrix.*(vector).items.arr
