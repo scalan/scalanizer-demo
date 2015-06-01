@@ -459,7 +459,10 @@ package paradise.collections {
           def length: Rep[Int];
           def apply(i: Rep[Int]): Rep[A];
           def map[B](f: Rep[scala.Function1[A, B]])(implicit eB: Elem[B]): Rep[Collection[B]] = Collection(array_map(arr, f));
-          def reduce(implicit m: NumMonoid[A]): Rep[A] = ??? //arr.reduce(m.append);
+          def reduce(implicit m: NumMonoid[A]): Rep[A] = {
+            implicit val monoid = RepMonoid(opName = "+", zero = m.zero, append = m.append, isCommutative = true)
+            array_reduce(arr)
+          };
           def zip[B](ys: Rep[Collection[B]])(implicit eB: Elem[B]): Rep[PairCollection[A, B]] = PairCollection(this, ys)
         };
         abstract class CollectionOverArray[A](val arr: Rep[Array[A]])(implicit val eA: Elem[A]) extends Collection[A] with Product with Serializable {
