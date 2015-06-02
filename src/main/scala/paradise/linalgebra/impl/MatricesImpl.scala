@@ -182,7 +182,7 @@ package paradise.linalgebra {
           case _ => None
         };
         object AbstractMatrixMethods {
-          object ctT {
+          object numColumns {
             def unapply(d: (Def[_$9] forSome { 
               type _$9
             })): Option[(Rep[AbstractMatrix[T]] forSome { 
@@ -191,7 +191,7 @@ package paradise.linalgebra {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(AbstractMatrixElem[_$10, _$11] forSome { 
   type _$10;
   type _$11
-})].&&(method.getName.==("ctT")) => Some(receiver).asInstanceOf[Option[(Rep[AbstractMatrix[T]] forSome { 
+})].&&(method.getName.==("numColumns")) => Some(receiver).asInstanceOf[Option[(Rep[AbstractMatrix[T]] forSome { 
                 type T
               })]]
               case _ => None
@@ -205,7 +205,7 @@ package paradise.linalgebra {
               case _ => None
             }
           };
-          object numColumns {
+          object numRows {
             def unapply(d: (Def[_$13] forSome { 
               type _$13
             })): Option[(Rep[AbstractMatrix[T]] forSome { 
@@ -214,7 +214,7 @@ package paradise.linalgebra {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(AbstractMatrixElem[_$14, _$15] forSome { 
   type _$14;
   type _$15
-})].&&(method.getName.==("numColumns")) => Some(receiver).asInstanceOf[Option[(Rep[AbstractMatrix[T]] forSome { 
+})].&&(method.getName.==("numRows")) => Some(receiver).asInstanceOf[Option[(Rep[AbstractMatrix[T]] forSome { 
                 type T
               })]]
               case _ => None
@@ -228,7 +228,7 @@ package paradise.linalgebra {
               case _ => None
             }
           };
-          object numRows {
+          object rows {
             def unapply(d: (Def[_$17] forSome { 
               type _$17
             })): Option[(Rep[AbstractMatrix[T]] forSome { 
@@ -237,7 +237,7 @@ package paradise.linalgebra {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(AbstractMatrixElem[_$18, _$19] forSome { 
   type _$18;
   type _$19
-})].&&(method.getName.==("numRows")) => Some(receiver).asInstanceOf[Option[(Rep[AbstractMatrix[T]] forSome { 
+})].&&(method.getName.==("rows")) => Some(receiver).asInstanceOf[Option[(Rep[AbstractMatrix[T]] forSome { 
                 type T
               })]]
               case _ => None
@@ -251,45 +251,22 @@ package paradise.linalgebra {
               case _ => None
             }
           };
-          object rows {
+          object columns {
             def unapply(d: (Def[_$21] forSome { 
               type _$21
-            })): Option[(Rep[AbstractMatrix[T]] forSome { 
+            })): Option[(scala.Tuple2[Rep[AbstractMatrix[T]], Rep[Numer[T]]] forSome { 
               type T
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(AbstractMatrixElem[_$22, _$23] forSome { 
+              case MethodCall((receiver @ _), (method @ _), Seq((n @ _), _*), _) if receiver.elem.isInstanceOf[(AbstractMatrixElem[_$22, _$23] forSome { 
   type _$22;
   type _$23
-})].&&(method.getName.==("rows")) => Some(receiver).asInstanceOf[Option[(Rep[AbstractMatrix[T]] forSome { 
+})].&&(method.getName.==("columns")) => Some(scala.Tuple2(receiver, n)).asInstanceOf[Option[(scala.Tuple2[Rep[AbstractMatrix[T]], Rep[Numer[T]]] forSome { 
                 type T
               })]]
               case _ => None
             };
             def unapply(exp: (Exp[_$24] forSome { 
               type _$24
-            })): Option[(Rep[AbstractMatrix[T]] forSome { 
-              type T
-            })] = exp match {
-              case Def((d @ _)) => unapply(d)
-              case _ => None
-            }
-          };
-          object columns {
-            def unapply(d: (Def[_$25] forSome { 
-              type _$25
-            })): Option[(scala.Tuple2[Rep[AbstractMatrix[T]], Rep[Numer[T]]] forSome { 
-              type T
-            })] = d match {
-              case MethodCall((receiver @ _), (method @ _), Seq((n @ _), _*), _) if receiver.elem.isInstanceOf[(AbstractMatrixElem[_$26, _$27] forSome { 
-  type _$26;
-  type _$27
-})].&&(method.getName.==("columns")) => Some(scala.Tuple2(receiver, n)).asInstanceOf[Option[(scala.Tuple2[Rep[AbstractMatrix[T]], Rep[Numer[T]]] forSome { 
-                type T
-              })]]
-              case _ => None
-            };
-            def unapply(exp: (Exp[_$28] forSome { 
-              type _$28
             })): Option[(scala.Tuple2[Rep[AbstractMatrix[T]], Rep[Numer[T]]] forSome { 
               type T
             })] = exp match {
@@ -298,21 +275,21 @@ package paradise.linalgebra {
             }
           };
           object * {
-            def unapply(d: (Def[_$29] forSome { 
-              type _$29
+            def unapply(d: (Def[_$25] forSome { 
+              type _$25
             })): Option[(scala.Tuple4[Rep[AbstractMatrix[T]], Rep[AbstractVector[T]], Rep[Numer[T]], Rep[NumMonoid[T]]] forSome { 
               type T
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), Seq((vector @ _), (n @ _), (m @ _), _*), _) if receiver.elem.isInstanceOf[(AbstractMatrixElem[_$30, _$31] forSome { 
-  type _$30;
-  type _$31
+              case MethodCall((receiver @ _), (method @ _), Seq((vector @ _), (n @ _), (m @ _), _*), _) if receiver.elem.isInstanceOf[(AbstractMatrixElem[_$26, _$27] forSome { 
+  type _$26;
+  type _$27
 })].&&(method.getName.==("$times")) => Some(scala.Tuple4(receiver, vector, n, m)).asInstanceOf[Option[(scala.Tuple4[Rep[AbstractMatrix[T]], Rep[AbstractVector[T]], Rep[Numer[T]], Rep[NumMonoid[T]]] forSome { 
                 type T
               })]]
               case _ => None
             };
-            def unapply(exp: (Exp[_$32] forSome { 
-              type _$32
+            def unapply(exp: (Exp[_$28] forSome { 
+              type _$28
             })): Option[(scala.Tuple4[Rep[AbstractMatrix[T]], Rep[AbstractVector[T]], Rep[Numer[T]], Rep[NumMonoid[T]]] forSome { 
               type T
             })] = exp match {
