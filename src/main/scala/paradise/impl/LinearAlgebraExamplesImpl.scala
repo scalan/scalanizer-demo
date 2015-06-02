@@ -125,7 +125,7 @@ package paradise {
             })): Option[(scala.Tuple6[Rep[MvMExample], Rep[AbstractMatrix[T]], Rep[AbstractVector[T]], Rep[Numer[T]], Rep[NumMonoid[T]], Rep[Elem[T]]] forSome { 
               type T
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), Seq((matrix @ _), (vector @ _), (n @ _), (m @ _), (eT @ _), _*), _) if receiver.elem.isInstanceOf[MvMExampleElem].&&(method.getName.==("mvm")) => Some(scala.Tuple6(receiver, matrix, vector, n, m, eT)).asInstanceOf[Option[(scala.Tuple6[Rep[MvMExample], Rep[AbstractMatrix[T]], Rep[AbstractVector[T]], Rep[Numer[T]], Rep[NumMonoid[T]], Rep[Elem[T]]] forSome { 
+              case MethodCall((receiver @ _), (method @ _), Seq((matrix @ _), (vector @ _), (n @ _), (m @ _), (emT @ _), _*), _) if receiver.elem.isInstanceOf[MvMExampleElem].&&(method.getName.==("mvm")) => Some(scala.Tuple6(receiver, matrix, vector, n, m, emT)).asInstanceOf[Option[(scala.Tuple6[Rep[MvMExample], Rep[AbstractMatrix[T]], Rep[AbstractVector[T]], Rep[Numer[T]], Rep[NumMonoid[T]], Rep[Elem[T]]] forSome { 
                 type T
               })]]
               case _ => None
@@ -156,7 +156,7 @@ package paradise {
         abstract class MvMExample extends LinearAlgebraExample with Product with Serializable {
           implicit val doubleNumer: Numer[Double] = DoubleNumer();
           implicit val plusMonoid: NumMonoid[Double] = PlusMonoid[Double];
-          def mvm[T](matrix: Rep[AbstractMatrix[T]], vector: Rep[AbstractVector[T]])(implicit n: Numer[T], m: NumMonoid[T], eT: Elem[T]): Rep[AbstractVector[T]] = DenseVector(matrix.rows.map(fun(((r: Rep[AbstractVector[T]]) => r.dot(vector)))));
+          def mvm[T](matrix: Rep[AbstractMatrix[T]], vector: Rep[AbstractVector[T]])(implicit n: Numer[T], m: NumMonoid[T], emT: Elem[T]): Rep[AbstractVector[T]] = DenseVector(matrix.rows.map(fun(((r: Rep[AbstractVector[T]]) => r.dot(vector)))));
           lazy val ddmvm0 = fun(((in: Rep[scala.Tuple2[Array[Array[Double]], Array[Double]]]) => {
             val m: Rep[Array[Array[Double]]] = in._1;
             val v: Rep[Array[Double]] = in._2;
