@@ -10,10 +10,10 @@ package paradise.linalgebra {
       import scalan.common.Default;
       trait VectorsAbs extends Vectors with ScalanDsl { self: LinearAlgebraDsl =>
         implicit def proxyAbstractVector[T](p: Rep[AbstractVector[T]]): AbstractVector[T] = proxyOps[AbstractVector[T]](p)(classTag[AbstractVector[T]]);
-        class AbstractVectorElem[T, To <: AbstractVector[T]](implicit val eT: Elem[T]) extends EntityElem[To] {
+        class AbstractVectorElem[T, To <: AbstractVector[T]](implicit val eeT: Elem[T]) extends EntityElem[To] {
           override def isEntityType = true;
           override lazy val tag = {
-            implicit val tagT = eT.tag;
+            implicit val tagT = eeT.tag;
             weakTypeTag[AbstractVector[T]].asInstanceOf[WeakTypeTag[To]]
           };
           override def convert(x: Rep[(Reifiable[_$1] forSome { 
@@ -31,7 +31,7 @@ package paradise.linalgebra {
           };
           override def getDefaultRep: Rep[To] = ???
         };
-        implicit def abstractVectorElement[T](implicit eT: Elem[T]): Elem[AbstractVector[T]] = new AbstractVectorElem[T, AbstractVector[T]]();
+        implicit def abstractVectorElement[T](implicit eeT: Elem[T]): Elem[AbstractVector[T]] = new AbstractVectorElem[T, AbstractVector[T]]();
         implicit case object AbstractVectorCompanionElem extends CompanionElem[AbstractVectorCompanionAbs] with scala.Product with scala.Serializable {
           lazy val tag = weakTypeTag[AbstractVectorCompanionAbs];
           protected def getDefaultRep = AbstractVector
@@ -41,16 +41,16 @@ package paradise.linalgebra {
         };
         def AbstractVector: Rep[AbstractVectorCompanionAbs];
         implicit def proxyAbstractVectorCompanion(p: Rep[AbstractVectorCompanion]): AbstractVectorCompanion = proxyOps[AbstractVectorCompanion](p);
-        class DenseVectorElem[T](val iso: Iso[DenseVectorData[T], DenseVector[T]])(implicit eT: Elem[T]) extends AbstractVectorElem[T, DenseVector[T]] with ConcreteElem[DenseVectorData[T], DenseVector[T]] {
+        class DenseVectorElem[T](val iso: Iso[DenseVectorData[T], DenseVector[T]])(implicit eeT: Elem[T]) extends AbstractVectorElem[T, DenseVector[T]] with ConcreteElem[DenseVectorData[T], DenseVector[T]] {
           override def convertAbstractVector(x: Rep[AbstractVector[T]]) = DenseVector(x.items);
           override def getDefaultRep = super[ConcreteElem].getDefaultRep;
           override lazy val tag = {
-            implicit val tagT = eT.tag;
+            implicit val tagT = eeT.tag;
             weakTypeTag[DenseVector[T]]
           }
         };
         type DenseVectorData[T] = Collection[T];
-        class DenseVectorIso[T](implicit eT: Elem[T]) extends Iso[DenseVectorData[T], DenseVector[T]] {
+        class DenseVectorIso[T](implicit eeT: Elem[T]) extends Iso[DenseVectorData[T], DenseVector[T]] {
           override def from(p: Rep[DenseVector[T]]) = p.items;
           override def to(p: Rep[Collection[T]]) = {
             val items = p;
@@ -61,7 +61,7 @@ package paradise.linalgebra {
         };
         abstract class DenseVectorCompanionAbs extends CompanionBase[DenseVectorCompanionAbs] with DenseVectorCompanion {
           override def toString = "DenseVector";
-          def apply[T](items: Rep[Collection[T]])(implicit eT: Elem[T]): Rep[DenseVector[T]] = mkDenseVector(items)
+          def apply[T](items: Rep[Collection[T]])(implicit eeT: Elem[T]): Rep[DenseVector[T]] = mkDenseVector(items)
         };
         object DenseVectorMatcher {
           def unapply[T](p: Rep[AbstractVector[T]]) = unmkDenseVector(p)
@@ -73,11 +73,11 @@ package paradise.linalgebra {
           protected def getDefaultRep = DenseVector
         };
         implicit def proxyDenseVector[T](p: Rep[DenseVector[T]]): DenseVector[T] = proxyOps[DenseVector[T]](p);
-        implicit class ExtendedDenseVector[T](p: Rep[DenseVector[T]])(implicit eT: Elem[T]) {
-          def toData: Rep[DenseVectorData[T]] = isoDenseVector(eT).from(p)
+        implicit class ExtendedDenseVector[T](p: Rep[DenseVector[T]])(implicit eeT: Elem[T]) {
+          def toData: Rep[DenseVectorData[T]] = isoDenseVector(eeT).from(p)
         };
-        implicit def isoDenseVector[T](implicit eT: Elem[T]): Iso[DenseVectorData[T], DenseVector[T]] = new DenseVectorIso[T]();
-        def mkDenseVector[T](items: Rep[Collection[T]])(implicit eT: Elem[T]): Rep[DenseVector[T]];
+        implicit def isoDenseVector[T](implicit eeT: Elem[T]): Iso[DenseVectorData[T], DenseVector[T]] = new DenseVectorIso[T]();
+        def mkDenseVector[T](items: Rep[Collection[T]])(implicit eeT: Elem[T]): Rep[DenseVector[T]];
         def unmkDenseVector[T](p: Rep[AbstractVector[T]]): Option[Rep[Collection[T]]]
       };
       trait VectorsSeq extends VectorsDsl with ScalanSeq { self: LinearAlgebraDslSeq =>
@@ -87,7 +87,7 @@ package paradise.linalgebra {
           };
           new $anon()
         };
-        case class SeqDenseVector[T](override val items: Rep[Collection[T]])(implicit eT: Elem[T]) extends DenseVector[T](items) with UserTypeSeq[DenseVector[T]] {
+        case class SeqDenseVector[T](override val items: Rep[Collection[T]])(implicit eeT: Elem[T]) extends DenseVector[T](items) with UserTypeSeq[DenseVector[T]] {
           lazy val selfType = element[DenseVector[T]]
         };
         lazy val DenseVector = {
@@ -96,7 +96,7 @@ package paradise.linalgebra {
           };
           new $anon()
         };
-        def mkDenseVector[T](items: Rep[Collection[T]])(implicit eT: Elem[T]): Rep[DenseVector[T]] = new SeqDenseVector[T](items);
+        def mkDenseVector[T](items: Rep[Collection[T]])(implicit eeT: Elem[T]): Rep[DenseVector[T]] = new SeqDenseVector[T](items);
         def unmkDenseVector[T](p: Rep[AbstractVector[T]]) = p match {
           case (p @ ((_): DenseVector[T] @unchecked)) => Some(p.items)
           case _ => None
@@ -110,7 +110,7 @@ package paradise.linalgebra {
           };
           new $anon()
         };
-        case class ExpDenseVector[T](override val items: Rep[Collection[T]])(implicit eT: Elem[T]) extends DenseVector[T](items) with UserTypeDef[DenseVector[T]] {
+        case class ExpDenseVector[T](override val items: Rep[Collection[T]])(implicit eeT: Elem[T]) extends DenseVector[T](items) with UserTypeDef[DenseVector[T]] {
           lazy val selfType = element[DenseVector[T]];
           override def mirror(t: Transformer) = ExpDenseVector[T](t(items))
         };
@@ -190,7 +190,7 @@ package paradise.linalgebra {
           }
         };
         object DenseVectorCompanionMethods;
-        def mkDenseVector[T](items: Rep[Collection[T]])(implicit eT: Elem[T]): Rep[DenseVector[T]] = new ExpDenseVector[T](items);
+        def mkDenseVector[T](items: Rep[Collection[T]])(implicit eeT: Elem[T]): Rep[DenseVector[T]] = new ExpDenseVector[T](items);
         def unmkDenseVector[T](p: Rep[AbstractVector[T]]) = p.elem.asInstanceOf[(Elem[_$11] forSome { 
           type _$11
         })] match {
@@ -295,17 +295,17 @@ package paradise.linalgebra {
       };
       trait Vectors extends Base { self: LinearAlgebraDsl =>
         trait AbstractVector[T] extends Reifiable[AbstractVector[T]] {
-          implicit def eT: Elem[T];
+          implicit def eeT: Elem[T];
           def length: Rep[Int];
           def items: Rep[Collection[T]];
           def apply(i: Rep[Int]): Rep[T];
-          def map[R](f: Rep[scala.Function1[T, R]])(implicit eR: Elem[R]): Rep[AbstractVector[R]];
+          def map[R](f: Rep[scala.Function1[T, R]])(implicit emR: Elem[R]): Rep[AbstractVector[R]];
           def dot(other: Rep[AbstractVector[T]])(implicit n: Numer[T], m: NumMonoid[T]): Rep[T]
         };
-        abstract class DenseVector[T](val items: Rep[Collection[T]])(implicit val eT: Elem[T]) extends AbstractVector[T] with Product with Serializable {
+        abstract class DenseVector[T](val items: Rep[Collection[T]])(implicit val eeT: Elem[T]) extends AbstractVector[T] with Product with Serializable {
           def length = items.length;
           def apply(i: Rep[Int]): Rep[T] = items(i);
-          def map[R](f: Rep[scala.Function1[T, R]])(implicit eR: Elem[R]): Rep[AbstractVector[R]] = DenseVector(items.map(f));
+          def map[R](f: Rep[scala.Function1[T, R]])(implicit emR: Elem[R]): Rep[AbstractVector[R]] = DenseVector(items.map(f));
           def dot(other: Rep[AbstractVector[T]])(implicit n: Numer[T], m: NumMonoid[T]): Rep[T] = other.items.zip(items).map(fun(((v: Rep[scala.Tuple2[T, T]]) => n.times(v._1, v._2)))).reduce
         };
         trait AbstractVectorCompanion;
