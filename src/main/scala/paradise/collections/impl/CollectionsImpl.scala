@@ -8,10 +8,10 @@ package paradise.collections {
       import scalan.common.Default;
       trait CollectionsAbs extends Collections with ScalanDsl { self: CollectionsDsl =>
         implicit def proxyCollection[A](p: Rep[Collection[A]]): Collection[A] = proxyOps[Collection[A]](p)(classTag[Collection[A]]);
-        class CollectionElem[A, To <: Collection[A]](implicit val eA: Elem[A]) extends EntityElem[To] {
+        class CollectionElem[A, To <: Collection[A]](implicit val eeA: Elem[A]) extends EntityElem[To] {
           override def isEntityType = true;
           override lazy val tag = {
-            implicit val tagA = eA.tag;
+            implicit val tagA = eeA.tag;
             weakTypeTag[Collection[A]].asInstanceOf[WeakTypeTag[To]]
           };
           override def convert(x: Rep[(Reifiable[_$1] forSome { 
@@ -29,7 +29,7 @@ package paradise.collections {
           };
           override def getDefaultRep: Rep[To] = ???
         };
-        implicit def collectionElement[A](implicit eA: Elem[A]): Elem[Collection[A]] = new CollectionElem[A, Collection[A]]();
+        implicit def collectionElement[A](implicit eeA: Elem[A]): Elem[Collection[A]] = new CollectionElem[A, Collection[A]]();
         implicit case object CollectionCompanionElem extends CompanionElem[CollectionCompanionAbs] with scala.Product with scala.Serializable {
           lazy val tag = weakTypeTag[CollectionCompanionAbs];
           protected def getDefaultRep = Collection
@@ -39,16 +39,16 @@ package paradise.collections {
         };
         def Collection: Rep[CollectionCompanionAbs];
         implicit def proxyCollectionCompanion(p: Rep[CollectionCompanion]): CollectionCompanion = proxyOps[CollectionCompanion](p);
-        class CollectionOverArrayElem[A](val iso: Iso[CollectionOverArrayData[A], CollectionOverArray[A]])(implicit eA: Elem[A]) extends CollectionElem[A, CollectionOverArray[A]] with ConcreteElem[CollectionOverArrayData[A], CollectionOverArray[A]] {
+        class CollectionOverArrayElem[A](val iso: Iso[CollectionOverArrayData[A], CollectionOverArray[A]])(implicit eeA: Elem[A]) extends CollectionElem[A, CollectionOverArray[A]] with ConcreteElem[CollectionOverArrayData[A], CollectionOverArray[A]] {
           override def convertCollection(x: Rep[Collection[A]]) = CollectionOverArray(x.arr);
           override def getDefaultRep = super[ConcreteElem].getDefaultRep;
           override lazy val tag = {
-            implicit val tagA = eA.tag;
+            implicit val tagA = eeA.tag;
             weakTypeTag[CollectionOverArray[A]]
           }
         };
         type CollectionOverArrayData[A] = Array[A];
-        class CollectionOverArrayIso[A](implicit eA: Elem[A]) extends Iso[CollectionOverArrayData[A], CollectionOverArray[A]] {
+        class CollectionOverArrayIso[A](implicit eeA: Elem[A]) extends Iso[CollectionOverArrayData[A], CollectionOverArray[A]] {
           override def from(p: Rep[CollectionOverArray[A]]) = p.arr;
           override def to(p: Rep[Array[A]]) = {
             val arr = p;
@@ -59,7 +59,7 @@ package paradise.collections {
         };
         abstract class CollectionOverArrayCompanionAbs extends CompanionBase[CollectionOverArrayCompanionAbs] with CollectionOverArrayCompanion {
           override def toString = "CollectionOverArray";
-          def apply[A](arr: Rep[Array[A]])(implicit eA: Elem[A]): Rep[CollectionOverArray[A]] = mkCollectionOverArray(arr)
+          def apply[A](arr: Rep[Array[A]])(implicit eeA: Elem[A]): Rep[CollectionOverArray[A]] = mkCollectionOverArray(arr)
         };
         object CollectionOverArrayMatcher {
           def unapply[A](p: Rep[Collection[A]]) = unmkCollectionOverArray(p)
@@ -71,23 +71,24 @@ package paradise.collections {
           protected def getDefaultRep = CollectionOverArray
         };
         implicit def proxyCollectionOverArray[A](p: Rep[CollectionOverArray[A]]): CollectionOverArray[A] = proxyOps[CollectionOverArray[A]](p);
-        implicit class ExtendedCollectionOverArray[A](p: Rep[CollectionOverArray[A]])(implicit eA: Elem[A]) {
-          def toData: Rep[CollectionOverArrayData[A]] = isoCollectionOverArray(eA).from(p)
+        implicit class ExtendedCollectionOverArray[A](p: Rep[CollectionOverArray[A]])(implicit eeA: Elem[A]) {
+          def toData: Rep[CollectionOverArrayData[A]] = isoCollectionOverArray(eeA).from(p)
         };
-        implicit def isoCollectionOverArray[A](implicit eA: Elem[A]): Iso[CollectionOverArrayData[A], CollectionOverArray[A]] = new CollectionOverArrayIso[A]();
-        def mkCollectionOverArray[A](arr: Rep[Array[A]])(implicit eA: Elem[A]): Rep[CollectionOverArray[A]];
+        implicit def isoCollectionOverArray[A](implicit eeA: Elem[A]): Iso[CollectionOverArrayData[A], CollectionOverArray[A]] = new CollectionOverArrayIso[A]();
+        def mkCollectionOverArray[A](arr: Rep[Array[A]])(implicit eeA: Elem[A]): Rep[CollectionOverArray[A]];
         def unmkCollectionOverArray[A](p: Rep[Collection[A]]): Option[Rep[Array[A]]];
-        class PairCollectionElem[A, B](val iso: Iso[PairCollectionData[A, B], PairCollection[A, B]])(implicit eA: Elem[A], eB: Elem[B]) extends CollectionElem[scala.Tuple2[A, B], PairCollection[A, B]] with ConcreteElem[PairCollectionData[A, B], PairCollection[A, B]] {
+        class PairCollectionElem[A, B](val iso: Iso[PairCollectionData[A, B], PairCollection[A, B]])(implicit eeA: Elem[scala.Tuple2[A, B]], ecA: Elem[A], ecB: Elem[B]) extends CollectionElem[scala.Tuple2[A, B], PairCollection[A, B]] with ConcreteElem[PairCollectionData[A, B], PairCollection[A, B]] {
           override def convertCollection(x: Rep[Collection[scala.Tuple2[A, B]]]) = !!!("Cannot convert from Collection to PairCollection: missing fields List(as, bs)");
           override def getDefaultRep = super[ConcreteElem].getDefaultRep;
           override lazy val tag = {
-            implicit val tagA = eA.tag;
-            implicit val tagB = eB.tag;
+            implicit val tagTuple_A_B = eeA.tag;
+            implicit val tagA = ecA.tag;
+            implicit val tagB = ecB.tag;
             weakTypeTag[PairCollection[A, B]]
           }
         };
         type PairCollectionData[A, B] = scala.Tuple2[Collection[A], Collection[B]];
-        class PairCollectionIso[A, B](implicit eA: Elem[A], eB: Elem[B]) extends Iso[PairCollectionData[A, B], PairCollection[A, B]]()(pairElement(implicitly[Elem[Collection[A]]], implicitly[Elem[Collection[B]]])) {
+        class PairCollectionIso[A, B](implicit eeA: Elem[scala.Tuple2[A, B]], ecA: Elem[A], ecB: Elem[B]) extends Iso[PairCollectionData[A, B], PairCollection[A, B]]()(pairElement(implicitly[Elem[Collection[A]]], implicitly[Elem[Collection[B]]])) {
           override def from(p: Rep[PairCollection[A, B]]) = scala.Tuple2(p.as, p.bs);
           override def to(p: Rep[scala.Tuple2[Collection[A], Collection[B]]]) = {
             val x$1 = (p: @scala.unchecked) match {
@@ -102,8 +103,8 @@ package paradise.collections {
         };
         abstract class PairCollectionCompanionAbs extends CompanionBase[PairCollectionCompanionAbs] with PairCollectionCompanion {
           override def toString = "PairCollection";
-          def apply[A, B](p: Rep[PairCollectionData[A, B]])(implicit eA: Elem[A], eB: Elem[B]): Rep[PairCollection[A, B]] = isoPairCollection(eA, eB).to(p);
-          def apply[A, B](as: Rep[Collection[A]], bs: Rep[Collection[B]])(implicit eA: Elem[A], eB: Elem[B]): Rep[PairCollection[A, B]] = mkPairCollection(as, bs)
+          def apply[A, B](p: Rep[PairCollectionData[A, B]])(implicit eeA: Elem[scala.Tuple2[A, B]], ecA: Elem[A], ecB: Elem[B]): Rep[PairCollection[A, B]] = isoPairCollection(eeA, ecA, ecB).to(p);
+          def apply[A, B](as: Rep[Collection[A]], bs: Rep[Collection[B]])(implicit eeA: Elem[scala.Tuple2[A, B]], ecA: Elem[A], ecB: Elem[B]): Rep[PairCollection[A, B]] = mkPairCollection(as, bs)
         };
         object PairCollectionMatcher {
           def unapply[A, B](p: Rep[Collection[scala.Tuple2[A, B]]]) = unmkPairCollection(p)
@@ -115,11 +116,11 @@ package paradise.collections {
           protected def getDefaultRep = PairCollection
         };
         implicit def proxyPairCollection[A, B](p: Rep[PairCollection[A, B]]): PairCollection[A, B] = proxyOps[PairCollection[A, B]](p);
-        implicit class ExtendedPairCollection[A, B](p: Rep[PairCollection[A, B]])(implicit eA: Elem[A], eB: Elem[B]) {
-          def toData: Rep[PairCollectionData[A, B]] = isoPairCollection(eA, eB).from(p)
+        implicit class ExtendedPairCollection[A, B](p: Rep[PairCollection[A, B]])(implicit eeA: Elem[scala.Tuple2[A, B]], ecA: Elem[A], ecB: Elem[B]) {
+          def toData: Rep[PairCollectionData[A, B]] = isoPairCollection(eeA, ecA, ecB).from(p)
         };
-        implicit def isoPairCollection[A, B](implicit eA: Elem[A], eB: Elem[B]): Iso[PairCollectionData[A, B], PairCollection[A, B]] = new PairCollectionIso[A, B]();
-        def mkPairCollection[A, B](as: Rep[Collection[A]], bs: Rep[Collection[B]])(implicit eA: Elem[A], eB: Elem[B]): Rep[PairCollection[A, B]];
+        implicit def isoPairCollection[A, B](implicit eeA: Elem[scala.Tuple2[A, B]], ecA: Elem[A], ecB: Elem[B]): Iso[PairCollectionData[A, B], PairCollection[A, B]] = new PairCollectionIso[A, B]();
+        def mkPairCollection[A, B](as: Rep[Collection[A]], bs: Rep[Collection[B]])(implicit eeA: Elem[scala.Tuple2[A, B]], ecA: Elem[A], ecB: Elem[B]): Rep[PairCollection[A, B]];
         def unmkPairCollection[A, B](p: Rep[Collection[scala.Tuple2[A, B]]]): Option[scala.Tuple2[Rep[Collection[A]], Rep[Collection[B]]]]
       };
       trait CollectionsSeq extends CollectionsDsl with ScalanSeq { self: CollectionsDslSeq =>
@@ -129,7 +130,7 @@ package paradise.collections {
           };
           new $anon()
         };
-        case class SeqCollectionOverArray[A](override val arr: Rep[Array[A]])(implicit eA: Elem[A]) extends CollectionOverArray[A](arr) with UserTypeSeq[CollectionOverArray[A]] {
+        case class SeqCollectionOverArray[A](override val arr: Rep[Array[A]])(implicit eeA: Elem[A]) extends CollectionOverArray[A](arr) with UserTypeSeq[CollectionOverArray[A]] {
           lazy val selfType = element[CollectionOverArray[A]]
         };
         lazy val CollectionOverArray = {
@@ -138,12 +139,12 @@ package paradise.collections {
           };
           new $anon()
         };
-        def mkCollectionOverArray[A](arr: Rep[Array[A]])(implicit eA: Elem[A]): Rep[CollectionOverArray[A]] = new SeqCollectionOverArray[A](arr);
+        def mkCollectionOverArray[A](arr: Rep[Array[A]])(implicit eeA: Elem[A]): Rep[CollectionOverArray[A]] = new SeqCollectionOverArray[A](arr);
         def unmkCollectionOverArray[A](p: Rep[Collection[A]]) = p match {
           case (p @ ((_): CollectionOverArray[A] @unchecked)) => Some(p.arr)
           case _ => None
         };
-        case class SeqPairCollection[A, B](override val as: Rep[Collection[A]], override val bs: Rep[Collection[B]])(implicit eA: Elem[A], eB: Elem[B]) extends PairCollection[A, B](as, bs) with UserTypeSeq[PairCollection[A, B]] {
+        case class SeqPairCollection[A, B](override val as: Rep[Collection[A]], override val bs: Rep[Collection[B]])(implicit eeA: Elem[scala.Tuple2[A, B]], ecA: Elem[A], ecB: Elem[B]) extends PairCollection[A, B](as, bs) with UserTypeSeq[PairCollection[A, B]] {
           lazy val selfType = element[PairCollection[A, B]]
         };
         lazy val PairCollection = {
@@ -152,7 +153,7 @@ package paradise.collections {
           };
           new $anon()
         };
-        def mkPairCollection[A, B](as: Rep[Collection[A]], bs: Rep[Collection[B]])(implicit eA: Elem[A], eB: Elem[B]): Rep[PairCollection[A, B]] = new SeqPairCollection[A, B](as, bs);
+        def mkPairCollection[A, B](as: Rep[Collection[A]], bs: Rep[Collection[B]])(implicit eeA: Elem[scala.Tuple2[A, B]], ecA: Elem[A], ecB: Elem[B]): Rep[PairCollection[A, B]] = new SeqPairCollection[A, B](as, bs);
         def unmkPairCollection[A, B](p: Rep[Collection[scala.Tuple2[A, B]]]) = p match {
           case (p @ ((_): PairCollection[A, B] @unchecked)) => Some(scala.Tuple2(p.as, p.bs))
           case _ => None
@@ -166,7 +167,7 @@ package paradise.collections {
           };
           new $anon()
         };
-        case class ExpCollectionOverArray[A](override val arr: Rep[Array[A]])(implicit eA: Elem[A]) extends CollectionOverArray[A](arr) with UserTypeDef[CollectionOverArray[A]] {
+        case class ExpCollectionOverArray[A](override val arr: Rep[Array[A]])(implicit eeA: Elem[A]) extends CollectionOverArray[A](arr) with UserTypeDef[CollectionOverArray[A]] {
           lazy val selfType = element[CollectionOverArray[A]];
           override def mirror(t: Transformer) = ExpCollectionOverArray[A](t(arr))
         };
@@ -224,14 +225,14 @@ package paradise.collections {
           }
         };
         object CollectionOverArrayCompanionMethods;
-        def mkCollectionOverArray[A](arr: Rep[Array[A]])(implicit eA: Elem[A]): Rep[CollectionOverArray[A]] = new ExpCollectionOverArray[A](arr);
+        def mkCollectionOverArray[A](arr: Rep[Array[A]])(implicit eeA: Elem[A]): Rep[CollectionOverArray[A]] = new ExpCollectionOverArray[A](arr);
         def unmkCollectionOverArray[A](p: Rep[Collection[A]]) = p.elem.asInstanceOf[(Elem[_$8] forSome { 
           type _$8
         })] match {
           case ((_): CollectionOverArrayElem[A] @unchecked) => Some(p.asRep[CollectionOverArray[A]].arr)
           case _ => None
         };
-        case class ExpPairCollection[A, B](override val as: Rep[Collection[A]], override val bs: Rep[Collection[B]])(implicit eA: Elem[A], eB: Elem[B]) extends PairCollection[A, B](as, bs) with UserTypeDef[PairCollection[A, B]] {
+        case class ExpPairCollection[A, B](override val as: Rep[Collection[A]], override val bs: Rep[Collection[B]])(implicit eeA: Elem[scala.Tuple2[A, B]], ecA: Elem[A], ecB: Elem[B]) extends PairCollection[A, B](as, bs) with UserTypeDef[PairCollection[A, B]] {
           lazy val selfType = element[PairCollection[A, B]];
           override def mirror(t: Transformer) = ExpPairCollection[A, B](t(as), t(bs))
         };
@@ -323,7 +324,7 @@ package paradise.collections {
           }
         };
         object PairCollectionCompanionMethods;
-        def mkPairCollection[A, B](as: Rep[Collection[A]], bs: Rep[Collection[B]])(implicit eA: Elem[A], eB: Elem[B]): Rep[PairCollection[A, B]] = new ExpPairCollection[A, B](as, bs);
+        def mkPairCollection[A, B](as: Rep[Collection[A]], bs: Rep[Collection[B]])(implicit eeA: Elem[scala.Tuple2[A, B]], ecA: Elem[A], ecB: Elem[B]): Rep[PairCollection[A, B]] = new ExpPairCollection[A, B](as, bs);
         def unmkPairCollection[A, B](p: Rep[Collection[scala.Tuple2[A, B]]]) = p.elem.asInstanceOf[(Elem[_$21] forSome { 
           type _$21
         })] match {
@@ -430,10 +431,10 @@ package paradise.collections {
               type A;
               type B
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), Seq((ys @ _), (eB @ _), _*), _) if receiver.elem.isInstanceOf[(CollectionElem[_$39, _$40] forSome { 
+              case MethodCall((receiver @ _), (method @ _), Seq((ys @ _), (emB @ _), _*), _) if receiver.elem.isInstanceOf[(CollectionElem[_$39, _$40] forSome { 
   type _$39;
   type _$40
-})].&&(method.getName.==("zip")) => Some(scala.Tuple3(receiver, ys, eB)).asInstanceOf[Option[(scala.Tuple3[Rep[Collection[A]], Rep[Collection[B]], Rep[Elem[B]]] forSome { 
+})].&&(method.getName.==("zip")) => Some(scala.Tuple3(receiver, ys, emB)).asInstanceOf[Option[(scala.Tuple3[Rep[Collection[A]], Rep[Collection[B]], Rep[Elem[B]]] forSome { 
                 type A;
                 type B
               })]]
@@ -457,7 +458,7 @@ package paradise.collections {
             })): Option[(scala.Tuple2[Rep[Array[T]], Rep[Elem[T]]] forSome { 
               type T
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), Seq((arr @ _), (eT @ _), _*), _) if receiver.elem.==(CollectionCompanionElem).&&(method.getName.==("apply")) => Some(scala.Tuple2(arr, eT)).asInstanceOf[Option[(scala.Tuple2[Rep[Array[T]], Rep[Elem[T]]] forSome { 
+              case MethodCall((receiver @ _), (method @ _), Seq((arr @ _), (emT @ _), _*), _) if receiver.elem.==(CollectionCompanionElem).&&(method.getName.==("apply")) => Some(scala.Tuple2(arr, emT)).asInstanceOf[Option[(scala.Tuple2[Rep[Array[T]], Rep[Elem[T]]] forSome { 
                 type T
               })]]
               case _ => None
@@ -477,7 +478,7 @@ package paradise.collections {
             })): Option[(scala.Tuple2[Rep[Array[T]], Rep[Elem[T]]] forSome { 
               type T
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), Seq((arr @ _), (eT @ _), _*), _) if receiver.elem.==(CollectionCompanionElem).&&(method.getName.==("fromArray")) => Some(scala.Tuple2(arr, eT)).asInstanceOf[Option[(scala.Tuple2[Rep[Array[T]], Rep[Elem[T]]] forSome { 
+              case MethodCall((receiver @ _), (method @ _), Seq((arr @ _), (emT @ _), _*), _) if receiver.elem.==(CollectionCompanionElem).&&(method.getName.==("fromArray")) => Some(scala.Tuple2(arr, emT)).asInstanceOf[Option[(scala.Tuple2[Rep[Array[T]], Rep[Elem[T]]] forSome { 
                 type T
               })]]
               case _ => None
@@ -495,29 +496,29 @@ package paradise.collections {
       };
       trait Collections extends Base with NumMonoidsDsl { self: CollectionsDsl =>
         trait Collection[A] extends Reifiable[Collection[A]] {
-          implicit def eA: Elem[A];
+          implicit def eeA: Elem[A];
           def arr: Rep[Array[A]];
           def length: Rep[Int];
           def apply(i: Rep[Int]): Rep[A];
-          def map[B](f: Rep[scala.Function1[A, B]])(implicit eB: Elem[B]): Rep[Collection[B]] = Collection(array_map(arr, f));
+          def map[B](f: Rep[scala.Function1[A, B]])(implicit emB: Elem[B]): Rep[Collection[B]] = Collection(array_map(arr, f));
           def reduce(implicit m: NumMonoid[A]): Rep[A] = {
             implicit val monoid = RepMonoid(opName = "+", zero = m.zero, append = m.append, isCommutative = true)
             array_reduce(arr)
           };
-          def zip[B](ys: Rep[Collection[B]])(implicit eB: Elem[B]): Rep[PairCollection[A, B]] = PairCollection(this, ys)
+          def zip[B](ys: Rep[Collection[B]])(implicit emB: Elem[B]): Rep[PairCollection[A, B]] = PairCollection(this, ys)
         };
-        abstract class CollectionOverArray[A](val arr: Rep[Array[A]])(implicit val eA: Elem[A]) extends Collection[A] with Product with Serializable {
+        abstract class CollectionOverArray[A](val arr: Rep[Array[A]])(implicit val eeA: Elem[A]) extends Collection[A] with Product with Serializable {
           def length = array_length(arr);
           def apply(i: Rep[Int]) = array_apply(arr, i);
         };
-        abstract class PairCollection[A, B](val as: Rep[Collection[A]], val bs: Rep[Collection[B]])(implicit val eA: Elem[scala.Tuple2[A, B]], val eB: Elem[B]) extends Collection[scala.Tuple2[A, B]] with Product with Serializable {
+        abstract class PairCollection[A, B](val as: Rep[Collection[A]], val bs: Rep[Collection[B]])(implicit val eeA: Elem[scala.Tuple2[A, B]], val ecA: Elem[A], val ecB: Elem[B]) extends Collection[scala.Tuple2[A, B]] with Product with Serializable {
           def arr: Rep[Array[scala.Tuple2[A, B]]] = array_zip(as.arr, bs.arr);
           def length = as.length;
           def apply(i: Rep[Int]) = Tuple(as(i), bs(i))
         };
         trait CollectionCompanion {
-          def apply[T](arr: Rep[Array[T]])(implicit eT: Elem[T]): Rep[Collection[T]] = fromArray(arr);
-          def fromArray[T](arr: Rep[Array[T]])(implicit eT: Elem[T]): Rep[Collection[T]] = CollectionOverArray(arr)
+          def apply[T](arr: Rep[Array[T]])(implicit emT: Elem[T]): Rep[Collection[T]] = fromArray(arr);
+          def fromArray[T](arr: Rep[Array[T]])(implicit emT: Elem[T]): Rep[Collection[T]] = CollectionOverArray(arr)
         };
         trait CollectionOverArrayCompanion;
         trait PairCollectionCompanion
