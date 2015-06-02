@@ -14,7 +14,7 @@ trait LinearAlgebraExamples extends LinearAlgebra {
 
     def mvm[T: ClassTag](matrix: AbstractMatrix[T], vector: AbstractVector[T])
               (implicit n: Numer[T], m: NumMonoid[T]): AbstractVector[T] = {
-      DenseVector(matrix.rows.map(r => r dot vector))
+      DenseVector(matrix.rows.map{ r: AbstractVector[T] => r dot vector })
     }
 
     lazy val ddmvm0 = (m: Array[Array[Double]], v: Array[Double]) => {
