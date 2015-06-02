@@ -8,10 +8,10 @@ package paradise {
       import scalan.common.Default;
       trait NumMonoidsAbs extends NumMonoids with ScalanDsl { self: NumMonoidsDsl =>
         implicit def proxyNumMonoid[A](p: Rep[NumMonoid[A]]): NumMonoid[A] = proxyOps[NumMonoid[A]](p)(classTag[NumMonoid[A]]);
-        class NumMonoidElem[A, To <: NumMonoid[A]](implicit val eA: Elem[A]) extends EntityElem[To] {
+        class NumMonoidElem[A, To <: NumMonoid[A]](implicit val eeA: Elem[A]) extends EntityElem[To] {
           override def isEntityType = true;
           override lazy val tag = {
-            implicit val tagA = eA.tag;
+            implicit val tagA = eeA.tag;
             weakTypeTag[NumMonoid[A]].asInstanceOf[WeakTypeTag[To]]
           };
           override def convert(x: Rep[(Reifiable[_$1] forSome { 
@@ -29,7 +29,7 @@ package paradise {
           };
           override def getDefaultRep: Rep[To] = ???
         };
-        implicit def numMonoidElement[A](implicit eA: Elem[A]): Elem[NumMonoid[A]] = new NumMonoidElem[A, NumMonoid[A]]();
+        implicit def numMonoidElement[A](implicit eeA: Elem[A]): Elem[NumMonoid[A]] = new NumMonoidElem[A, NumMonoid[A]]();
         implicit case object NumMonoidCompanionElem extends CompanionElem[NumMonoidCompanionAbs] with scala.Product with scala.Serializable {
           lazy val tag = weakTypeTag[NumMonoidCompanionAbs];
           protected def getDefaultRep = NumMonoid
@@ -39,16 +39,16 @@ package paradise {
         };
         def NumMonoid: Rep[NumMonoidCompanionAbs];
         implicit def proxyNumMonoidCompanion(p: Rep[NumMonoidCompanion]): NumMonoidCompanion = proxyOps[NumMonoidCompanion](p);
-        class PlusMonoidElem[A](val iso: Iso[PlusMonoidData[A], PlusMonoid[A]])(implicit n: Numer[A], eA: Elem[A]) extends NumMonoidElem[A, PlusMonoid[A]] with ConcreteElem[PlusMonoidData[A], PlusMonoid[A]] {
+        class PlusMonoidElem[A](val iso: Iso[PlusMonoidData[A], PlusMonoid[A]])(implicit n: Numer[A], eeA: Elem[A]) extends NumMonoidElem[A, PlusMonoid[A]] with ConcreteElem[PlusMonoidData[A], PlusMonoid[A]] {
           override def convertNumMonoid(x: Rep[NumMonoid[A]]) = PlusMonoid();
           override def getDefaultRep = super[ConcreteElem].getDefaultRep;
           override lazy val tag = {
-            implicit val tagA = eA.tag;
+            implicit val tagA = eeA.tag;
             weakTypeTag[PlusMonoid[A]]
           }
         };
         type PlusMonoidData[A] = Unit;
-        class PlusMonoidIso[A](implicit n: Numer[A], eA: Elem[A]) extends Iso[PlusMonoidData[A], PlusMonoid[A]] {
+        class PlusMonoidIso[A](implicit n: Numer[A], eeA: Elem[A]) extends Iso[PlusMonoidData[A], PlusMonoid[A]] {
           override def from(p: Rep[PlusMonoid[A]]) = ();
           override def to(p: Rep[Unit]) = {
             val unit = p;
@@ -59,8 +59,8 @@ package paradise {
         };
         abstract class PlusMonoidCompanionAbs extends CompanionBase[PlusMonoidCompanionAbs] with PlusMonoidCompanion {
           override def toString = "PlusMonoid";
-          def apply[A](p: Rep[PlusMonoidData[A]])(implicit n: Numer[A], eA: Elem[A]): Rep[PlusMonoid[A]] = isoPlusMonoid(n, eA).to(p);
-          def apply[A]()(implicit n: Numer[A], eA: Elem[A]): Rep[PlusMonoid[A]] = mkPlusMonoid()
+          def apply[A](p: Rep[PlusMonoidData[A]])(implicit n: Numer[A], eeA: Elem[A]): Rep[PlusMonoid[A]] = isoPlusMonoid(n, eeA).to(p);
+          def apply[A]()(implicit n: Numer[A], eeA: Elem[A]): Rep[PlusMonoid[A]] = mkPlusMonoid()
         };
         object PlusMonoidMatcher {
           def unapply[A](p: Rep[NumMonoid[A]]) = unmkPlusMonoid(p)
@@ -72,11 +72,11 @@ package paradise {
           protected def getDefaultRep = PlusMonoid
         };
         implicit def proxyPlusMonoid[A](p: Rep[PlusMonoid[A]]): PlusMonoid[A] = proxyOps[PlusMonoid[A]](p);
-        implicit class ExtendedPlusMonoid[A](p: Rep[PlusMonoid[A]])(implicit n: Numer[A], eA: Elem[A]) {
-          def toData: Rep[PlusMonoidData[A]] = isoPlusMonoid(n, eA).from(p)
+        implicit class ExtendedPlusMonoid[A](p: Rep[PlusMonoid[A]])(implicit n: Numer[A], eeA: Elem[A]) {
+          def toData: Rep[PlusMonoidData[A]] = isoPlusMonoid(n, eeA).from(p)
         };
-        implicit def isoPlusMonoid[A](implicit n: Numer[A], eA: Elem[A]): Iso[PlusMonoidData[A], PlusMonoid[A]] = new PlusMonoidIso[A]();
-        def mkPlusMonoid[A]()(implicit n: Numer[A], eA: Elem[A]): Rep[PlusMonoid[A]];
+        implicit def isoPlusMonoid[A](implicit n: Numer[A], eeA: Elem[A]): Iso[PlusMonoidData[A], PlusMonoid[A]] = new PlusMonoidIso[A]();
+        def mkPlusMonoid[A]()(implicit n: Numer[A], eeA: Elem[A]): Rep[PlusMonoid[A]];
         def unmkPlusMonoid[A](p: Rep[NumMonoid[A]]): Option[Rep[Unit]]
       };
       trait NumMonoidsSeq extends NumMonoidsDsl with ScalanSeq { self: NumMonoidsDslSeq =>
@@ -86,7 +86,7 @@ package paradise {
           };
           new $anon()
         };
-        case class SeqPlusMonoid[A](implicit override val n: Numer[A], override val eA: Elem[A]) extends PlusMonoid[A]() with UserTypeSeq[PlusMonoid[A]] {
+        case class SeqPlusMonoid[A](implicit override val n: Numer[A], override val eeA: Elem[A]) extends PlusMonoid[A]() with UserTypeSeq[PlusMonoid[A]] {
           lazy val selfType = element[PlusMonoid[A]]
         };
         lazy val PlusMonoid = {
@@ -95,7 +95,7 @@ package paradise {
           };
           new $anon()
         };
-        def mkPlusMonoid[A]()(implicit n: Numer[A], eA: Elem[A]): Rep[PlusMonoid[A]] = new SeqPlusMonoid[A]();
+        def mkPlusMonoid[A]()(implicit n: Numer[A], eeA: Elem[A]): Rep[PlusMonoid[A]] = new SeqPlusMonoid[A]();
         def unmkPlusMonoid[A](p: Rep[NumMonoid[A]]) = p match {
           case (p @ ((_): PlusMonoid[A] @unchecked)) => Some(())
           case _ => None
@@ -109,7 +109,7 @@ package paradise {
           };
           new $anon()
         };
-        case class ExpPlusMonoid[A](implicit override val n: Numer[A], override val eA: Elem[A]) extends PlusMonoid[A]() with UserTypeDef[PlusMonoid[A]] {
+        case class ExpPlusMonoid[A](implicit override val n: Numer[A], override val eeA: Elem[A]) extends PlusMonoid[A]() with UserTypeDef[PlusMonoid[A]] {
           lazy val selfType = element[PlusMonoid[A]];
           override def mirror(t: Transformer) = ExpPlusMonoid[A]()
         };
@@ -211,7 +211,7 @@ package paradise {
           }
         };
         object PlusMonoidCompanionMethods;
-        def mkPlusMonoid[A]()(implicit n: Numer[A], eA: Elem[A]): Rep[PlusMonoid[A]] = new ExpPlusMonoid[A]();
+        def mkPlusMonoid[A]()(implicit n: Numer[A], eeA: Elem[A]): Rep[PlusMonoid[A]] = new ExpPlusMonoid[A]();
         def unmkPlusMonoid[A](p: Rep[NumMonoid[A]]) = p.elem.asInstanceOf[(Elem[_$14] forSome { 
           type _$14
         })] match {
@@ -339,14 +339,14 @@ package paradise {
       };
       trait NumMonoids extends Base with NumersDsl { self: NumMonoidsDsl =>
         trait NumMonoid[A] extends Reifiable[NumMonoid[A]] {
-          implicit def eA: Elem[A];
+          implicit def eeA: Elem[A];
           implicit def n: Numer[A];
           def opName: Rep[String];
           def zero: Rep[A];
           def append: Rep[scala.Function1[scala.Tuple2[A, A], A]];
           def isCommutative: Rep[Boolean]
         };
-        abstract class PlusMonoid[A](implicit val n: Numer[A], val eA: Elem[A]) extends NumMonoid[A] with Product with Serializable {
+        abstract class PlusMonoid[A](implicit val n: Numer[A], val eeA: Elem[A]) extends NumMonoid[A] with Product with Serializable {
           def opName = toRep("+");
           def zero = n.zero;
           def append = fun(((in: Rep[scala.Tuple2[A, A]]) => {
