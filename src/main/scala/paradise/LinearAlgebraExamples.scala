@@ -6,7 +6,9 @@ import scala.reflect.ClassTag
 
 trait LinearAlgebraExamples extends LinearAlgebra {
 
-  trait LinearAlgebraExample {
+  trait LinearAlgebraExample
+
+  case class MvMExample() extends LinearAlgebraExample {
     implicit val doubleNumer: Numer[Double] = DoubleNumer()
     implicit val plusMonoid: NumMonoid[Double] = PlusMonoid[Double]
 
