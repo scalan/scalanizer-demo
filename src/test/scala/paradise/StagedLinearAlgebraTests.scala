@@ -4,7 +4,7 @@ import scalan._
 import scala.language.reflectiveCalls
 import paradise.implOfLinearAlgebraExamples.StagedEvaluation._
 
-trait StagedLinearAlgebraTests extends BaseTests { suit =>
+class StagedLinearAlgebraTests extends BaseTests { suit =>
 
   trait SimpleLaTests extends ScalanDsl with LinearAlgebraExamplesDsl {
     lazy val t0 = fun {(in: Rep[MvMExample]) => in.ddmvm0}
