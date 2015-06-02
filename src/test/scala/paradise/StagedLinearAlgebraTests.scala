@@ -11,8 +11,11 @@ trait StagedLinearAlgebraTests extends BaseTests { suit =>
   }
 
   test("simple") {
-    val ctx = new TestContext(this, "simpleStagedLa") with SimpleLaTests with LinearAlgebraExamplesDslExp
+    val ctx = new TestContext(this, "simpleStagedLa") with SimpleLaTests with LinearAlgebraExamplesDslExp {
+      def test() = { }
+    }
 
+    ctx.test
     ctx.emit("t0", ctx.t0)
   }
 }
