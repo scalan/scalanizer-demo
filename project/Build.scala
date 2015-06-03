@@ -52,6 +52,7 @@ object ScalanParadiseRootBuild extends Build {
   lazy val core = liteDependency("core")
   lazy val common = liteDependency("common")
   lazy val community = liteDependency("community-edition")
+  lazy val lmsbackend = liteDependency("lms-backend")
   lazy val scalanParadise = Project(
     id = "scalan-paradise",
     base = file(".")
@@ -62,7 +63,8 @@ object ScalanParadiseRootBuild extends Build {
     common % "test" classifier "tests",
     community,
     "org.scalatest" %% "scalatest" % "2.2.1" % "test",
-    "org.scalacheck" %% "scalacheck" % "1.11.5" % "test"
+    "org.scalacheck" %% "scalacheck" % "1.11.5" % "test",
+    lmsbackend
   ))
 
   def itFilter(name: String): Boolean = name endsWith "ItTests"
