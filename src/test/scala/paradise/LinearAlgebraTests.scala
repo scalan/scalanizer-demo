@@ -7,6 +7,6 @@ class LinearAlgebraTests extends FunSuite with LinearAlgebraExamples {
     val inM = Array(Array(1.0, 1.0), Array(0.0, 1.0))
     val inV = Array(2.0, 3.0)
 
-    assertResult(Array(5.0, 3.0))(MvMExample().ddmvm0(inM, inV))
+    assertResult(Array(5.0, 3.0))(ddmvm0(inM, inV))
   }
 }
