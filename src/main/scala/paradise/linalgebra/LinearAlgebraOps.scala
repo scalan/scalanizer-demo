@@ -1,8 +1,7 @@
 package paradise.linalgebra
 
-import paradise.HotSpot
-
 import scala.reflect.ClassTag
+import scalan.HotSpot
 
 trait LinearAlgebraOps { self: LinearAlgebra =>
   trait LinearAlgebraOp {

@@ -1,7 +1,7 @@
 package paradise.linalgebra {
   package implOfLinearAlgebraOps {
   object StagedEvaluation {
-      import scalan._;
+      import scalan._
       import paradise.implOfNumers.StagedEvaluation._;
       import paradise.implOfNumMonoids.StagedEvaluation._;
       import paradise.linalgebra.implOfVectors.StagedEvaluation._;
@@ -10,9 +10,8 @@ package paradise.linalgebra {
       import scala.reflect.runtime.universe._;
       import scala.reflect._;
       import scalan.common.Default;
-      import paradise.HotSpot
 
-      trait LinearAlgebraOpsAbs extends LinearAlgebraOps with ScalanDsl { self: LinearAlgebraDsl =>
+    trait LinearAlgebraOpsAbs extends LinearAlgebraOps with ScalanDsl { self: LinearAlgebraDsl =>
         implicit def proxyLinearAlgebraOp(p: Rep[LinearAlgebraOp]): LinearAlgebraOp = proxyOps[LinearAlgebraOp](p)(classTag[LinearAlgebraOp]);
         class LinearAlgebraOpElem[To <: LinearAlgebraOp] extends EntityElem[To] {
           override def isEntityType = true;

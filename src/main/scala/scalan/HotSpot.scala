@@ -1,4 +1,4 @@
-package paradise
+package scalan
 
 import scala.annotation.StaticAnnotation
 
