@@ -2,12 +2,42 @@ package paradise
 
 import org.scalatest._
 import paradise.linalgebra.LinearAlgebra
+import scala.util.Random
 
 class LinearAlgebraTests extends FunSuite with LinearAlgebra {
-  test("ddmvm") {
-    val inM = Array(Array(1.0, 1.0), Array(0.0, 1.0))
-    val inV = Array(2.0, 3.0)
 
-    assertResult(Array(5.0, 3.0))(LA.ddmvm0(inM, inV))
+  object CommonData {
+    val rnd = new Random(1)
+
+    def genArray(len: Int): Array[Double] = {
+      { for (i <- 1 to len) yield { rnd.nextDouble() } }.toArray
+    }
+
+    def genMatr(rows: Int, cols: Int): Array[Array[Double]] = {
+      { for (i <- 1 to rows) yield { genArray(cols) } }.toArray
+    }
+  }
+
+  test("ddmvm") {
+    val rows = 10000
+    val cols = rows;
+
+    println(s"""Generating random ${rows}x${cols} dense "Array[Array[Double]]" matrix...""")
+    val inM = CommonData.genMatr(rows, cols)
+    println(s"""Generating random ${rows} elements "Array[Double]" vector...""")
+    val inV = CommonData.genArray(cols)
+
+    val correctRes = inM.map({r:Array[Double] => r.zip(inV).map({p => p._1 * p._2}).fold(0.0)(_+_)})
+
+    println( s"Multiplying matrix by vector..." )
+    val t1 = System.currentTimeMillis()
+    val res = LA.ddmvm0(inM, inV)
+    val t2 = System.currentTimeMillis()
+
+    assertResult(correctRes)(res)
+
+    val dt = t2 - t1
+    println("")
+    println(s"Multiplication is done in $dt millis.")
   }
 }
