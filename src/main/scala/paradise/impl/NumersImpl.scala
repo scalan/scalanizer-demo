@@ -7,10 +7,10 @@ package paradise {
       import scalan.common.Default;
       trait NumersAbs extends Numers with ScalanDsl { self: NumersDsl =>
         implicit def proxyNumer[T](p: Rep[Numer[T]]): Numer[T] = proxyOps[Numer[T]](p)(classTag[Numer[T]]);
-        class NumerElem[T, To <: Numer[T]](implicit val eT: Elem[T]) extends EntityElem[To] {
+        class NumerElem[T, To <: Numer[T]](implicit val eeT: Elem[T]) extends EntityElem[To] {
           override def isEntityType = true;
           override lazy val tag = {
-            implicit val tagT = eT.tag;
+            implicit val tagT = eeT.tag;
             weakTypeTag[Numer[T]].asInstanceOf[WeakTypeTag[To]]
           };
           override def convert(x: Rep[(Reifiable[_$1] forSome { 
@@ -28,7 +28,7 @@ package paradise {
           };
           override def getDefaultRep: Rep[To] = ???
         };
-        implicit def numerElement[T](implicit eT: Elem[T]): Elem[Numer[T]] = new NumerElem[T, Numer[T]]();
+        implicit def numerElement[T](implicit eeT: Elem[T]): Elem[Numer[T]] = new NumerElem[T, Numer[T]]();
         implicit case object NumerCompanionElem extends CompanionElem[NumerCompanionAbs] with scala.Product with scala.Serializable {
           lazy val tag = weakTypeTag[NumerCompanionAbs];
           protected def getDefaultRep = Numer
@@ -280,14 +280,14 @@ package paradise {
       };
       trait Numers extends Base { self: NumersDsl =>
         trait Numer[T] extends Reifiable[Numer[T]] {
-          implicit def eT: Elem[T];
+          implicit def eeT: Elem[T];
           def zero: Rep[T];
           def one: Rep[T];
           def plus(a: Rep[T], b: Rep[T]): Rep[T];
           def times(a: Rep[T], b: Rep[T]): Rep[T]
         };
         abstract class DoubleNumer extends Numer[Double] with Product with Serializable {
-          def eT: Elem[Double] = element[Double]
+          def eeT: Elem[Double] = element[Double];
           def zero: Rep[Double] = toRep(0.0);
           def one: Rep[Double] = toRep(1.0);
           def plus(a: Rep[Double], b: Rep[Double]) = a.+(b);
