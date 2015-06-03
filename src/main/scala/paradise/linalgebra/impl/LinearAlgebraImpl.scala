@@ -8,6 +8,7 @@ package paradise.linalgebra {
       import paradise.collections.implOfCollections.StagedEvaluation._
       import paradise.linalgebra.implOfVectors.StagedEvaluation._
       import paradise.linalgebra.implOfMatrices.StagedEvaluation._
+      import paradise.linalgebra.implOfLinearAlgebraOps.StagedEvaluation._
 
       trait LinearAlgebraDsl extends Scalan
       with NumersDsl
@@ -15,6 +16,7 @@ package paradise.linalgebra {
       with CollectionsDsl
       with VectorsDsl
       with MatricesDsl
+      with LinearAlgebraOpsDsl
 
       trait LinearAlgebraDslSeq extends ScalanSeq with LinearAlgebraDsl
       with NumersDslSeq
@@ -22,6 +24,7 @@ package paradise.linalgebra {
       with CollectionsDslSeq
       with VectorsDslSeq
       with MatricesDslSeq
+      with LinearAlgebraOpsDslSeq
 
       trait LinearAlgebraDslExp extends ScalanExp with LinearAlgebraDsl
       with NumersDslExp
@@ -29,6 +32,7 @@ package paradise.linalgebra {
       with CollectionsDslExp
       with VectorsDslExp
       with MatricesDslExp
+      with LinearAlgebraOpsDslExp
 
     }
   }
