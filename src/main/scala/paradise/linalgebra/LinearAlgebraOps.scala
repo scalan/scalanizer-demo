@@ -29,7 +29,7 @@ trait LinearAlgebraOps { self: LinearAlgebra =>
 //      val vector: Vec[Double] = DenseVec(Col(v))
 //
 //      LA().mvm(matrix, vector).items.arr
-      implOfLinearAlgebraOps.HotSpotLoaders.ddmvmKernel(m, v)
+      implOfLinearAlgebraOps.HotSpotKernels.ddmvmKernel(m, v)
     }
   }
 }
