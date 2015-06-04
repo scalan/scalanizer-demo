@@ -1,10 +1,10 @@
 package paradise.linalgebra
 
 import paradise.NumMonoids
-import paradise.collections.Collections
+import paradise.collections.Cols
 
 trait LinearAlgebra extends NumMonoids
-with Collections
-with Vectors
-with Matrices
+with Cols
+with Vecs
+with Matrs
 with LinearAlgebraOps

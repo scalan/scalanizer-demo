@@ -5,14 +5,14 @@ import scalan.HotSpot
 
 trait LinearAlgebraOps { self: LinearAlgebra =>
   trait LinearAlgebraOp {
-    def mvm[T: ClassTag](matrix: AbstractMatrix[T], vector: AbstractVector[T])
-                        (implicit n: Numer[T], m: NumMonoid[T]): AbstractVector[T]
+    def mvm[T: ClassTag](matrix: Matr[T], vector: Vec[T])
+                        (implicit n: Numer[T], m: NumMonoid[T]): Vec[T]
   }
 
   case class LA() extends LinearAlgebraOp {
-    def mvm[T: ClassTag](matrix: AbstractMatrix[T], vector: AbstractVector[T])
-                        (implicit n: Numer[T], m: NumMonoid[T]): AbstractVector[T] = {
-      DenseVector(matrix.rows.map{ r: AbstractVector[T] => r dot vector })
+    def mvm[T: ClassTag](matrix: Matr[T], vector: Vec[T])
+                        (implicit n: Numer[T], m: NumMonoid[T]): Vec[T] = {
+      DenseVec(matrix.rows.map{ r: Vec[T] => r dot vector })
     }
   }
 
@@ -23,10 +23,10 @@ trait LinearAlgebraOps { self: LinearAlgebra =>
       implicit val plusMonoid: NumMonoid[Double] = PlusMonoid[Double]
 
       val width = m(0).length
-      val matrix: AbstractMatrix[Double] = {
-        CompoundMatrix(Collection(m.map { r: Array[Double] => DenseVector(Collection(r)) }), width)
+      val matrix: Matr[Double] = {
+        CompoundMatr(Col(m.map { r: Array[Double] => DenseVec(Col(r)) }), width)
       }
-      val vector: AbstractVector[Double] = DenseVector(Collection(v))
+      val vector: Vec[Double] = DenseVec(Col(v))
 
       LA().mvm(matrix, vector).items.arr
     }
