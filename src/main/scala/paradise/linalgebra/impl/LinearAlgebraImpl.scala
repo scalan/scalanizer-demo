@@ -5,33 +5,33 @@ package paradise.linalgebra {
       import scalan._
       import paradise.implOfNumers.StagedEvaluation._
       import paradise.implOfNumMonoids.StagedEvaluation._
-      import paradise.collections.implOfCollections.StagedEvaluation._
-      import paradise.linalgebra.implOfVectors.StagedEvaluation._
-      import paradise.linalgebra.implOfMatrices.StagedEvaluation._
+      import paradise.collections.implOfCols.StagedEvaluation._
+      import paradise.linalgebra.implOfVecs.StagedEvaluation._
+      import paradise.linalgebra.implOfMatrs.StagedEvaluation._
       import paradise.linalgebra.implOfLinearAlgebraOps.StagedEvaluation._
 
       trait LinearAlgebraDsl extends Scalan
       with NumersDsl
       with NumMonoidsDsl
-      with CollectionsDsl
-      with VectorsDsl
-      with MatricesDsl
+      with ColsDsl
+      with VecsDsl
+      with MatrsDsl
       with LinearAlgebraOpsDsl
 
       trait LinearAlgebraDslSeq extends ScalanSeq with LinearAlgebraDsl
       with NumersDslSeq
       with NumMonoidsDslSeq
-      with CollectionsDslSeq
-      with VectorsDslSeq
-      with MatricesDslSeq
+      with ColsDslSeq
+      with VecsDslSeq
+      with MatrsDslSeq
       with LinearAlgebraOpsDslSeq
 
       trait LinearAlgebraDslExp extends ScalanExp with LinearAlgebraDsl
       with NumersDslExp
       with NumMonoidsDslExp
-      with CollectionsDslExp
-      with VectorsDslExp
-      with MatricesDslExp
+      with ColsDslExp
+      with VecsDslExp
+      with MatrsDslExp
       with LinearAlgebraOpsDslExp
 
     }

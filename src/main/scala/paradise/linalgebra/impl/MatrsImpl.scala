@@ -1,149 +1,149 @@
 package paradise.linalgebra {
-  package implOfMatrices {
+  package implOfMatrs {
     object StagedEvaluation {
       import scalan._;
       import paradise.implOfNumMonoids.StagedEvaluation._;
-      import paradise.collections.implOfCollections.StagedEvaluation._;
-      import paradise.linalgebra.implOfVectors.StagedEvaluation._;
+      import paradise.collections.implOfCols.StagedEvaluation._;
+      import paradise.linalgebra.implOfVecs.StagedEvaluation._;
       import paradise.linalgebra.implOfLinearAlgebra.StagedEvaluation._;
       import scala.reflect.runtime.universe._;
       import scala.reflect._;
       import scalan.common.Default;
-      trait MatricesAbs extends Matrices with ScalanDsl { self: LinearAlgebraDsl =>
-        implicit def proxyAbstractMatrix[T](p: Rep[AbstractMatrix[T]]): AbstractMatrix[T] = proxyOps[AbstractMatrix[T]](p)(classTag[AbstractMatrix[T]]);
-        class AbstractMatrixElem[T, To <: AbstractMatrix[T]](implicit val eeT: Elem[T]) extends EntityElem[To] {
+      trait MatrsAbs extends Matrs with ScalanDsl { self: LinearAlgebraDsl =>
+        implicit def proxyMatr[T](p: Rep[Matr[T]]): Matr[T] = proxyOps[Matr[T]](p)(classTag[Matr[T]]);
+        class MatrElem[T, To <: Matr[T]](implicit val eeT: Elem[T]) extends EntityElem[To] {
           override def isEntityType = true;
           override lazy val tag = {
             implicit val tagT = eeT.tag;
-            weakTypeTag[AbstractMatrix[T]].asInstanceOf[WeakTypeTag[To]]
+            weakTypeTag[Matr[T]].asInstanceOf[WeakTypeTag[To]]
           };
           override def convert(x: Rep[(Reifiable[_$1] forSome { 
             type _$1
           })]) = {
-            val conv = fun(((x: Rep[AbstractMatrix[T]]) => convertAbstractMatrix(x)));
-            tryConvert(element[AbstractMatrix[T]], this, x, conv)
+            val conv = fun(((x: Rep[Matr[T]]) => convertMatr(x)));
+            tryConvert(element[Matr[T]], this, x, conv)
           };
-          def convertAbstractMatrix(x: Rep[AbstractMatrix[T]]): Rep[To] = {
+          def convertMatr(x: Rep[Matr[T]]): Rep[To] = {
             assert(x.selfType1 match {
-              case ((_): AbstractMatrixElem[(_), (_)]) => true
+              case ((_): MatrElem[(_), (_)]) => true
               case _ => false
             });
             x.asRep[To]
           };
           override def getDefaultRep: Rep[To] = ???
         };
-        implicit def abstractMatrixElement[T](implicit eeT: Elem[T]): Elem[AbstractMatrix[T]] = new AbstractMatrixElem[T, AbstractMatrix[T]]();
-        implicit case object AbstractMatrixCompanionElem extends CompanionElem[AbstractMatrixCompanionAbs] with scala.Product with scala.Serializable {
-          lazy val tag = weakTypeTag[AbstractMatrixCompanionAbs];
-          protected def getDefaultRep = AbstractMatrix
+        implicit def matrElement[T](implicit eeT: Elem[T]): Elem[Matr[T]] = new MatrElem[T, Matr[T]]();
+        implicit case object MatrCompanionElem extends CompanionElem[MatrCompanionAbs] with scala.Product with scala.Serializable {
+          lazy val tag = weakTypeTag[MatrCompanionAbs];
+          protected def getDefaultRep = Matr
         };
-        abstract class AbstractMatrixCompanionAbs extends CompanionBase[AbstractMatrixCompanionAbs] with AbstractMatrixCompanion {
-          override def toString = "AbstractMatrix"
+        abstract class MatrCompanionAbs extends CompanionBase[MatrCompanionAbs] with MatrCompanion {
+          override def toString = "Matr"
         };
-        def AbstractMatrix: Rep[AbstractMatrixCompanionAbs];
-        implicit def proxyAbstractMatrixCompanion(p: Rep[AbstractMatrixCompanion]): AbstractMatrixCompanion = proxyOps[AbstractMatrixCompanion](p);
-        class CompoundMatrixElem[T](val iso: Iso[CompoundMatrixData[T], CompoundMatrix[T]])(implicit eeT: Elem[T]) extends AbstractMatrixElem[T, CompoundMatrix[T]] with ConcreteElem[CompoundMatrixData[T], CompoundMatrix[T]] {
-          override def convertAbstractMatrix(x: Rep[AbstractMatrix[T]]) = CompoundMatrix(x.rows, x.numColumns);
+        def Matr: Rep[MatrCompanionAbs];
+        implicit def proxyMatrCompanion(p: Rep[MatrCompanion]): MatrCompanion = proxyOps[MatrCompanion](p);
+        class CompoundMatrElem[T](val iso: Iso[CompoundMatrData[T], CompoundMatr[T]])(implicit eeT: Elem[T]) extends MatrElem[T, CompoundMatr[T]] with ConcreteElem[CompoundMatrData[T], CompoundMatr[T]] {
+          override def convertMatr(x: Rep[Matr[T]]) = CompoundMatr(x.rows, x.numColumns);
           override def getDefaultRep = super[ConcreteElem].getDefaultRep;
           override lazy val tag = {
             implicit val tagT = eeT.tag;
-            weakTypeTag[CompoundMatrix[T]]
+            weakTypeTag[CompoundMatr[T]]
           }
         };
-        type CompoundMatrixData[T] = scala.Tuple2[Collection[AbstractVector[T]], Int];
-        class CompoundMatrixIso[T](implicit eeT: Elem[T]) extends Iso[CompoundMatrixData[T], CompoundMatrix[T]]()(pairElement(implicitly[Elem[Collection[AbstractVector[T]]]], implicitly[Elem[Int]])) {
-          override def from(p: Rep[CompoundMatrix[T]]) = scala.Tuple2(p.rows, p.numColumns);
-          override def to(p: Rep[scala.Tuple2[Collection[AbstractVector[T]], Int]]) = {
+        type CompoundMatrData[T] = scala.Tuple2[Col[Vec[T]], Int];
+        class CompoundMatrIso[T](implicit eeT: Elem[T]) extends Iso[CompoundMatrData[T], CompoundMatr[T]]()(pairElement(implicitly[Elem[Col[Vec[T]]]], implicitly[Elem[Int]])) {
+          override def from(p: Rep[CompoundMatr[T]]) = scala.Tuple2(p.rows, p.numColumns);
+          override def to(p: Rep[scala.Tuple2[Col[Vec[T]], Int]]) = {
             val x$1 = (p: @scala.unchecked) match {
               case Pair((rows @ _), (numColumns @ _)) => scala.Tuple2(rows, numColumns)
             };
             val rows = x$1._1;
             val numColumns = x$1._2;
-            CompoundMatrix(rows, numColumns)
+            CompoundMatr(rows, numColumns)
           };
-          lazy val defaultRepTo = Default.defaultVal[Rep[CompoundMatrix[T]]](CompoundMatrix(element[Collection[AbstractVector[T]]].defaultRepValue, 0));
-          lazy val eTo = new CompoundMatrixElem[T](this)
+          lazy val defaultRepTo = Default.defaultVal[Rep[CompoundMatr[T]]](CompoundMatr(element[Col[Vec[T]]].defaultRepValue, 0));
+          lazy val eTo = new CompoundMatrElem[T](this)
         };
-        abstract class CompoundMatrixCompanionAbs extends CompanionBase[CompoundMatrixCompanionAbs] with CompoundMatrixCompanion {
-          override def toString = "CompoundMatrix";
-          def apply[T](p: Rep[CompoundMatrixData[T]])(implicit eeT: Elem[T]): Rep[CompoundMatrix[T]] = isoCompoundMatrix(eeT).to(p);
-          def apply[T](rows: Rep[Collection[AbstractVector[T]]], numColumns: Rep[Int])(implicit eeT: Elem[T]): Rep[CompoundMatrix[T]] = mkCompoundMatrix(rows, numColumns)
+        abstract class CompoundMatrCompanionAbs extends CompanionBase[CompoundMatrCompanionAbs] with CompoundMatrCompanion {
+          override def toString = "CompoundMatr";
+          def apply[T](p: Rep[CompoundMatrData[T]])(implicit eeT: Elem[T]): Rep[CompoundMatr[T]] = isoCompoundMatr(eeT).to(p);
+          def apply[T](rows: Rep[Col[Vec[T]]], numColumns: Rep[Int])(implicit eeT: Elem[T]): Rep[CompoundMatr[T]] = mkCompoundMatr(rows, numColumns)
         };
-        object CompoundMatrixMatcher {
-          def unapply[T](p: Rep[AbstractMatrix[T]]) = unmkCompoundMatrix(p)
+        object CompoundMatrMatcher {
+          def unapply[T](p: Rep[Matr[T]]) = unmkCompoundMatr(p)
         };
-        def CompoundMatrix: Rep[CompoundMatrixCompanionAbs];
-        implicit def proxyCompoundMatrixCompanion(p: Rep[CompoundMatrixCompanionAbs]): CompoundMatrixCompanionAbs = proxyOps[CompoundMatrixCompanionAbs](p);
-        implicit case object CompoundMatrixCompanionElem extends CompanionElem[CompoundMatrixCompanionAbs] with scala.Product with scala.Serializable {
-          lazy val tag = weakTypeTag[CompoundMatrixCompanionAbs];
-          protected def getDefaultRep = CompoundMatrix
+        def CompoundMatr: Rep[CompoundMatrCompanionAbs];
+        implicit def proxyCompoundMatrCompanion(p: Rep[CompoundMatrCompanionAbs]): CompoundMatrCompanionAbs = proxyOps[CompoundMatrCompanionAbs](p);
+        implicit case object CompoundMatrCompanionElem extends CompanionElem[CompoundMatrCompanionAbs] with scala.Product with scala.Serializable {
+          lazy val tag = weakTypeTag[CompoundMatrCompanionAbs];
+          protected def getDefaultRep = CompoundMatr
         };
-        implicit def proxyCompoundMatrix[T](p: Rep[CompoundMatrix[T]]): CompoundMatrix[T] = proxyOps[CompoundMatrix[T]](p);
-        implicit class ExtendedCompoundMatrix[T](p: Rep[CompoundMatrix[T]])(implicit eeT: Elem[T]) {
-          def toData: Rep[CompoundMatrixData[T]] = isoCompoundMatrix(eeT).from(p)
+        implicit def proxyCompoundMatr[T](p: Rep[CompoundMatr[T]]): CompoundMatr[T] = proxyOps[CompoundMatr[T]](p);
+        implicit class ExtendedCompoundMatr[T](p: Rep[CompoundMatr[T]])(implicit eeT: Elem[T]) {
+          def toData: Rep[CompoundMatrData[T]] = isoCompoundMatr(eeT).from(p)
         };
-        implicit def isoCompoundMatrix[T](implicit eeT: Elem[T]): Iso[CompoundMatrixData[T], CompoundMatrix[T]] = new CompoundMatrixIso[T]();
-        def mkCompoundMatrix[T](rows: Rep[Collection[AbstractVector[T]]], numColumns: Rep[Int])(implicit eeT: Elem[T]): Rep[CompoundMatrix[T]];
-        def unmkCompoundMatrix[T](p: Rep[AbstractMatrix[T]]): Option[scala.Tuple2[Rep[Collection[AbstractVector[T]]], Rep[Int]]]
+        implicit def isoCompoundMatr[T](implicit eeT: Elem[T]): Iso[CompoundMatrData[T], CompoundMatr[T]] = new CompoundMatrIso[T]();
+        def mkCompoundMatr[T](rows: Rep[Col[Vec[T]]], numColumns: Rep[Int])(implicit eeT: Elem[T]): Rep[CompoundMatr[T]];
+        def unmkCompoundMatr[T](p: Rep[Matr[T]]): Option[scala.Tuple2[Rep[Col[Vec[T]]], Rep[Int]]]
       };
-      trait MatricesSeq extends MatricesDsl with ScalanSeq { self: LinearAlgebraDslSeq =>
-        lazy val AbstractMatrix: Rep[AbstractMatrixCompanionAbs] = {
-          final class $anon extends AbstractMatrixCompanionAbs with UserTypeSeq[AbstractMatrixCompanionAbs] {
-            lazy val selfType = element[AbstractMatrixCompanionAbs]
+      trait MatrsSeq extends MatrsDsl with ScalanSeq { self: LinearAlgebraDslSeq =>
+        lazy val Matr: Rep[MatrCompanionAbs] = {
+          final class $anon extends MatrCompanionAbs with UserTypeSeq[MatrCompanionAbs] {
+            lazy val selfType = element[MatrCompanionAbs]
           };
           new $anon()
         };
-        case class SeqCompoundMatrix[T](override val rows: Rep[Collection[AbstractVector[T]]], override val numColumns: Rep[Int])(implicit eeT: Elem[T]) extends CompoundMatrix[T](rows, numColumns) with UserTypeSeq[CompoundMatrix[T]] {
-          lazy val selfType = element[CompoundMatrix[T]]
+        case class SeqCompoundMatr[T](override val rows: Rep[Col[Vec[T]]], override val numColumns: Rep[Int])(implicit eeT: Elem[T]) extends CompoundMatr[T](rows, numColumns) with UserTypeSeq[CompoundMatr[T]] {
+          lazy val selfType = element[CompoundMatr[T]]
         };
-        lazy val CompoundMatrix = {
-          final class $anon extends CompoundMatrixCompanionAbs with UserTypeSeq[CompoundMatrixCompanionAbs] {
-            lazy val selfType = element[CompoundMatrixCompanionAbs]
+        lazy val CompoundMatr = {
+          final class $anon extends CompoundMatrCompanionAbs with UserTypeSeq[CompoundMatrCompanionAbs] {
+            lazy val selfType = element[CompoundMatrCompanionAbs]
           };
           new $anon()
         };
-        def mkCompoundMatrix[T](rows: Rep[Collection[AbstractVector[T]]], numColumns: Rep[Int])(implicit eeT: Elem[T]): Rep[CompoundMatrix[T]] = new SeqCompoundMatrix[T](rows, numColumns);
-        def unmkCompoundMatrix[T](p: Rep[AbstractMatrix[T]]) = p match {
-          case (p @ ((_): CompoundMatrix[T] @unchecked)) => Some(scala.Tuple2(p.rows, p.numColumns))
+        def mkCompoundMatr[T](rows: Rep[Col[Vec[T]]], numColumns: Rep[Int])(implicit eeT: Elem[T]): Rep[CompoundMatr[T]] = new SeqCompoundMatr[T](rows, numColumns);
+        def unmkCompoundMatr[T](p: Rep[Matr[T]]) = p match {
+          case (p @ ((_): CompoundMatr[T] @unchecked)) => Some(scala.Tuple2(p.rows, p.numColumns))
           case _ => None
         }
       };
-      trait MatricesExp extends MatricesDsl with ScalanExp { self: LinearAlgebraDslExp =>
-        lazy val AbstractMatrix: Rep[AbstractMatrixCompanionAbs] = {
-          final class $anon extends AbstractMatrixCompanionAbs with UserTypeDef[AbstractMatrixCompanionAbs] {
-            lazy val selfType = element[AbstractMatrixCompanionAbs];
+      trait MatrsExp extends MatrsDsl with ScalanExp { self: LinearAlgebraDslExp =>
+        lazy val Matr: Rep[MatrCompanionAbs] = {
+          final class $anon extends MatrCompanionAbs with UserTypeDef[MatrCompanionAbs] {
+            lazy val selfType = element[MatrCompanionAbs];
             override def mirror(t: Transformer) = this
           };
           new $anon()
         };
-        case class ExpCompoundMatrix[T](override val rows: Rep[Collection[AbstractVector[T]]], override val numColumns: Rep[Int])(implicit eeT: Elem[T]) extends CompoundMatrix[T](rows, numColumns) with UserTypeDef[CompoundMatrix[T]] {
-          lazy val selfType = element[CompoundMatrix[T]];
-          override def mirror(t: Transformer) = ExpCompoundMatrix[T](t(rows), t(numColumns))
+        case class ExpCompoundMatr[T](override val rows: Rep[Col[Vec[T]]], override val numColumns: Rep[Int])(implicit eeT: Elem[T]) extends CompoundMatr[T](rows, numColumns) with UserTypeDef[CompoundMatr[T]] {
+          lazy val selfType = element[CompoundMatr[T]];
+          override def mirror(t: Transformer) = ExpCompoundMatr[T](t(rows), t(numColumns))
         };
-        lazy val CompoundMatrix: Rep[CompoundMatrixCompanionAbs] = {
-          final class $anon extends CompoundMatrixCompanionAbs with UserTypeDef[CompoundMatrixCompanionAbs] {
-            lazy val selfType = element[CompoundMatrixCompanionAbs];
+        lazy val CompoundMatr: Rep[CompoundMatrCompanionAbs] = {
+          final class $anon extends CompoundMatrCompanionAbs with UserTypeDef[CompoundMatrCompanionAbs] {
+            lazy val selfType = element[CompoundMatrCompanionAbs];
             override def mirror(t: Transformer) = this
           };
           new $anon()
         };
-        object CompoundMatrixMethods {
+        object CompoundMatrMethods {
           object numRows {
             def unapply(d: (Def[_$2] forSome { 
               type _$2
-            })): Option[(Rep[CompoundMatrix[T]] forSome { 
+            })): Option[(Rep[CompoundMatr[T]] forSome { 
               type T
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(CompoundMatrixElem[_$3] forSome { 
+              case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(CompoundMatrElem[_$3] forSome { 
   type _$3
-})].&&(method.getName.==("numRows")) => Some(receiver).asInstanceOf[Option[(Rep[CompoundMatrix[T]] forSome { 
+})].&&(method.getName.==("numRows")) => Some(receiver).asInstanceOf[Option[(Rep[CompoundMatr[T]] forSome { 
                 type T
               })]]
               case _ => None
             };
             def unapply(exp: (Exp[_$4] forSome { 
               type _$4
-            })): Option[(Rep[CompoundMatrix[T]] forSome { 
+            })): Option[(Rep[CompoundMatr[T]] forSome { 
               type T
             })] = exp match {
               case Def((d @ _)) => unapply(d)
@@ -153,19 +153,19 @@ package paradise.linalgebra {
           object columns {
             def unapply(d: (Def[_$5] forSome { 
               type _$5
-            })): Option[(scala.Tuple2[Rep[CompoundMatrix[T]], Rep[Numer[T]]] forSome { 
+            })): Option[(scala.Tuple2[Rep[CompoundMatr[T]], Rep[Numer[T]]] forSome { 
               type T
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), Seq((n @ _), _*), _) if receiver.elem.isInstanceOf[(CompoundMatrixElem[_$6] forSome { 
+              case MethodCall((receiver @ _), (method @ _), Seq((n @ _), _*), _) if receiver.elem.isInstanceOf[(CompoundMatrElem[_$6] forSome { 
   type _$6
-})].&&(method.getName.==("columns")) => Some(scala.Tuple2(receiver, n)).asInstanceOf[Option[(scala.Tuple2[Rep[CompoundMatrix[T]], Rep[Numer[T]]] forSome { 
+})].&&(method.getName.==("columns")) => Some(scala.Tuple2(receiver, n)).asInstanceOf[Option[(scala.Tuple2[Rep[CompoundMatr[T]], Rep[Numer[T]]] forSome { 
                 type T
               })]]
               case _ => None
             };
             def unapply(exp: (Exp[_$7] forSome { 
               type _$7
-            })): Option[(scala.Tuple2[Rep[CompoundMatrix[T]], Rep[Numer[T]]] forSome { 
+            })): Option[(scala.Tuple2[Rep[CompoundMatr[T]], Rep[Numer[T]]] forSome { 
               type T
             })] = exp match {
               case Def((d @ _)) => unapply(d)
@@ -173,32 +173,32 @@ package paradise.linalgebra {
             }
           }
         };
-        object CompoundMatrixCompanionMethods;
-        def mkCompoundMatrix[T](rows: Rep[Collection[AbstractVector[T]]], numColumns: Rep[Int])(implicit eeT: Elem[T]): Rep[CompoundMatrix[T]] = new ExpCompoundMatrix[T](rows, numColumns);
-        def unmkCompoundMatrix[T](p: Rep[AbstractMatrix[T]]) = p.elem.asInstanceOf[(Elem[_$8] forSome { 
+        object CompoundMatrCompanionMethods;
+        def mkCompoundMatr[T](rows: Rep[Col[Vec[T]]], numColumns: Rep[Int])(implicit eeT: Elem[T]): Rep[CompoundMatr[T]] = new ExpCompoundMatr[T](rows, numColumns);
+        def unmkCompoundMatr[T](p: Rep[Matr[T]]) = p.elem.asInstanceOf[(Elem[_$8] forSome { 
           type _$8
         })] match {
-          case ((_): CompoundMatrixElem[T] @unchecked) => Some(scala.Tuple2(p.asRep[CompoundMatrix[T]].rows, p.asRep[CompoundMatrix[T]].numColumns))
+          case ((_): CompoundMatrElem[T] @unchecked) => Some(scala.Tuple2(p.asRep[CompoundMatr[T]].rows, p.asRep[CompoundMatr[T]].numColumns))
           case _ => None
         };
-        object AbstractMatrixMethods {
+        object MatrMethods {
           object numColumns {
             def unapply(d: (Def[_$9] forSome { 
               type _$9
-            })): Option[(Rep[AbstractMatrix[T]] forSome { 
+            })): Option[(Rep[Matr[T]] forSome { 
               type T
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(AbstractMatrixElem[_$10, _$11] forSome { 
+              case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(MatrElem[_$10, _$11] forSome { 
   type _$10;
   type _$11
-})].&&(method.getName.==("numColumns")) => Some(receiver).asInstanceOf[Option[(Rep[AbstractMatrix[T]] forSome { 
+})].&&(method.getName.==("numColumns")) => Some(receiver).asInstanceOf[Option[(Rep[Matr[T]] forSome { 
                 type T
               })]]
               case _ => None
             };
             def unapply(exp: (Exp[_$12] forSome { 
               type _$12
-            })): Option[(Rep[AbstractMatrix[T]] forSome { 
+            })): Option[(Rep[Matr[T]] forSome { 
               type T
             })] = exp match {
               case Def((d @ _)) => unapply(d)
@@ -208,20 +208,20 @@ package paradise.linalgebra {
           object numRows {
             def unapply(d: (Def[_$13] forSome { 
               type _$13
-            })): Option[(Rep[AbstractMatrix[T]] forSome { 
+            })): Option[(Rep[Matr[T]] forSome { 
               type T
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(AbstractMatrixElem[_$14, _$15] forSome { 
+              case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(MatrElem[_$14, _$15] forSome { 
   type _$14;
   type _$15
-})].&&(method.getName.==("numRows")) => Some(receiver).asInstanceOf[Option[(Rep[AbstractMatrix[T]] forSome { 
+})].&&(method.getName.==("numRows")) => Some(receiver).asInstanceOf[Option[(Rep[Matr[T]] forSome { 
                 type T
               })]]
               case _ => None
             };
             def unapply(exp: (Exp[_$16] forSome { 
               type _$16
-            })): Option[(Rep[AbstractMatrix[T]] forSome { 
+            })): Option[(Rep[Matr[T]] forSome { 
               type T
             })] = exp match {
               case Def((d @ _)) => unapply(d)
@@ -231,20 +231,20 @@ package paradise.linalgebra {
           object rows {
             def unapply(d: (Def[_$17] forSome { 
               type _$17
-            })): Option[(Rep[AbstractMatrix[T]] forSome { 
+            })): Option[(Rep[Matr[T]] forSome { 
               type T
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(AbstractMatrixElem[_$18, _$19] forSome { 
+              case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(MatrElem[_$18, _$19] forSome { 
   type _$18;
   type _$19
-})].&&(method.getName.==("rows")) => Some(receiver).asInstanceOf[Option[(Rep[AbstractMatrix[T]] forSome { 
+})].&&(method.getName.==("rows")) => Some(receiver).asInstanceOf[Option[(Rep[Matr[T]] forSome { 
                 type T
               })]]
               case _ => None
             };
             def unapply(exp: (Exp[_$20] forSome { 
               type _$20
-            })): Option[(Rep[AbstractMatrix[T]] forSome { 
+            })): Option[(Rep[Matr[T]] forSome { 
               type T
             })] = exp match {
               case Def((d @ _)) => unapply(d)
@@ -254,20 +254,20 @@ package paradise.linalgebra {
           object columns {
             def unapply(d: (Def[_$21] forSome { 
               type _$21
-            })): Option[(scala.Tuple2[Rep[AbstractMatrix[T]], Rep[Numer[T]]] forSome { 
+            })): Option[(scala.Tuple2[Rep[Matr[T]], Rep[Numer[T]]] forSome { 
               type T
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), Seq((n @ _), _*), _) if receiver.elem.isInstanceOf[(AbstractMatrixElem[_$22, _$23] forSome { 
+              case MethodCall((receiver @ _), (method @ _), Seq((n @ _), _*), _) if receiver.elem.isInstanceOf[(MatrElem[_$22, _$23] forSome { 
   type _$22;
   type _$23
-})].&&(method.getName.==("columns")) => Some(scala.Tuple2(receiver, n)).asInstanceOf[Option[(scala.Tuple2[Rep[AbstractMatrix[T]], Rep[Numer[T]]] forSome { 
+})].&&(method.getName.==("columns")) => Some(scala.Tuple2(receiver, n)).asInstanceOf[Option[(scala.Tuple2[Rep[Matr[T]], Rep[Numer[T]]] forSome { 
                 type T
               })]]
               case _ => None
             };
             def unapply(exp: (Exp[_$24] forSome { 
               type _$24
-            })): Option[(scala.Tuple2[Rep[AbstractMatrix[T]], Rep[Numer[T]]] forSome { 
+            })): Option[(scala.Tuple2[Rep[Matr[T]], Rep[Numer[T]]] forSome { 
               type T
             })] = exp match {
               case Def((d @ _)) => unapply(d)
@@ -277,20 +277,20 @@ package paradise.linalgebra {
           object * {
             def unapply(d: (Def[_$25] forSome { 
               type _$25
-            })): Option[(scala.Tuple4[Rep[AbstractMatrix[T]], Rep[AbstractVector[T]], Rep[Numer[T]], Rep[NumMonoid[T]]] forSome { 
+            })): Option[(scala.Tuple4[Rep[Matr[T]], Rep[Vec[T]], Rep[Numer[T]], Rep[NumMonoid[T]]] forSome { 
               type T
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), Seq((vector @ _), (n @ _), (m @ _), _*), _) if receiver.elem.isInstanceOf[(AbstractMatrixElem[_$26, _$27] forSome { 
+              case MethodCall((receiver @ _), (method @ _), Seq((vector @ _), (n @ _), (m @ _), _*), _) if receiver.elem.isInstanceOf[(MatrElem[_$26, _$27] forSome { 
   type _$26;
   type _$27
-})].&&(method.getName.==("$times")) => Some(scala.Tuple4(receiver, vector, n, m)).asInstanceOf[Option[(scala.Tuple4[Rep[AbstractMatrix[T]], Rep[AbstractVector[T]], Rep[Numer[T]], Rep[NumMonoid[T]]] forSome { 
+})].&&(method.getName.==("$times")) => Some(scala.Tuple4(receiver, vector, n, m)).asInstanceOf[Option[(scala.Tuple4[Rep[Matr[T]], Rep[Vec[T]], Rep[Numer[T]], Rep[NumMonoid[T]]] forSome { 
                 type T
               })]]
               case _ => None
             };
             def unapply(exp: (Exp[_$28] forSome { 
               type _$28
-            })): Option[(scala.Tuple4[Rep[AbstractMatrix[T]], Rep[AbstractVector[T]], Rep[Numer[T]], Rep[NumMonoid[T]]] forSome { 
+            })): Option[(scala.Tuple4[Rep[Matr[T]], Rep[Vec[T]], Rep[Numer[T]], Rep[NumMonoid[T]]] forSome { 
               type T
             })] = exp match {
               case Def((d @ _)) => unapply(d)
@@ -298,38 +298,38 @@ package paradise.linalgebra {
             }
           }
         };
-        object AbstractMatrixCompanionMethods
+        object MatrCompanionMethods
       };
-      trait Matrices extends Base { self: LinearAlgebraDsl =>
-        trait AbstractMatrix[T] extends Reifiable[AbstractMatrix[T]] {
+      trait Matrs extends Base { self: LinearAlgebraDsl =>
+        trait Matr[T] extends Reifiable[Matr[T]] {
           implicit def eeT: Elem[T];
           def numColumns: Rep[Int];
           def numRows: Rep[Int];
-          def rows: Rep[Collection[AbstractVector[T]]];
-          def columns(implicit n: Numer[T]): Rep[Collection[AbstractVector[T]]];
-          def *(vector: Rep[AbstractVector[T]])(implicit n: Numer[T], m: NumMonoid[T]): Rep[AbstractVector[T]] = DenseVector(rows.map(fun(((r: Rep[AbstractVector[T]]) => r.dot(vector)))))
+          def rows: Rep[Col[Vec[T]]];
+          def columns(implicit n: Numer[T]): Rep[Col[Vec[T]]];
+          def *(vector: Rep[Vec[T]])(implicit n: Numer[T], m: NumMonoid[T]): Rep[Vec[T]] = DenseVec(rows.map(fun(((r: Rep[Vec[T]]) => r.dot(vector)))))
         };
-        abstract class CompoundMatrix[T](val rows: Rep[Collection[AbstractVector[T]]], val numColumns: Rep[Int])(implicit val eeT: Elem[T]) extends AbstractMatrix[T] with Product with Serializable {
+        abstract class CompoundMatr[T](val rows: Rep[Col[Vec[T]]], val numColumns: Rep[Int])(implicit val eeT: Elem[T]) extends Matr[T] with Product with Serializable {
           def numRows = rows.length;
-          def columns(implicit n: Numer[T]): Rep[Collection[AbstractVector[T]]] = {
-            Collection(SArray.tabulate(numColumns) {
-              (j: Rep[Int]) => DenseVector(rows.map(fun(((vec: Rep[AbstractVector[T]]) => vec(j)))))
+          def columns(implicit n: Numer[T]): Rep[Col[Vec[T]]] = {
+            Col(SArray.tabulate(numColumns) {
+              (j: Rep[Int]) => DenseVec(rows.map(fun(((vec: Rep[Vec[T]]) => vec(j)))))
             })
           }
         };
-        trait AbstractMatrixCompanion;
-        trait CompoundMatrixCompanion
+        trait MatrCompanion;
+        trait CompoundMatrCompanion
       };
-      trait MatricesDsl extends MatricesAbs { self: LinearAlgebraDsl =>
+      trait MatrsDsl extends MatrsAbs { self: LinearAlgebraDsl =>
         
       };
-      trait MatricesDslSeq extends MatricesSeq { self: LinearAlgebraDslSeq =>
+      trait MatrsDslSeq extends MatrsSeq { self: LinearAlgebraDslSeq =>
         
       };
-      trait MatricesDslExp extends MatricesExp { self: LinearAlgebraDslExp =>
+      trait MatrsDslExp extends MatrsExp { self: LinearAlgebraDslExp =>
         
       };
-      val serializedMetaAst = "rO0ABXNyACZzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU0VudGl0eU1vZHVsZURlZqplOx8xRQC7AgAMTAAJYW5jZXN0b3JzdAAhTHNjYWxhL2NvbGxlY3Rpb24vaW1tdXRhYmxlL0xpc3Q7TAAEYm9keXEAfgABTAAQY29uY3JldGVTQ2xhc3Nlc3EAfgABTAAIZW50aXRpZXNxAH4AAUwACWVudGl0eU9wc3QAIUxzY2FsYW4vbWV0YS9TY2FsYW5Bc3QkU1RyYWl0RGVmO0wAEGVudGl0eVJlcFN5bm9ueW10AA5Mc2NhbGEvT3B0aW9uO0wAB2ltcG9ydHNxAH4AAUwAB21ldGhvZHNxAH4AAUwABG5hbWV0ABJMamF2YS9sYW5nL1N0cmluZztMAAtwYWNrYWdlTmFtZXEAfgAETAAIc2VsZlR5cGVxAH4AA0wACnNlcURzbEltcGxxAH4AA3hwc3IAMnNjYWxhLmNvbGxlY3Rpb24uaW1tdXRhYmxlLkxpc3QkU2VyaWFsaXphdGlvblByb3h5AAAAAAAAAAEDAAB4cHNyACxzY2FsYS5jb2xsZWN0aW9uLmltbXV0YWJsZS5MaXN0U2VyaWFsaXplRW5kJIpcY1v3UwttAgAAeHB4cQB+AAdzcQB+AAZzcgAfc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNDbGFzc0RlZgfQfWjxqHAzAgAKWgAKaXNBYnN0cmFjdEwACWFuY2VzdG9yc3EAfgABTAALYW5ub3RhdGlvbnNxAH4AAUwABGFyZ3N0ACJMc2NhbGFuL21ldGEvU2NhbGFuQXN0JFNDbGFzc0FyZ3M7TAAEYm9keXEAfgABTAAJY29tcGFuaW9ucQB+AANMAAxpbXBsaWNpdEFyZ3NxAH4ADEwABG5hbWVxAH4ABEwACHNlbGZUeXBlcQB+AANMAAd0cGVBcmdzcQB+AAF4cABzcQB+AAZzcgAgc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNUcmFpdENhbGxQ6xktJexFWAIAAkwABG5hbWVxAH4ABEwACXRwZVNFeHByc3EAfgABeHB0AA5BYnN0cmFjdE1hdHJpeHNxAH4ABnNxAH4AD3QAAVRxAH4AB3EAfgAJeHNxAH4AD3QAB1Byb2R1Y3RxAH4AB3NxAH4AD3QADFNlcmlhbGl6YWJsZXEAfgAHcQB+AAl4cQB+AAdzcgAgc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNDbGFzc0FyZ3Mn6+5kxTAAXAIAAUwABGFyZ3NxAH4AAXhwc3EAfgAGc3IAH3NjYWxhbi5tZXRhLlNjYWxhbkFzdCRTQ2xhc3NBcmcFc9jWC9QpPwIACFoAB2ltcEZsYWdaAAxpc0VsZW1PckNvbnRaAAhvdmVyRmxhZ1oAB3ZhbEZsYWdMAAthbm5vdGF0aW9uc3EAfgABTAAHZGVmYXVsdHEAfgADTAAEbmFtZXEAfgAETAADdHBldAAgTHNjYWxhbi9tZXRhL1NjYWxhbkFzdCRTVHBlRXhwcjt4cAAAAAFxAH4AB3NyAAtzY2FsYS5Ob25lJEZQJPZTypSsAgAAeHIADHNjYWxhLk9wdGlvbv5pN/3bDmZ0AgAAeHB0AARyb3dzc3EAfgAPdAAKQ29sbGVjdGlvbnNxAH4ABnNxAH4AD3QADkFic3RyYWN0VmVjdG9yc3EAfgAGc3EAfgAPdAABVHEAfgAHcQB+AAl4cQB+AAl4c3EAfgAcAAAAAXEAfgAHcQB+ACF0AApudW1Db2x1bW5zc3IAI3NjYWxhbi5tZXRhLlNjYWxhbkFzdCRTVHBlUHJpbWl0aXZlNcO7VfC+TgUCAAJMABJkZWZhdWx0VmFsdWVTdHJpbmdxAH4ABEwABG5hbWVxAH4ABHhwdAABMHQAA0ludHEAfgAJeHNxAH4ABnNyACBzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU01ldGhvZERlZt1ZcXG3MCsOAgAKWgAMaXNFbGVtT3JDb250WgAKaXNJbXBsaWNpdFoACmlzT3ZlcnJpZGVMAAthbm5vdGF0aW9uc3EAfgABTAALYXJnU2VjdGlvbnNxAH4AAUwABGJvZHlxAH4AA0wABG5hbWVxAH4ABEwACm92ZXJsb2FkSWRxAH4AA0wAB3RwZUFyZ3NxAH4AAUwABnRwZVJlc3EAfgADeHAAAABxAH4AB3EAfgAHc3IACnNjYWxhLlNvbWURIvJpXqGLdAIAAUwAAXh0ABJMamF2YS9sYW5nL09iamVjdDt4cQB+ACBzcgAdc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNTZWxlY3QL3WllZUD5hQIAAkwABGV4cHJ0AB1Mc2NhbGFuL21ldGEvU2NhbGFu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B3EAfgAJeHEAfgAJeHNxAH4ABnNyAB9zY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU1RyYWl0RGVmAb40kjQUsbICAAlaAAhiaXRtYXAkMEwACWFuY2VzdG9yc3EAfgABTAALYW5ub3RhdGlvbnNxAH4AAUwABGJvZHlxAH4AAUwACWNvbXBhbmlvbnEAfgADTAAMaW1wbGljaXRBcmdzcQB+AAxMAARuYW1lcQB+AARMAAhzZWxmVHlwZXEAfgADTAAHdHBlQXJnc3EAfgABeHAAcQB+AAdxAH4AB3NxAH4ABnNxAH4AMgABAHEAfgAHcQB+AAdxAH4AIXQAA2N0VHEAfgAhcQB+AAdzcQB+ADRzcQB+AA90AAhDbGFzc1RhZ3NxAH4ABnNxAH4AD3QAAVRxAH4AB3EAfgAJeHNxAH4AMgAAAHEAfgAHcQB+AAdxAH4AIXQACm51bUNvbHVtbnNxAH4AIXEAfgAHc3EAfgA0cQB+AC5zcQB+ADIAAABxAH4AB3EAfgAHcQB+ACF0AAdudW1Sb3dzcQB+ACFxAH4AB3NxAH4ANHEAfgAuc3EAfgAyAAAAcQB+AAdxAH4AB3EAfgAhdAAEcm93c3EAfgAhcQB+AAdzcQB+ADRzcQB+AA90AApDb2xsZWN0aW9uc3EAfgAGc3EAfgAPdAAOQWJzdHJhY3RWZWN0b3JzcQB+AAZzcQB+AA90AAFUcQB+AAdxAH4ACXhxAH4ACXhzcQB+ADIAAABxAH4AB3NxAH4ABnNxAH4AQXNxAH4ABnNxAH4ARAEAAHEAfgAHcQB+ACF0AAFuc3EAfgAPdAAFTnVtZXJzcQB+AAZzcQB+AA90AAFUcQB+AAdxAH4ACXhxAH4ACXhxAH4ACXhxAH4AIXQAB2NvbHVtbnNxAH4AIXEAfgAHc3EAfgA0c3EAfgAPdAAKQ29sbGVjdGlvbnNxAH4ABnNxAH4AD3QADkFic3RyYWN0VmVjdG9yc3EAfgAGc3EAfgAPdAABVHEAfgAHcQB+AAl4cQB+AAl4c3EAfgAyAAAAcQB+AAdzcQB+AAZzcQB+AEFzcQB+AAZzcQB+AEQAAABxAH4AB3EAfgAhdAAGdmVjdG9yc3EAfgAPdAAOQWJzdHJhY3RWZWN0b3JzcQB+AAZzcQB+AA90AAFUcQB+AAdxAH4ACXhxAH4ACXhzcQB+AEFzcQB+AAZzcQB+AEQBAABxAH4AB3EAfgAhdAABbnNxAH4AD3QABU51bWVyc3EAfgAGc3EAfgAPdAABVHEAfgAHcQB+AAl4c3EAfgBEAQAAcQB+AAdxAH4AIXQAAW1zcQB+AA90AAlOdW1Nb25vaWRzcQB+AAZzcQB+AA90AAFUcQB+AAdxAH4ACXhxAH4ACXhxAH4ACXhzcQB+ADRzcQB+AE1zcQB+AAZzcQB+AAZzcQB+AE1zcQB+AAZzcQB+AAZzcQB+AFVzcQB+AAZzcQB+AFgAAHNxAH4AWnQAAXJzcQB+ADRzcQB+AA90AA5BYnN0cmFjdFZlY3RvcnNxAH4ABnNxAH4AD3QAAVRxAH4AB3EAfgAJeHEAfgAJeHNxAH4ATXNxAH4ABnNxAH4ABnNxAH4AOnQABnZlY3RvcnEAfgAJeHEAfgAJeHNxAH4AN3NxAH4AOnQAAXJ0AANkb3RxAH4AB3EAfgAJeHEAfgAJeHNxAH4AN3NxAH4AOnQABHJvd3NxAH4Ae3EAfgAHcQB+AAl4cQB+AAl4c3EAfgA6dAALRGVuc2VWZWN0b3JxAH4AB3QABiR0aW1lc3EAfgAhcQB+AAdzcQB+ADRzcQB+AA90AA5BYnN0cmFjdFZlY3RvcnNxAH4ABnNxAH4AD3QAAVRxAH4AB3EAfgAJeHEAfgAJeHEAfgAhcHQADkFic3RyYWN0TWF0cml4cQB+ACFzcQB+AAZzcQB+AKhxAH4AIXEAfgAHdAABVHEAfgAHcQB+AAl4cQB+AAl4cQB+AK1xAH4AIXNxAH4ABnNyACFzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU0ltcG9ydFN0YXSsgKBKw8YbIgIAAUwABG5hbWVxAH4ABHhwdAAWc2NhbGEucmVmbGVjdC5DbGFzc1RhZ3EAfgAJeHEAfgAHdAAITWF0cmljZXN0ABNwYXJhZGlzZS5saW5hbGdlYnJhc3EAfgA0c3IAInNjYWxhbi5tZXRhLlNjYWxhbkFzdCRTU2VsZlR5cGVEZWZ+951OKs6z5QIAAkwACmNvbXBvbmVudHNxAH4AAUwABG5hbWVxAH4ABHhwc3EAfgAGc3EAfgAPdAANTGluZWFyQWxnZWJyYXEAfgAHcQB+AAl4dAAEc2VsZnEAfgAh"
+      val serializedMetaAst = "rO0ABXNyACZzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU0VudGl0eU1vZHVsZURlZqplOx8xRQC7AgAMTAAJYW5jZXN0b3JzdAAhTHNjYWxhL2NvbGxlY3Rpb24vaW1tdXRhYmxlL0xpc3Q7TAAEYm9keXEAfgABTAAQY29uY3JldGVTQ2xhc3Nlc3EAfgABTAAIZW50aXRpZXNxAH4AAUwACWVudGl0eU9wc3QAIUxzY2FsYW4vbWV0YS9TY2FsYW5Bc3QkU1RyYWl0RGVmO0wAEGVudGl0eVJlcFN5bm9ueW10AA5Mc2NhbGEvT3B0aW9uO0wAB2ltcG9ydHNxAH4AAUwAB21ldGhvZHNxAH4AAUwABG5hbWV0ABJMamF2YS9sYW5nL1N0cmluZztMAAtwYWNrYWdlTmFtZXEAfgAETAAIc2VsZlR5cGVxAH4AA0wACnNlcURzbEltcGxxAH4AA3hwc3IAMnNjYWxhLmNvbGxlY3Rpb24uaW1tdXRhYmxlLkxpc3QkU2VyaWFsaXphdGlvblByb3h5AAAAAAAAAAEDAAB4cHNyACxzY2FsYS5jb2xsZWN0aW9uLmltbXV0YWJsZS5MaXN0U2VyaWFsaXplRW5kJIpcY1v3UwttAgAAeHB4cQB+AAdzcQB+AAZzcgAfc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNDbGFzc0RlZgfQfWjxqHAzAgAKWgAKaXNBYnN0cmFjdEwACWFuY2VzdG9yc3EAfgABTAALYW5ub3RhdGlvbnNxAH4AAUwABGFyZ3N0ACJMc2NhbGFuL21ldGEvU2NhbGFuQXN0JFNDbGFzc0FyZ3M7TAAEYm9keXEAfgABTAAJY29tcGFuaW9ucQB+AANMAAxpbXBsaWNpdEFyZ3NxAH4ADEwABG5hbWVxAH4ABEwACHNlbGZUeXBlcQB+AANMAAd0cGVBcmdzcQB+AAF4cABzcQB+AAZzcgAgc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNUcmFpdENhbGxQ6xktJexFWAIAAkwABG5hbWVxAH4ABEwACXRwZVNFeHByc3EAfgABeHB0AARNYXRyc3EAfgAGc3EAfgAPdAABVHEAfgAHcQB+AAl4c3EAfgAPdAAHUHJvZHVjdHEAfgAHc3EAfgAPdAAMU2VyaWFsaXphYmxlcQB+AAdxAH4ACXhxAH4AB3NyACBzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU0NsYXNzQXJncyfr7mTFMABcAgABTAAEYXJnc3EAfgABeHBzcQB+AAZzcgAfc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNDbGFzc0FyZwVz2NYL1Ck/AgAIWgAHaW1wRmxhZ1oADGlzRWxlbU9yQ29udFoACG92ZXJGbGFnWgAHdmFsRmxhZ0wAC2Fubm90YXRpb25zcQB+AAFMAAdkZWZhdWx0cQB+AANMAARuYW1lcQB+AARMAAN0cGV0ACBMc2NhbGFuL21ldGEvU2NhbGFuQXN0JFNUcGVFeHByO3hwAAAAAXEAfgAHc3IAC3NjYWxhLk5vbmUkRlAk9lPKlKwCAAB4cgAMc2NhbGEuT3B0aW9u/mk3/dsOZnQCAAB4cHQABHJvd3NzcQB+AA90AANDb2xzcQB+AAZzcQB+AA90AANWZWNzcQB+AAZzcQB+AA90AAFUcQB+AAdxAH4ACXhxAH4ACXhzcQB+ABwAAAABcQB+AAdxAH4AIXQACm51bUNvbHVtbnNzcgAjc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNUcGVQcmltaXRpdmU1w7tV8L5OBQIAAkwAEmRlZmF1bHRWYWx1ZVN0cmluZ3EAfgAETAAEbmFtZXEAfgAEeHB0AAEwdAADSW50cQB+AAl4c3EAfgAGc3IAIHNjYWxhbi5tZXRhLlNjYWxhbkFzdCRTTWV0aG9kRGVm3VlxcbcwKw4CAApaAAxpc0VsZW1PckNvbnRaAAppc0ltcGxpY2l0WgAKaXNPdmVycmlkZUwAC2Fubm90YXRpb25zcQB+AAFMAAthcmdTZWN0aW9uc3EAfgABTAAEYm9keXEAfgADTAAEbmFtZXEAfgAETAAKb3ZlcmxvYWRJZHEAfgADTAAHdHBlQXJnc3EAfgABTAAGdHBlUmVzcQB+AAN4cAAAAHEAfgAHcQB+AAdzcgAKc2NhbGEuU29tZREi8mleoYt0AgABTAABeHQAEkxqYXZhL2xhbmcvT2JqZWN0O3hxAH4AIHNyAB1zY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU1NlbGVjdAvdaWVlQPmFAgACTAAEZXhwcnQAHUxzY2FsYW4vbWV0YS9TY2FsYW5Bc3QkU0V4cHI7TAAFdG5hbWVxAH4ABHhwc3IA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bmNlc3RvcnNxAH4AAUwAC2Fubm90YXRpb25zcQB+AAFMAARib2R5cQB+AAFMAAljb21wYW5pb25xAH4AA0wADGltcGxpY2l0QXJnc3EAfgAMTAAEbmFtZXEAfgAETAAIc2VsZlR5cGVxAH4AA0wAB3RwZUFyZ3NxAH4AAXhwAHEAfgAHcQB+AAdzcQB+AAZzcQB+ADIAAQBxAH4AB3EAfgAHcQB+ACF0AANjdFRxAH4AIXEAfgAHc3EAfgA0c3EAfgAPdAAIQ2xhc3NUYWdzcQB+AAZzcQB+AA90AAFUcQB+AAdxAH4ACXhzcQB+ADIAAABxAH4AB3EAfgAHcQB+ACF0AApudW1Db2x1bW5zcQB+ACFxAH4AB3NxAH4ANHEAfgAuc3EAfgAyAAAAcQB+AAdxAH4AB3EAfgAhdAAHbnVtUm93c3EAfgAhcQB+AAdzcQB+ADRxAH4ALnNxAH4AMgAAAHEAfgAHcQB+AAdxAH4AIXQABHJvd3NxAH4AIXEAfgAHc3EAfgA0c3EAfgAPdAADQ29sc3EAfgAGc3EAfgAPdAADVmVjc3EAfgAGc3EAfgAPdAABVHEAfgAHcQB+AAl4cQB+AAl4c3EAfgAyAAAAcQB+AAdzcQB+AAZzcQB+AEFzcQB+AAZzcQB+AEQBAABxAH4AB3EAfgAhdAABbnNxAH4AD3QABU51bWVyc3EAfgAGc3EAfgAPdAABVHEAfgAHcQB+AAl4cQB+AAl4cQB+AAl4cQB+ACF0AAdjb2x1bW5zcQB+ACFxAH4AB3NxAH4ANHNxAH4AD3QAA0NvbHNxAH4ABnNxAH4AD3QAA1ZlY3NxAH4ABnNxAH4AD3QAAVRxAH4AB3EAfgAJeHEAfgAJeHNxAH4AMgAAAHEAfgAHc3EAfgAGc3EAfgBBc3EAfgAGc3EAfgBEAAAAcQB+AAdxAH4AIXQABnZlY3RvcnNxAH4AD3QAA1ZlY3NxAH4ABnNxAH4AD3QAAVRxAH4AB3EAfgAJeHEAfgAJeHNxAH4AQXNxAH4ABnNxAH4ARAEAAHEAfgAHcQB+ACF0AAFuc3EAfgAPdAAFTnVtZXJzcQB+AAZzcQB+AA90AAFUcQB+AAdxAH4ACXhzcQB+AEQBAABxAH4AB3EAfgAhdAABbXNxAH4AD3QACU51bU1vbm9pZHNxAH4ABnNxAH4AD3QAAVRxAH4AB3EAfgAJeHEAfgAJeHEAfgAJeHNxAH4ANHNxAH4ATXNxAH4ABnNxAH4ABnNxAH4ATXNxAH4ABnNxAH4ABnNxAH4AVXNxAH4ABnNxAH4AWAAAc3EAfgBadAABcnNxAH4ANHNxAH4AD3QAA1ZlY3NxAH4ABnNxAH4AD3QAAVRxAH4AB3EAfgAJeHEAfgAJeHNxAH4ATXNxAH4ABnNxAH4ABnNxAH4AOnQABnZlY3RvcnEAfgAJeHEAfgAJeHNxAH4AN3NxAH4AOnQAAXJ0AANkb3RxAH4AB3EAfgAJeHEAfgAJeHNxAH4AN3NxAH4AOnQABHJvd3NxAH4Ae3EAfgAHcQB+AAl4cQB+AAl4c3EAfgA6dAAIRGVuc2VWZWNxAH4AB3QABiR0aW1lc3EAfgAhcQB+AAdzcQB+ADRzcQB+AA90AANWZWNzcQB+AAZzcQB+AA90AAFUcQB+AAdxAH4ACXhxAH4ACXhxAH4AIXB0AARNYXRycQB+ACFzcQB+AAZzcQB+AKhxAH4AIXEAfgAHdAABVHEAfgAHcQB+AAl4cQB+AAl4cQB+AK1xAH4AIXNxAH4ABnNyACFzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU0ltcG9ydFN0YXSsgKBKw8YbIgIAAUwABG5hbWVxAH4ABHhwdAAWc2NhbGEucmVmbGVjdC5DbGFzc1RhZ3EAfgAJeHEAfgAHdAAFTWF0cnN0ABNwYXJhZGlzZS5saW5hbGdlYnJhc3EAfgA0c3IAInNjYWxhbi5tZXRhLlNjYWxhbkFzdCRTU2VsZlR5cGVEZWZ+951OKs6z5QIAAkwACmNvbXBvbmVudHNxAH4AAUwABG5hbWVxAH4ABHhwc3EAfgAGc3EAfgAPdAANTGluZWFyQWxnZWJyYXEAfgAHcQB+AAl4dAAEc2VsZnEAfgAh"
     }
   }
 }
