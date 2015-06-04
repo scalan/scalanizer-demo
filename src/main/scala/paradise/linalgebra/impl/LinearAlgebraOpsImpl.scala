@@ -232,7 +232,7 @@ package paradise.linalgebra {
           "ddmvm0",
           ctx.ddmvmWrapper, GraphVizConfig.default)(ctx.defaultCompilerConfig)
         val (cls, method) = ctx.loadMethod(compilerOutput)
-        val instance = cls.newInstance().asInstanceOf[(Array[Array[Double]], Array[Double]) => Array[Double]]
+        val instance = cls.newInstance().asInstanceOf[((Array[Array[Double]], Array[Double])) => Array[Double]]
         instance
       }
     }
