@@ -224,9 +224,9 @@ package paradise.linalgebra {
     import scalan.compilation.lms.scalac.{CommunityLmsCompilerScala, LmsCompilerScala}
     import scalan.primitives.EffectfulCompiler
 
-    object HotSpotLoaders {
+    object HotSpotKernels {
       lazy val ddmvmKernel = {
-        val ctx = HotspotManager.getScalanContext
+        val ctx = HotSpotManager.getScalanContext
         val compilerOutput = ctx.buildExecutable(
           new File("./"),
           "ddmvm0",
@@ -237,7 +237,7 @@ package paradise.linalgebra {
       }
     }
 
-    object HotspotManager {
+    object HotSpotManager {
       lazy val scalanContext = new Scalan
       def getScalanContext = scalanContext
 
