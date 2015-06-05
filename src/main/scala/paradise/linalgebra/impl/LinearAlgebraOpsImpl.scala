@@ -219,14 +219,16 @@ package paradise.linalgebra {
     import java.io.File
     import paradise.linalgebra.implOfLinearAlgebra.StagedEvaluation.LinearAlgebraDslExp
     import scalan.ScalanCommunityDslExp
+    import scalan.CommunityMethodMappingDSL
     import scalan.compilation.GraphVizConfig
     import scalan.compilation.lms.{CommunityLmsBackend, CoreBridge}
     import scalan.compilation.lms.scalac.{CommunityLmsCompilerScala, LmsCompilerScala}
+    import scalan.compilation.lms.uni.LmsCompilerUni
     import scalan.primitives.EffectfulCompiler
 
     object HotSpotKernels {
       lazy val ddmvmKernel = {
-        val ctx = HotSpotManager.getScalanContext
+        val ctx = HotSpotManager.getScalanContextUni
         val compilerOutput = ctx.buildExecutable(
           new File("./"),
           "ddmvm0",
@@ -243,6 +245,19 @@ package paradise.linalgebra {
 
       class Scalan extends LinearAlgebraDslExp with CommunityLmsCompilerScala with CoreBridge
         with ScalanCommunityDslExp with EffectfulCompiler {
+        //----------- wrappers
+        lazy val ddmvmWrapper = fun(((in: Rep[scala.Tuple2[Array[Array[Double]], Array[Double]]]) => {
+          LA.ddmvm0(in._1, in._2)
+        }))
+        val lms = new CommunityLmsBackend
+        //-----------
+      }
+
+      lazy val scalanContextUni = new ScalanUni
+      def getScalanContextUni = scalanContextUni
+
+      class ScalanUni extends LinearAlgebraDslExp with LmsCompilerUni with CoreBridge
+        with ScalanCommunityDslExp with EffectfulCompiler with CommunityMethodMappingDSL {
         //----------- wrappers
         lazy val ddmvmWrapper = fun(((in: Rep[scala.Tuple2[Array[Array[Double]], Array[Double]]]) => {
           LA.ddmvm0(in._1, in._2)
