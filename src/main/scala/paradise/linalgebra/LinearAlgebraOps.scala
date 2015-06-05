@@ -18,18 +18,17 @@ trait LinearAlgebraOps { self: LinearAlgebra =>
 
   object LA {
     @HotSpot
-    def ddmvm0(m: Array[Array[Double]], v: Array[Double]): Array[Double] = {
-//      implicit val doubleNumer: Numer[Double] = DoubleNumer()
-//      implicit val plusMonoid: NumMonoid[Double] = PlusMonoid[Double]
-//
-//      val width = m(0).length
-//      val matrix: Matr[Double] = {
-//        CompoundMatr(Col(m.map { r: Array[Double] => DenseVec(Col(r)) }), width)
-//      }
-//      val vector: Vec[Double] = DenseVec(Col(v))
-//
-//      LA().mvm(matrix, vector).items.arr
-      implOfLinearAlgebraOps.HotSpotKernels.ddmvmKernel(m, v)
+    def ddmvm(m: Array[Array[Double]], v: Array[Double]): Array[Double] = {
+      implicit val doubleNumer: Numer[Double] = DoubleNumer()
+      implicit val plusMonoid: NumMonoid[Double] = PlusMonoid[Double]
+
+      val width = m(0).length
+      val matrix: Matr[Double] = {
+        CompoundMatr(Col(m.map { r: Array[Double] => DenseVec(Col(r)) }), width)
+      }
+      val vector: Vec[Double] = DenseVec(Col(v))
+
+      LA().mvm(matrix, vector).items.arr
     }
   }
 }
