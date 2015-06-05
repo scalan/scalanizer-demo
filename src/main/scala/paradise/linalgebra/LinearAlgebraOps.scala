@@ -24,7 +24,7 @@ trait LinearAlgebraOps { self: LinearAlgebra =>
 
       val width = m(0).length
       val matrix: Matr[Double] = {
-        CompoundMatr(Col(m.map { r: Array[Double] => DenseVec(Col(r)) }), width)
+        CompoundMatr(Col((m: Array[Array[Double]]).map { r: Array[Double] => DenseVec(Col(r)) }), width)
       }
       val vector: Vec[Double] = DenseVec(Col(v))
 
