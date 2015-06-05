@@ -241,11 +241,15 @@ package paradise.linalgebra {
       import scalan.compilation.lms.{CommunityLmsBackend, CoreBridge};
       import scalan.compilation.lms.scalac.CommunityLmsCompilerScala;
       import scalan.primitives.EffectfulCompiler;
-      import paradise.linalgebra.implOfLinearAlgebra.StagedEvaluation.LinearAlgebraDslExp;
+      import paradise.linalgebra.implOfLinearAlgebra.StagedEvaluation._;
       lazy val scalanContext = new Scalan();
       def getScalanContext = scalanContext;
       class Scalan extends LinearAlgebraDslExp with CommunityLmsCompilerScala with CoreBridge with ScalanCommunityDslExp with EffectfulCompiler {
-        lazy val ddmvmWrapper = fun(((in: Rep[scala.Tuple2[Array[Array[Double]], Array[Double]]]) => LA.ddmvm(in._1, in._2)));
+        lazy val ddmvmWrapper = fun(((in: Rep[scala.Tuple2[Array[Array[Double]], Array[Double]]]) => {
+          val m: Rep[Array[Array[Double]]] = in._1;
+          val v: Rep[Array[Double]] = in._2;
+          LA.ddmvm(m, v)
+        }));
         val lms = new CommunityLmsBackend()
       }
     }
