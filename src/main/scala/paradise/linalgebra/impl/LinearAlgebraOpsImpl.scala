@@ -231,7 +231,7 @@ package paradise.linalgebra {
         };
         val cls = x$1._1;
         val method = x$1._2;
-        val instance = cls.newInstance().asInstanceOf[_root_.scala.Function1[scala.Tuple2[Array[Array[Double]], Array[Double]], Array[Double]]];
+        val instance = cls.newInstance().asInstanceOf[scala.Function1[scala.Tuple2[Array[Array[Double]], Array[Double]], Array[Double]]];
         instance
       }
     }
