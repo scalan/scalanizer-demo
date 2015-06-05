@@ -11,7 +11,7 @@ trait Cols extends NumMonoids {
     def length: Int
     def apply(i: Int): A
     def map[B: ClassTag](f: A => B): Col[B] =
-      Col(arr.map(f)(implicitly[CanBuildFrom[Array[A], B, Array[B]]]))
+      Col((arr: Array[A]).map(f)(implicitly[CanBuildFrom[Array[A], B, Array[B]]]))
     def reduce(implicit m: NumMonoid[A]): A = (arr: Array[A]).reduce(m.append)
     def zip[B](ys: Col[B]): PairCol[A, B] = PairCol(this, ys)
   }
