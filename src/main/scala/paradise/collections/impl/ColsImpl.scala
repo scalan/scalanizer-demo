@@ -17,6 +17,7 @@ package paradise.collections {
           override def convert(x: Rep[(Reifiable[_$1] forSome { 
             type _$1
           })]) = {
+            implicit val eTo: Elem[To] = this
             val conv = fun(((x: Rep[Col[A]]) => convertCol(x)));
             tryConvert(element[Col[A]], this, x, conv)
           };

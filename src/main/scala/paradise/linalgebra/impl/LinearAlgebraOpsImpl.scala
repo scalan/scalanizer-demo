@@ -18,6 +18,7 @@ package paradise.linalgebra {
           override def convert(x: Rep[(Reifiable[_$1] forSome { 
             type _$1
           })]) = {
+            implicit val eTo: Elem[To] = this
             val conv = fun(((x: Rep[LinearAlgebraOp]) => convertLinearAlgebraOp(x)));
             tryConvert(element[LinearAlgebraOp], this, x, conv)
           };
