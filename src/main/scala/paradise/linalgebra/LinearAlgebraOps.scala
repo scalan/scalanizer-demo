@@ -2,6 +2,7 @@ package paradise.linalgebra
 
 import scala.reflect.ClassTag
 import scalan.HotSpot
+import scalan.Kernels._
 
 trait LinearAlgebraOps { self: LinearAlgebra =>
   trait LinearAlgebraOp {
@@ -17,7 +18,7 @@ trait LinearAlgebraOps { self: LinearAlgebra =>
   }
 
   object LA {
-    @HotSpot
+    @HotSpot(CppKernel)
     def ddmvm(m: Array[Array[Double]], v: Array[Double]): Array[Double] = {
       val doubleNumer: Numer[Double] = DoubleNumer()
       val plusMonoid: NumMonoid[Double] = PlusMonoid[Double](doubleNumer)
