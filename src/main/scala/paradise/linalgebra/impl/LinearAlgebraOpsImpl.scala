@@ -11,13 +11,14 @@ package paradise.linalgebra {
       import scala.reflect._;
       import scalan.common.Default;
       trait LinearAlgebraOpsAbs extends LinearAlgebraOps with ScalanDsl { self: LinearAlgebraDsl =>
-        implicit def proxyLinearAlgebraOp(p: Rep[LinearAlgebraOp]): LinearAlgebraOp = proxyOps[LinearAlgebraOp](p)(classTag[LinearAlgebraOp]);
+        implicit def proxyLinearAlgebraOp(p: Rep[LinearAlgebraOp]): LinearAlgebraOp = proxyOps[LinearAlgebraOp](p)(scala.reflect.classTag[LinearAlgebraOp]);
         class LinearAlgebraOpElem[To <: LinearAlgebraOp] extends EntityElem[To] {
           override def isEntityType = true;
           override lazy val tag = weakTypeTag[LinearAlgebraOp].asInstanceOf[WeakTypeTag[To]];
           override def convert(x: Rep[(Reifiable[_$1] forSome { 
             type _$1
           })]) = {
+            implicit val eTo: Elem[To] = this;
             val conv = fun(((x: Rep[LinearAlgebraOp]) => convertLinearAlgebraOp(x)));
             tryConvert(element[LinearAlgebraOp], this, x, conv)
           };
@@ -52,7 +53,7 @@ package paradise.linalgebra {
             val unit = p;
             LA()
           };
-          lazy val defaultRepTo = Default.defaultVal[Rep[LA]](LA());
+          lazy val defaultRepTo: Rep[LA] = LA();
           lazy val eTo = new LAElem(this)
         };
         abstract class LACompanionAbs extends CompanionBase[LACompanionAbs] with LACompanion {
@@ -250,6 +251,13 @@ package paradise.linalgebra {
           val v: Rep[Array[Double]] = in._2;
           LA.ddmvm(m, v)
         }));
+        val lms = new CommunityLmsBackend()
+      };
+      import scalan.CommunityMethodMappingDSL;
+      import scalan.compilation.lms.uni.LmsCompilerUni;
+      lazy val scalanContextUni = new ScalanUni();
+      def getScalanContextUni = scalanContextUni;
+      class ScalanUni extends LinearAlgebraDslExp with LmsCompilerUni with CoreBridge with ScalanCommunityDslExp with EffectfulCompiler with CommunityMethodMappingDSL {
         val lms = new CommunityLmsBackend()
       }
     }

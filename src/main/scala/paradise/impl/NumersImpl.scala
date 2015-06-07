@@ -6,7 +6,7 @@ package paradise {
       import scala.reflect._;
       import scalan.common.Default;
       trait NumersAbs extends Numers with ScalanDsl { self: NumersDsl =>
-        implicit def proxyNumer[T](p: Rep[Numer[T]]): Numer[T] = proxyOps[Numer[T]](p)(classTag[Numer[T]]);
+        implicit def proxyNumer[T](p: Rep[Numer[T]]): Numer[T] = proxyOps[Numer[T]](p)(scala.reflect.classTag[Numer[T]]);
         class NumerElem[T, To <: Numer[T]](implicit val eeT: Elem[T]) extends EntityElem[To] {
           override def isEntityType = true;
           override lazy val tag = {
@@ -16,6 +16,7 @@ package paradise {
           override def convert(x: Rep[(Reifiable[_$1] forSome { 
             type _$1
           })]) = {
+            implicit val eTo: Elem[To] = this;
             val conv = fun(((x: Rep[Numer[T]]) => convertNumer(x)));
             tryConvert(element[Numer[T]], this, x, conv)
           };
@@ -50,7 +51,7 @@ package paradise {
             val unit = p;
             DoubleNumer()
           };
-          lazy val defaultRepTo = Default.defaultVal[Rep[DoubleNumer]](DoubleNumer());
+          lazy val defaultRepTo: Rep[DoubleNumer] = DoubleNumer();
           lazy val eTo = new DoubleNumerElem(this)
         };
         abstract class DoubleNumerCompanionAbs extends CompanionBase[DoubleNumerCompanionAbs] with DoubleNumerCompanion {
@@ -322,6 +323,13 @@ package paradise {
       lazy val scalanContext = new Scalan();
       def getScalanContext = scalanContext;
       class Scalan extends NumersDslExp with CommunityLmsCompilerScala with CoreBridge with ScalanCommunityDslExp with EffectfulCompiler {
+        val lms = new CommunityLmsBackend()
+      };
+      import scalan.CommunityMethodMappingDSL;
+      import scalan.compilation.lms.uni.LmsCompilerUni;
+      lazy val scalanContextUni = new ScalanUni();
+      def getScalanContextUni = scalanContextUni;
+      class ScalanUni extends NumersDslExp with LmsCompilerUni with CoreBridge with ScalanCommunityDslExp with EffectfulCompiler with CommunityMethodMappingDSL {
         val lms = new CommunityLmsBackend()
       }
     }

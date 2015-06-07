@@ -7,7 +7,7 @@ package paradise.collections {
       import scala.reflect._;
       import scalan.common.Default;
       trait ColsAbs extends Cols with ScalanDsl { self: ColsDsl =>
-        implicit def proxyCol[A](p: Rep[Col[A]]): Col[A] = proxyOps[Col[A]](p)(classTag[Col[A]]);
+        implicit def proxyCol[A](p: Rep[Col[A]]): Col[A] = proxyOps[Col[A]](p)(scala.reflect.classTag[Col[A]]);
         class ColElem[A, To <: Col[A]](implicit val eeA: Elem[A]) extends EntityElem[To] {
           override def isEntityType = true;
           override lazy val tag = {
@@ -17,6 +17,7 @@ package paradise.collections {
           override def convert(x: Rep[(Reifiable[_$1] forSome { 
             type _$1
           })]) = {
+            implicit val eTo: Elem[To] = this;
             val conv = fun(((x: Rep[Col[A]]) => convertCol(x)));
             tryConvert(element[Col[A]], this, x, conv)
           };
@@ -54,7 +55,7 @@ package paradise.collections {
             val arr = p;
             ColOverArray(arr)
           };
-          lazy val defaultRepTo = Default.defaultVal[Rep[ColOverArray[A]]](ColOverArray(element[Array[A]].defaultRepValue));
+          lazy val defaultRepTo: Rep[ColOverArray[A]] = ColOverArray(element[Array[A]].defaultRepValue);
           lazy val eTo = new ColOverArrayElem[A](this)
         };
         abstract class ColOverArrayCompanionAbs extends CompanionBase[ColOverArrayCompanionAbs] with ColOverArrayCompanion {
@@ -98,7 +99,7 @@ package paradise.collections {
             val bs = x$1._2;
             PairCol(as, bs)
           };
-          lazy val defaultRepTo = Default.defaultVal[Rep[PairCol[A, B]]](PairCol(element[Col[A]].defaultRepValue, element[Col[B]].defaultRepValue));
+          lazy val defaultRepTo: Rep[PairCol[A, B]] = PairCol(element[Col[A]].defaultRepValue, element[Col[B]].defaultRepValue);
           lazy val eTo = new PairColElem[A, B](this)
         };
         abstract class PairColCompanionAbs extends CompanionBase[PairColCompanionAbs] with PairColCompanion {
@@ -546,6 +547,13 @@ package paradise.collections {
       lazy val scalanContext = new Scalan();
       def getScalanContext = scalanContext;
       class Scalan extends ColsDslExp with CommunityLmsCompilerScala with CoreBridge with ScalanCommunityDslExp with EffectfulCompiler {
+        val lms = new CommunityLmsBackend()
+      };
+      import scalan.CommunityMethodMappingDSL;
+      import scalan.compilation.lms.uni.LmsCompilerUni;
+      lazy val scalanContextUni = new ScalanUni();
+      def getScalanContextUni = scalanContextUni;
+      class ScalanUni extends ColsDslExp with LmsCompilerUni with CoreBridge with ScalanCommunityDslExp with EffectfulCompiler with CommunityMethodMappingDSL {
         val lms = new CommunityLmsBackend()
       }
     }

@@ -18,6 +18,7 @@ object ScalanParadiseBoilerplateTool extends BoilerplateTool {
       ,"Monads.scala"
       ,"Frees.scala"
     ),
+    entityTypeSynonyms = paradiseTypeSynonims,
     baseContextTrait = "ScalanDsl",
     seqContextTrait = "ScalanSeq",
     stagedContextTrait = "ScalanExp",
@@ -25,7 +26,7 @@ object ScalanParadiseBoilerplateTool extends BoilerplateTool {
       "scala.reflect.runtime.universe._",
       "scala.reflect._",
       "scalan.common.Default"),
-    paradiseTypeSynonims
+    isAlreadyRep = false
   )
 
   override def getConfigs(args: Array[String]) = Seq(paradiseConfig)

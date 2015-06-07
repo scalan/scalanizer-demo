@@ -10,7 +10,7 @@ package paradise.linalgebra {
       import scala.reflect._;
       import scalan.common.Default;
       trait MatrsAbs extends Matrs with ScalanDsl { self: LinearAlgebraDsl =>
-        implicit def proxyMatr[T](p: Rep[Matr[T]]): Matr[T] = proxyOps[Matr[T]](p)(classTag[Matr[T]]);
+        implicit def proxyMatr[T](p: Rep[Matr[T]]): Matr[T] = proxyOps[Matr[T]](p)(scala.reflect.classTag[Matr[T]]);
         class MatrElem[T, To <: Matr[T]](implicit val eeT: Elem[T]) extends EntityElem[To] {
           override def isEntityType = true;
           override lazy val tag = {
@@ -20,6 +20,7 @@ package paradise.linalgebra {
           override def convert(x: Rep[(Reifiable[_$1] forSome { 
             type _$1
           })]) = {
+            implicit val eTo: Elem[To] = this;
             val conv = fun(((x: Rep[Matr[T]]) => convertMatr(x)));
             tryConvert(element[Matr[T]], this, x, conv)
           };
@@ -61,7 +62,7 @@ package paradise.linalgebra {
             val numColumns = x$1._2;
             CompoundMatr(rows, numColumns)
           };
-          lazy val defaultRepTo = Default.defaultVal[Rep[CompoundMatr[T]]](CompoundMatr(element[Col[Vec[T]]].defaultRepValue, 0));
+          lazy val defaultRepTo: Rep[CompoundMatr[T]] = CompoundMatr(element[Col[Vec[T]]].defaultRepValue, 0);
           lazy val eTo = new CompoundMatrElem[T](this)
         };
         abstract class CompoundMatrCompanionAbs extends CompanionBase[CompoundMatrCompanionAbs] with CompoundMatrCompanion {
@@ -318,6 +319,13 @@ package paradise.linalgebra {
       lazy val scalanContext = new Scalan();
       def getScalanContext = scalanContext;
       class Scalan extends LinearAlgebraDslExp with CommunityLmsCompilerScala with CoreBridge with ScalanCommunityDslExp with EffectfulCompiler {
+        val lms = new CommunityLmsBackend()
+      };
+      import scalan.CommunityMethodMappingDSL;
+      import scalan.compilation.lms.uni.LmsCompilerUni;
+      lazy val scalanContextUni = new ScalanUni();
+      def getScalanContextUni = scalanContextUni;
+      class ScalanUni extends LinearAlgebraDslExp with LmsCompilerUni with CoreBridge with ScalanCommunityDslExp with EffectfulCompiler with CommunityMethodMappingDSL {
         val lms = new CommunityLmsBackend()
       }
     }
