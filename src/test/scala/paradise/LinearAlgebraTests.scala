@@ -19,7 +19,7 @@ class LinearAlgebraTests extends FunSuite with LinearAlgebra {
   }
 
   test("ddmvm") {
-    val rows = 1000
+    val rows = 10000
     val cols = rows;
 
     println(s"""Generating random matrix ${rows}x${cols} dense format "Array[Array[Double]]" ...""")
