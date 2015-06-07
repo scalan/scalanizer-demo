@@ -16,7 +16,7 @@ trait Vecs { self: LinearAlgebra =>
     def apply(i: Int): T = items(i)
     def map[R: ClassTag](f: T => R): Vec[R] = DenseVec(items.map(f))
     def dot(other: Vec[T])(implicit n: Numer[T], m: NumMonoid[T]): T = {
-      (other.items zip items).map((v: (T, T)) => n.times(v._1, v._2)).reduce
+      (other.items zip items).map((v: (T, T)) => n.times(v._1, v._2)).reduce(m)
     }
   }
 }

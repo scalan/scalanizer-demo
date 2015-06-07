@@ -6,21 +6,21 @@ import scalan.HotSpot
 trait LinearAlgebraOps { self: LinearAlgebra =>
   trait LinearAlgebraOp {
     def mvm[T: ClassTag](matrix: Matr[T], vector: Vec[T])
-                        (implicit n: Numer[T], m: NumMonoid[T]): Vec[T]
+                        (n: Numer[T], m: NumMonoid[T]): Vec[T]
   }
 
   case class LA() extends LinearAlgebraOp {
     def mvm[T: ClassTag](matrix: Matr[T], vector: Vec[T])
-                        (implicit n: Numer[T], m: NumMonoid[T]): Vec[T] = {
-      DenseVec(matrix.rows.map{ r: Vec[T] => r dot vector })
+                        (n: Numer[T], m: NumMonoid[T]): Vec[T] = {
+      DenseVec(matrix.rows.map{ r: Vec[T] => r.dot(vector)(n, m) })
     }
   }
 
   object LA {
     @HotSpot
     def ddmvm(m: Array[Array[Double]], v: Array[Double]): Array[Double] = {
-      implicit val doubleNumer: Numer[Double] = DoubleNumer()
-      implicit val plusMonoid: NumMonoid[Double] = PlusMonoid[Double]
+      val doubleNumer: Numer[Double] = DoubleNumer()
+      val plusMonoid: NumMonoid[Double] = PlusMonoid[Double](doubleNumer)
 
       val width = m(0).length
       val matrix: Matr[Double] = {
@@ -28,7 +28,7 @@ trait LinearAlgebraOps { self: LinearAlgebra =>
       }
       val vector: Vec[Double] = DenseVec(Col(v))
 
-      LA().mvm(matrix, vector).items.arr
+      LA().mvm(matrix, vector)(doubleNumer, plusMonoid).items.arr
     }
   }
 }

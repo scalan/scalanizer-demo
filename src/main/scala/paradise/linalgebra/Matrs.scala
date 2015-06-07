@@ -9,9 +9,6 @@ trait Matrs { self: LinearAlgebra =>
     def numRows: Int
     def rows: Col[Vec[T]]
     def columns(implicit n: Numer[T]): Col[Vec[T]]
-    def *(vector: Vec[T])(implicit n: Numer[T], m: NumMonoid[T]): Vec[T] = {
-      DenseVec(rows.map { r: Vec[T] => r.dot(vector) })
-    }
   }
 
   case class CompoundMatr[T](val rows: Col[Vec[T]], val numColumns: Int)
