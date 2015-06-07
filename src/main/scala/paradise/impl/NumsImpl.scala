@@ -319,11 +319,17 @@ package paradise {
       import scalan.compilation.lms.{CommunityLmsBackend, CoreBridge};
       import scalan.compilation.lms.scalac.CommunityLmsCompilerScala;
       import scalan.primitives.EffectfulCompiler;
-      import scalan.compilation.lms.uni.LmsCompilerUni;
       import paradise.implOfNums.StagedEvaluation._;
       lazy val scalanContext = new Scalan();
       def getScalanContext = scalanContext;
-      class Scalan extends NumsDslExp with LmsCompilerUni with CoreBridge with ScalanCommunityDslExp with EffectfulCompiler {
+      class Scalan extends NumsDslExp with CommunityLmsCompilerScala with CoreBridge with ScalanCommunityDslExp with EffectfulCompiler {
+        val lms = new CommunityLmsBackend()
+      };
+      import scalan.CommunityMethodMappingDSL;
+      import scalan.compilation.lms.uni.LmsCompilerUni;
+      lazy val scalanContextUni = new ScalanUni();
+      def getScalanContextUni = scalanContextUni;
+      class ScalanUni extends NumsDslExp with LmsCompilerUni with CoreBridge with ScalanCommunityDslExp with EffectfulCompiler with CommunityMethodMappingDSL {
         val lms = new CommunityLmsBackend()
       }
     }

@@ -2,7 +2,7 @@ package paradise.linalgebra
 
 import scala.reflect.ClassTag
 import scalan.HotSpot
-import scalan.Kernels._
+import scalan.KernelTypes._
 
 trait LinearAlgebraOps { self: LinearAlgebra =>
   trait LinearAlgebraOp {

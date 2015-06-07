@@ -2,7 +2,7 @@ package paradise {
   package implOfNumMonoids {
     object StagedEvaluation {
       import scalan._;
-      import paradise.implOfNumers.StagedEvaluation._;
+      import paradise.implOfNums.StagedEvaluation._;
       import scala.reflect.runtime.universe._;
       import scala.reflect._;
       import scalan.common.Default;
@@ -48,19 +48,19 @@ package paradise {
             weakTypeTag[PlusMonoid[A]]
           }
         };
-        type PlusMonoidData[A] = Numer[A];
+        type PlusMonoidData[A] = Num[A];
         class PlusMonoidIso[A](implicit eeA: Elem[A]) extends Iso[PlusMonoidData[A], PlusMonoid[A]] {
           override def from(p: Rep[PlusMonoid[A]]) = p.n;
-          override def to(p: Rep[Numer[A]]) = {
+          override def to(p: Rep[Num[A]]) = {
             val n = p;
             PlusMonoid(n)
           };
-          lazy val defaultRepTo: Rep[PlusMonoid[A]] = PlusMonoid(element[Numer[A]].defaultRepValue);
+          lazy val defaultRepTo: Rep[PlusMonoid[A]] = PlusMonoid(element[Num[A]].defaultRepValue);
           lazy val eTo = new PlusMonoidElem[A](this)
         };
         abstract class PlusMonoidCompanionAbs extends CompanionBase[PlusMonoidCompanionAbs] with PlusMonoidCompanion {
           override def toString = "PlusMonoid";
-          def apply[A](n: Rep[Numer[A]])(implicit eeA: Elem[A]): Rep[PlusMonoid[A]] = mkPlusMonoid(n)
+          def apply[A](n: Rep[Num[A]])(implicit eeA: Elem[A]): Rep[PlusMonoid[A]] = mkPlusMonoid(n)
         };
         object PlusMonoidMatcher {
           def unapply[A](p: Rep[NumMonoid[A]]) = unmkPlusMonoid(p)
@@ -76,8 +76,8 @@ package paradise {
           def toData: Rep[PlusMonoidData[A]] = isoPlusMonoid(eeA).from(p)
         };
         implicit def isoPlusMonoid[A](implicit eeA: Elem[A]): Iso[PlusMonoidData[A], PlusMonoid[A]] = new PlusMonoidIso[A]();
-        def mkPlusMonoid[A](n: Rep[Numer[A]])(implicit eeA: Elem[A]): Rep[PlusMonoid[A]];
-        def unmkPlusMonoid[A](p: Rep[NumMonoid[A]]): Option[Rep[Numer[A]]]
+        def mkPlusMonoid[A](n: Rep[Num[A]])(implicit eeA: Elem[A]): Rep[PlusMonoid[A]];
+        def unmkPlusMonoid[A](p: Rep[NumMonoid[A]]): Option[Rep[Num[A]]]
       };
       trait NumMonoidsSeq extends NumMonoidsDsl with ScalanSeq { self: NumMonoidsDslSeq =>
         lazy val NumMonoid: Rep[NumMonoidCompanionAbs] = {
@@ -86,7 +86,7 @@ package paradise {
           };
           new $anon()
         };
-        case class SeqPlusMonoid[A](override val n: Rep[Numer[A]])(implicit eeA: Elem[A]) extends PlusMonoid[A](n) with UserTypeSeq[PlusMonoid[A]] {
+        case class SeqPlusMonoid[A](override val n: Rep[Num[A]])(implicit eeA: Elem[A]) extends PlusMonoid[A](n) with UserTypeSeq[PlusMonoid[A]] {
           lazy val selfType = element[PlusMonoid[A]]
         };
         lazy val PlusMonoid = {
@@ -95,7 +95,7 @@ package paradise {
           };
           new $anon()
         };
-        def mkPlusMonoid[A](n: Rep[Numer[A]])(implicit eeA: Elem[A]): Rep[PlusMonoid[A]] = new SeqPlusMonoid[A](n);
+        def mkPlusMonoid[A](n: Rep[Num[A]])(implicit eeA: Elem[A]): Rep[PlusMonoid[A]] = new SeqPlusMonoid[A](n);
         def unmkPlusMonoid[A](p: Rep[NumMonoid[A]]) = p match {
           case (p @ ((_): PlusMonoid[A] @unchecked)) => Some(p.n)
           case _ => None
@@ -109,7 +109,7 @@ package paradise {
           };
           new $anon()
         };
-        case class ExpPlusMonoid[A](override val n: Rep[Numer[A]])(implicit eeA: Elem[A]) extends PlusMonoid[A](n) with UserTypeDef[PlusMonoid[A]] {
+        case class ExpPlusMonoid[A](override val n: Rep[Num[A]])(implicit eeA: Elem[A]) extends PlusMonoid[A](n) with UserTypeDef[PlusMonoid[A]] {
           lazy val selfType = element[PlusMonoid[A]];
           override def mirror(t: Transformer) = ExpPlusMonoid[A](t(n))
         };
@@ -211,7 +211,7 @@ package paradise {
           }
         };
         object PlusMonoidCompanionMethods;
-        def mkPlusMonoid[A](n: Rep[Numer[A]])(implicit eeA: Elem[A]): Rep[PlusMonoid[A]] = new ExpPlusMonoid[A](n);
+        def mkPlusMonoid[A](n: Rep[Num[A]])(implicit eeA: Elem[A]): Rep[PlusMonoid[A]] = new ExpPlusMonoid[A](n);
         def unmkPlusMonoid[A](p: Rep[NumMonoid[A]]) = p.elem.asInstanceOf[(Elem[_$14] forSome { 
           type _$14
         })] match {
@@ -337,16 +337,16 @@ package paradise {
         };
         object NumMonoidCompanionMethods
       };
-      trait NumMonoids extends Base with NumersDsl { self: NumMonoidsDsl =>
+      trait NumMonoids extends Base with NumsDsl { self: NumMonoidsDsl =>
         trait NumMonoid[A] extends Reifiable[NumMonoid[A]] {
           implicit def eeA: Elem[A];
-          def n: Rep[Numer[A]];
+          def n: Rep[Num[A]];
           def opName: Rep[String];
           def zero: Rep[A];
           def append: Rep[scala.Function1[scala.Tuple2[A, A], A]];
           def isCommutative: Rep[Boolean]
         };
-        abstract class PlusMonoid[A](val n: Rep[Numer[A]])(implicit val eeA: Elem[A]) extends NumMonoid[A] with Product with Serializable {
+        abstract class PlusMonoid[A](val n: Rep[Num[A]])(implicit val eeA: Elem[A]) extends NumMonoid[A] with Product with Serializable {
           def opName = toRep("+");
           def zero = n.zero;
           def append = fun(((in: Rep[scala.Tuple2[A, A]]) => {
@@ -359,16 +359,16 @@ package paradise {
         trait NumMonoidCompanion;
         trait PlusMonoidCompanion
       };
-      trait NumMonoidsDsl extends NumMonoidsAbs with NumersDsl { self: NumMonoidsDsl =>
+      trait NumMonoidsDsl extends NumMonoidsAbs with NumsDsl { self: NumMonoidsDsl =>
         
       };
-      trait NumMonoidsDslSeq extends NumMonoidsSeq with NumersDslSeq { self: NumMonoidsDslSeq =>
+      trait NumMonoidsDslSeq extends NumMonoidsSeq with NumsDslSeq { self: NumMonoidsDslSeq =>
         
       };
-      trait NumMonoidsDslExp extends NumMonoidsExp with NumersDslExp { self: NumMonoidsDslExp =>
+      trait NumMonoidsDslExp extends NumMonoidsExp with NumsDslExp { self: NumMonoidsDslExp =>
         
       };
-      val serializedMetaAst = "rO0ABXNyACZzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU0VudGl0eU1vZHVsZURlZqplOx8xRQC7AgAMTAAJYW5jZXN0b3JzdAAhTHNjYWxhL2NvbGxlY3Rpb24vaW1tdXRhYmxlL0xpc3Q7TAAEYm9keXEAfgABTAAQY29uY3JldGVTQ2xhc3Nlc3EAfgABTAAIZW50aXRpZXNxAH4AAUwACWVudGl0eU9wc3QAIUxzY2FsYW4vbWV0YS9TY2FsYW5Bc3QkU1RyYWl0RGVmO0wAEGVudGl0eVJlcFN5bm9ueW10AA5Mc2NhbGEvT3B0aW9uO0wAB2ltcG9ydHNxAH4AAUwAB21ldGhvZHNxAH4AAUwABG5hbWV0ABJMamF2YS9sYW5nL1N0cmluZztMAAtwYWNrYWdlTmFtZXEAfgAETAAIc2VsZlR5cGVxAH4AA0wACnNlcURzbEltcGxxAH4AA3hwc3IAMnNjYWxhLmNvbGxlY3Rpb24uaW1tdXRhYmxlLkxpc3QkU2VyaWFsaXphdGlvblByb3h5AAAAAAAAAAEDAAB4cHNyACBzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU1RyYWl0Q2FsbFDrGS0l7EVYAgACTAAEbmFtZXEAfgAETAAJdHBlU0V4cHJzcQB+AAF4cHQABk51bWVyc3NxAH4ABnNyACxzY2FsYS5jb2xsZWN0aW9uLmltbXV0YWJsZS5MaXN0U2VyaWFsaXplRW5kJIpcY1v3UwttAgAAeHB4cQB+AA14cQB+AAtzcQB+AAZzcgAfc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNDbGFzc0RlZgfQfWjxqHAzAgAKWgAKaXNBYnN0cmFjdEwACWFuY2VzdG9yc3EAfgABTAALYW5ub3RhdGlvbnNxAH4AAUwABGFyZ3N0ACJMc2NhbGFuL21ldGEvU2NhbGFuQXN0JFNDbGFzc0FyZ3M7TAAEYm9keXEAfgABTAAJY29tcGFuaW9ucQB+AANMAAxpbXBsaWNpdEFyZ3NxAH4AEEwABG5hbWVxAH4ABEwACHNlbGZUeXBlcQB+AANMAAd0cGVBcmdzcQB+AAF4cABzcQB+AAZzcQB+AAh0AAlOdW1Nb25vaWRzcQB+AAZzcQB+AAh0AAFBcQB+AAtxAH4ADXhzcQB+AAh0AAdQcm9kdWN0cQB+AAtzcQB+AAh0AAxTZXJpYWxpemFibGVxAH4AC3EAfgANeHEAfgALc3IAIHNjYWxhbi5tZXRhLlNjYWxhbkFzdCRTQ2xhc3NBcmdzJ+vuZMUwAFwCAAFMAARhcmdzcQB+AAF4cHNxAH4ABnNyAB9zY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU0NsYXNzQXJnBXPY1gvUKT8CAAhaAAdpbXBGbGFnWgAMaXNFbGVtT3JDb250WgAIb3ZlckZsYWdaAAd2YWxGbGFnTAALYW5ub3RhdGlvbnNxAH4AAUwAB2RlZmF1bHRxAH4AA0wABG5hbWVxAH4ABEwAA3RwZXQAIExzY2FsYW4vbWV0YS9TY2FsYW5Bc3QkU1RwZUV4cHI7eHAAAAABcQB+AAtzcgALc2NhbGEuTm9uZSRGUCT2U8qUrAIAAHhyAAxzY2FsYS5PcHRpb27+aTf92w5mdAIAAHhwdAABbnNxAH4ACHQABU51bWVyc3EAfgAGc3EAfgAIdAABQXEAfgALcQB+AA14cQB+AA14c3EAfgAGc3IAIHNjYWxhbi5tZXRhLlNjYWxhbkFzdCRTTWV0aG9kRGVm3VlxcbcwKw4CAApaAAxpc0VsZW1PckNvbnRaAAppc0ltcGxpY2l0WgAKaXNPdmVycmlkZUwAC2Fubm90YXRpb25zcQB+AAFMAAthcmdTZWN0aW9uc3EAfgABTAAEYm9keXEAfgADTAAEbmFtZXEAfgAETAAKb3ZlcmxvYWRJZHEAfgADTAAHdHBlQXJnc3EAfgABTAAGdHBlUmVzcQB+AAN4cAAAAHEAfgALcQB+AAtzcgAKc2NhbGEuU29tZREi8mleoYt0AgABTAABeHQAEkxqYXZhL2xhbmcvT2JqZWN0O3hxAH4AI3NyABxzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU0NvbnN0Gk0U0WJLZ4oCAAFMAAFjcQB+AC94cHQAASt0AAZvcE5hbWVxAH4AJHEAfgALcQB+ACRzcQB+ACwAAABxAH4AC3EAfgALc3EAfgAuc3IAHXNjYWxhbi5tZXRhLlNjYWxhbkFzdCRTU2VsZWN0C91pZWVA+YUCAAJMAARleHBydAAdTHNjYWxhbi9tZXRhL1NjYWxhbkFzdCRTRXhwcjtMAAV0bmFtZXEAfgAEeHBzcgAcc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNJZGVudCcSpfvwCddPAgABTAAEbmFtZXEAfgAEeHB0AAFudAAEemVyb3EAfgA9cQB+ACRxAH4AC3EAfgAkc3EAfgAsAAAAcQB+AAtxAH4AC3NxAH4ALnNyABtzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU0Z1bmOwTPiQGsUwgwIAAkwABnBhcmFtc3EAfgABTAADcmVzcQB+ADh4cHNxAH4ABnNyAB1zY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU1ZhbERlZisGObp73UUPAgAFWgAKaXNJbXBsaWNpdFoABmlzTGF6eUwABGV4cHJxAH4AOEwABG5hbWVxAH4ABEwAA3RwZXEAfgADeHAAAHNyABxzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU0VtcHR5kWAV4UvlaL4CAAB4cHQAAmEwc3EAfgAuc3EAfgAIdAABQXEAfgALc3EAfgBDAABzcQB+AEV0AAJhMXNxAH4ALnNxAH4ACHQAAUFxAH4AC3EAfgANeHNyABxzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU0FwcGx5hGYpn9Ka/H8CAANMAAVhcmdzc3EAfgABTAADZnVucQB+ADhMAAJ0c3EAfgABeHBzcQB+AAZzcQB+AAZzcQB+ADp0AAJhMHNxAH4AOnQAAmExcQB+AA14cQB+AA14c3EAfgA3c3EAfgA6dAABbnQABHBsdXNxAH4AC3QABmFwcGVuZHEAfgAkcQB+AAtxAH4AJHNxAH4ALAAAAHEAfgALcQB+AAtzcQB+AC5zcQB+ADFzcgARamF2YS5sYW5nLkJvb2xlYW7NIHKA1Zz67gIAAVoABXZhbHVleHABdAANaXNDb21tdXRhdGl2ZXEAfgAkcQB+AAtzcQB+AC5zcgAjc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNUcGVQcmltaXRpdmU1w7tV8L5OBQIAAkwAEmRlZmF1bHRWYWx1ZVN0cmluZ3EAfgAETAAEbmFtZXEAfgAEeHB0AAVmYWxzZXQAB0Jvb2xlYW5xAH4ADXhxAH4AJHNxAH4AHHEAfgALdAAKUGx1c01vbm9pZHEAfgAkc3EAfgAGc3IAHXNjYWxhbi5tZXRhLlNjYWxhbkFzdCRTVHBlQXJnklsmSHLxm4kCAARMAAVib3VuZHEAfgADTAAMY29udGV4dEJvdW5kcQB+AAFMAARuYW1lcQB+AARMAAd0cGFyYW1zcQB+AAF4cHEAfgAkcQB+AAt0AAFBcQB+AAtxAH4ADXhxAH4ADXhzcQB+AAZzcgAfc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNUcmFpdERlZgG+NJI0FLGyAgAJWgAIYml0bWFwJDBMAAlhbmNlc3RvcnNxAH4AAUwAC2Fubm90YXRpb25zcQB+AAFMAARib2R5cQB+AAFMAAljb21wYW5pb25xAH4AA0wADGltcGxpY2l0QXJnc3EAfgAQTAAEbmFtZXEAfgAETAAIc2VsZlR5cGVxAH4AA0wAB3RwZUFyZ3NxAH4AAXhwAHEAfgALcQB+AAtzcQB+AAZzcQB+ACwAAABxAH4AC3EAfgALcQB+ACR0AAFucQB+ACRxAH4AC3NxAH4ALnNxAH4ACHQABU51bWVyc3EAfgAGc3EAfgAIdAABQXEAfgALcQB+AA14c3EAfgAsAAAAcQB+AAtxAH4AC3EAfgAkdAAGb3BOYW1lcQB+ACRxAH4AC3NxAH4ALnNxAH4AZXQAAiIidAAGU3RyaW5nc3EAfgAsAAAAcQB+AAtxAH4AC3EAfgAkcQB+AD1xAH4AJHEAfgALc3EAfgAuc3EAfgAIdAABQXEAfgALc3EAfgAsAAAAcQB+AAtxAH4AC3EAfgAkdAAGYXBwZW5kcQB+ACRxAH4AC3NxAH4ALnNyAB5zY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU1RwZUZ1bmPUSZkTDx1f4QIAAkwABmRvbWFpbnEAfgAgTAAFcmFuZ2VxAH4AIHhwc3IAH3NjYWxhbi5tZXRhLlNjYWxhbkFzdCRTVHBlVHVwbGU0u/leiIBIcAIAAUwACXRwZVNFeHByc3EAfgABeHBzcQB+AAZzcQB+AAh0AAFBcQB+AAtzcQB+AAh0AAFBcQB+AAtxAH4ADXhzcQB+AAh0AAFBcQB+AAtzcQB+ACwAAABxAH4AC3EAfgALcQB+ACR0AA1pc0NvbW11dGF0aXZlcQB+ACRxAH4AC3NxAH4ALnEAfgBmcQB+AA14cQB+ACRwdAAJTnVtTW9ub2lkcQB+ACRzcQB+AAZzcQB+AGxxAH4AJHEAfgALdAABQXEAfgALcQB+AA14cQB+AA14cQB+AHFxAH4AJHEAfgALcQB+AAt0AApOdW1Nb25vaWRzdAAIcGFyYWRpc2VxAH4AJHEAfgAk"
+      val serializedMetaAst = "rO0ABXNyACZzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU0VudGl0eU1vZHVsZURlZqplOx8xRQC7AgAMTAAJYW5jZXN0b3JzdAAhTHNjYWxhL2NvbGxlY3Rpb24vaW1tdXRhYmxlL0xpc3Q7TAAEYm9keXEAfgABTAAQY29uY3JldGVTQ2xhc3Nlc3EAfgABTAAIZW50aXRpZXNxAH4AAUwACWVudGl0eU9wc3QAIUxzY2FsYW4vbWV0YS9TY2FsYW5Bc3QkU1RyYWl0RGVmO0wAEGVudGl0eVJlcFN5bm9ueW10AA5Mc2NhbGEvT3B0aW9uO0wAB2ltcG9ydHNxAH4AAUwAB21ldGhvZHNxAH4AAUwABG5hbWV0ABJMamF2YS9sYW5nL1N0cmluZztMAAtwYWNrYWdlTmFtZXEAfgAETAAIc2VsZlR5cGVxAH4AA0wACnNlcURzbEltcGxxAH4AA3hwc3IAMnNjYWxhLmNvbGxlY3Rpb24uaW1tdXRhYmxlLkxpc3QkU2VyaWFsaXphdGlvblByb3h5AAAAAAAAAAEDAAB4cHNyACBzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU1RyYWl0Q2FsbFDrGS0l7EVYAgACTAAEbmFtZXEAfgAETAAJdHBlU0V4cHJzcQB+AAF4cHQABE51bXNzcQB+AAZzcgAsc2NhbGEuY29sbGVjdGlvbi5pbW11dGFibGUuTGlzdFNlcmlhbGl6ZUVuZCSKXGNb91MLbQIAAHhweHEAfgANeHEAfgALc3EAfgAGc3IAH3NjYWxhbi5tZXRhLlNjYWxhbkFzdCRTQ2xhc3NEZWYH0H1o8ahwMwIACloACmlzQWJzdHJhY3RMAAlhbmNlc3RvcnNxAH4AAUwAC2Fubm90YXRpb25zcQB+AAFMAARhcmdzdAAiTHNjYWxhbi9tZXRhL1NjYWxhbkFzdCRTQ2xhc3NBcmdzO0wABGJvZHlxAH4AAUwACWNvbXBhbmlvbnEAfgADTAAMaW1wbGljaXRBcmdzcQB+ABBMAARuYW1lcQB+AARMAAhzZWxmVHlwZXEAfgADTAAHdHBlQXJnc3EAfgABeHAAc3EAfgAGc3EAfgAIdAAJTnVtTW9ub2lkc3EAfgAGc3EAfgAIdAABQXEAfgALcQB+AA14c3EAfgAIdAAHUHJvZHVjdHEAfgALc3EAfgAIdAAMU2VyaWFsaXphYmxlcQB+AAtxAH4ADXhxAH4AC3NyACBzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU0NsYXNzQXJncyfr7mTFMABcAgABTAAEYXJnc3EAfgABeHBzcQB+AAZzcgAfc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNDbGFzc0FyZwVz2NYL1Ck/AgAIWgAHaW1wRmxhZ1oADGlzRWxlbU9yQ29udFoACG92ZXJGbGFnWgAHdmFsRmxhZ0wAC2Fubm90YXRpb25zcQB+AAFMAAdkZWZhdWx0cQB+AANMAARuYW1lcQB+AARMAAN0cGV0ACBMc2NhbGFuL21ldGEvU2NhbGFuQXN0JFNUcGVFeHByO3hwAAAAAXEAfgALc3IAC3NjYWxhLk5vbmUkRlAk9lPKlKwCAAB4cgAMc2NhbGEuT3B0aW9u/mk3/dsOZnQCAAB4cHQAAW5zcQB+AAh0AANOdW1zcQB+AAZzcQB+AAh0AAFBcQB+AAtxAH4ADXhxAH4ADXhzcQB+AAZzcgAgc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNNZXRob2REZWbdWXFxtzArDgIACloADGlzRWxlbU9yQ29udFoACmlzSW1wbGljaXRaAAppc092ZXJyaWRlTAALYW5ub3RhdGlvbnNxAH4AAUwAC2FyZ1NlY3Rpb25zcQB+AAFMAARib2R5cQB+AANMAARuYW1lcQB+AARMAApvdmVybG9hZElkcQB+AANMAAd0cGVBcmdzcQB+AAFMAAZ0cGVSZXNxAH4AA3hwAAAAcQB+AAtxAH4AC3NyAApzY2FsYS5Tb21lESLyaV6hi3QCAAFMAAF4dAASTGphdmEvbGFuZy9PYmplY3Q7eHEAfgAjc3IAHHNjYWxhbi5tZXRhLlNjYWxhbkFzdCRTQ29uc3QaTRTRYktnigIAAUwAAWNxAH4AL3hwdAABK3QABm9wTmFtZXEAfgAkcQB+AAtxAH4AJHNxAH4ALAAAAHEAfgALcQB+AAtzcQB+AC5zcgAdc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNTZWxlY3QL3WllZUD5hQIAAkwABGV4cHJ0AB1Mc2NhbGFuL21ldGEvU2NhbGFuQXN0JFNFeHByO0wABXRuYW1lcQB+AAR4cHNyABxzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU0lkZW50JxKl+/AJ108CAAFMAARuYW1lcQB+AAR4cHQAAW50AAR6ZXJvcQB+AD1xAH4AJHEAfgALcQB+ACRzcQB+ACwAAABxAH4AC3EAfgALc3EAfgAuc3IAG3NjYWxhbi5tZXRhLlNjYWxhbkFzdCRTRnVuY7BM+JAaxTCDAgACTAAGcGFyYW1zcQB+AAFMAANyZXNxAH4AOHhwc3EAfgAGc3IAHXNjYWxhbi5tZXRhLlNjYWxhbkFzdCRTVmFsRGVmKwY5unvdRQ8CAAVaAAppc0ltcGxpY2l0WgAGaXNMYXp5TAAEZXhwcnEAfgA4TAAEbmFtZXEAfgAETAADdHBlcQB+AAN4cAAAc3IAHHNjYWxhbi5tZXRhLlNjYWxhbkFzdCRTRW1wdHmRYBXhS+VovgIAAHhwdAACYTBzcQB+AC5zcQB+AAh0AAFBcQB+AAtzcQB+AEMAAHNxAH4ARXQAAmExc3EAfgAuc3EAfgAIdAABQXEAfgALcQB+AA14c3IAHHNjYWxhbi5tZXRhLlNjYWxhbkFzdCRTQXBwbHmEZimf0pr8fwIAA0wABWFyZ3NzcQB+AAFMAANmdW5xAH4AOEwAAnRzcQB+AAF4cHNxAH4ABnNxAH4ABnNxAH4AOnQAAmEwc3EAfgA6dAACYTFxAH4ADXhxAH4ADXhzcQB+ADdzcQB+ADp0AAFudAAEcGx1c3EAfgALdAAGYXBwZW5kcQB+ACRxAH4AC3EAfgAkc3EAfgAsAAAAcQB+AAtxAH4AC3NxAH4ALnNxAH4AMXNyABFqYXZhLmxhbmcuQm9vbGVhbs0gcoDVnPruAgABWgAFdmFsdWV4cAF0AA1pc0NvbW11dGF0aXZlcQB+ACRxAH4AC3NxAH4ALnNyACNzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU1RwZVByaW1pdGl2ZTXDu1Xwvk4FAgACTAASZGVmYXVsdFZhbHVlU3RyaW5ncQB+AARMAARuYW1lcQB+AAR4cHQABWZhbHNldAAHQm9vbGVhbnEAfgANeHEAfgAkc3EAfgAccQB+AAt0AApQbHVzTW9ub2lkcQB+ACRzcQB+AAZzcgAdc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNUcGVBcmeSWyZIcvGbiQIABEwABWJvdW5kcQB+AANMAAxjb250ZXh0Qm91bmRxAH4AAUwABG5hbWVxAH4ABEwAB3RwYXJhbXNxAH4AAXhwcQB+ACRxAH4AC3QAAUFxAH4AC3EAfgANeHEAfgANeHNxAH4ABnNyAB9zY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU1RyYWl0RGVmAb40kjQUsbICAAlaAAhiaXRtYXAkMEwACWFuY2VzdG9yc3EAfgABTAALYW5ub3RhdGlvbnNxAH4AAUwABGJvZHlxAH4AAUwACWNvbXBhbmlvbnEAfgADTAAMaW1wbGljaXRBcmdzcQB+ABBMAARuYW1lcQB+AARMAAhzZWxmVHlwZXEAfgADTAAHdHBlQXJnc3EAfgABeHAAcQB+AAtxAH4AC3NxAH4ABnNxAH4ALAAAAHEAfgALcQB+AAtxAH4AJHQAAW5xAH4AJHEAfgALc3EAfgAuc3EAfgAIdAADTnVtc3EAfgAGc3EAfgAIdAABQXEAfgALcQB+AA14c3EAfgAsAAAAcQB+AAtxAH4AC3EAfgAkdAAGb3BOYW1lcQB+ACRxAH4AC3NxAH4ALnNxAH4AZXQAAiIidAAGU3RyaW5nc3EAfgAsAAAAcQB+AAtxAH4AC3EAfgAkcQB+AD1xAH4AJHEAfgALc3EAfgAuc3EAfgAIdAABQXEAfgALc3EAfgAsAAAAcQB+AAtxAH4AC3EAfgAkdAAGYXBwZW5kcQB+ACRxAH4AC3NxAH4ALnNyAB5zY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU1RwZUZ1bmPUSZkTDx1f4QIAAkwABmRvbWFpbnEAfgAgTAAFcmFuZ2VxAH4AIHhwc3IAH3NjYWxhbi5tZXRhLlNjYWxhbkFzdCRTVHBlVHVwbGU0u/leiIBIcAIAAUwACXRwZVNFeHByc3EAfgABeHBzcQB+AAZzcQB+AAh0AAFBcQB+AAtzcQB+AAh0AAFBcQB+AAtxAH4ADXhzcQB+AAh0AAFBcQB+AAtzcQB+ACwAAABxAH4AC3EAfgALcQB+ACR0AA1pc0NvbW11dGF0aXZlcQB+ACRxAH4AC3NxAH4ALnEAfgBmcQB+AA14cQB+ACRwdAAJTnVtTW9ub2lkcQB+ACRzcQB+AAZzcQB+AGxxAH4AJHEAfgALdAABQXEAfgALcQB+AA14cQB+AA14cQB+AHFxAH4AJHEAfgALcQB+AAt0AApOdW1Nb25vaWRzdAAIcGFyYWRpc2VxAH4AJHEAfgAk"
     }
 
     object HotSpotKernels {

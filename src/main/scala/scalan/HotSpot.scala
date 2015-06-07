@@ -2,9 +2,9 @@ package scalan
 
 import scala.annotation.StaticAnnotation
 
-object Kernels extends Enumeration {
-  type Kernel = Value
+object KernelTypes extends Enumeration {
+  type KernelType = Value
   val ScalaKernel, CppKernel = Value
 }
 
-class HotSpot(kernel: Kernels.Kernel = Kernels.ScalaKernel) extends StaticAnnotation
+class HotSpot(kernel: KernelTypes.KernelType = KernelTypes.ScalaKernel) extends StaticAnnotation

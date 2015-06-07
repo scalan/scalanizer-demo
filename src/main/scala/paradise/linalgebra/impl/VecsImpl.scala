@@ -334,11 +334,10 @@ package paradise.linalgebra {
       import scalan.compilation.lms.{CommunityLmsBackend, CoreBridge};
       import scalan.compilation.lms.scalac.CommunityLmsCompilerScala;
       import scalan.primitives.EffectfulCompiler;
-      import scalan.compilation.lms.uni.LmsCompilerUni;
       import paradise.linalgebra.implOfLinearAlgebra.StagedEvaluation._;
       lazy val scalanContext = new Scalan();
       def getScalanContext = scalanContext;
-      class Scalan extends LinearAlgebraDslExp with LmsCompilerUni with CoreBridge with ScalanCommunityDslExp with EffectfulCompiler {
+      class Scalan extends LinearAlgebraDslExp with CommunityLmsCompilerScala with CoreBridge with ScalanCommunityDslExp with EffectfulCompiler {
         val lms = new CommunityLmsBackend()
       };
       import scalan.CommunityMethodMappingDSL;
