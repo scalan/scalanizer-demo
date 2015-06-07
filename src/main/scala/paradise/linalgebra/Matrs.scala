@@ -8,7 +8,7 @@ trait Matrs { self: LinearAlgebra =>
     def numColumns: Int
     def numRows: Int
     def rows: Col[Vec[T]]
-    def columns(implicit n: Numer[T]): Col[Vec[T]]
+    def columns(implicit n: Num[T]): Col[Vec[T]]
   }
 
   case class CompoundMatr[T](val rows: Col[Vec[T]], val numColumns: Int)
@@ -16,7 +16,7 @@ trait Matrs { self: LinearAlgebra =>
     extends Matr[T] {
 
     def numRows = rows.length
-    def columns(implicit n: Numer[T]): Col[Vec[T]] = {
+    def columns(implicit n: Num[T]): Col[Vec[T]] = {
       Col((Array.range(0, numColumns, 1): Array[Int]).map { (j: Int) =>
         DenseVec(rows.map((vec: Vec[T]) => vec(j))): Vec[T]
       })

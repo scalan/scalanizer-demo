@@ -7,12 +7,12 @@ import scalan.Kernels._
 trait LinearAlgebraOps { self: LinearAlgebra =>
   trait LinearAlgebraOp {
     def mvm[T: ClassTag](matrix: Matr[T], vector: Vec[T])
-                        (n: Numer[T], m: NumMonoid[T]): Vec[T]
+                        (n: Num[T], m: NumMonoid[T]): Vec[T]
   }
 
   case class LA() extends LinearAlgebraOp {
     def mvm[T: ClassTag](matrix: Matr[T], vector: Vec[T])
-                        (n: Numer[T], m: NumMonoid[T]): Vec[T] = {
+                        (n: Num[T], m: NumMonoid[T]): Vec[T] = {
       DenseVec(matrix.rows.map{ r: Vec[T] => r.dot(vector)(n, m) })
     }
   }
@@ -20,7 +20,7 @@ trait LinearAlgebraOps { self: LinearAlgebra =>
   object LA {
     @HotSpot(CppKernel)
     def ddmvm(m: Array[Array[Double]], v: Array[Double]): Array[Double] = {
-      val doubleNumer: Numer[Double] = DoubleNumer()
+      val doubleNumer: Num[Double] = DoubleNum()
       val plusMonoid: NumMonoid[Double] = PlusMonoid[Double](doubleNumer)
 
       val width = m(0).length
