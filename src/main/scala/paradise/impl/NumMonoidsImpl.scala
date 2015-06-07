@@ -7,7 +7,7 @@ package paradise {
       import scala.reflect._;
       import scalan.common.Default;
       trait NumMonoidsAbs extends NumMonoids with ScalanDsl { self: NumMonoidsDsl =>
-        implicit def proxyNumMonoid[A](p: Rep[NumMonoid[A]]): NumMonoid[A] = proxyOps[NumMonoid[A]](p)(classTag[NumMonoid[A]]);
+        implicit def proxyNumMonoid[A](p: Rep[NumMonoid[A]]): NumMonoid[A] = proxyOps[NumMonoid[A]](p)(scala.reflect.classTag[NumMonoid[A]]);
         class NumMonoidElem[A, To <: NumMonoid[A]](implicit val eeA: Elem[A]) extends EntityElem[To] {
           override def isEntityType = true;
           override lazy val tag = {
@@ -17,7 +17,7 @@ package paradise {
           override def convert(x: Rep[(Reifiable[_$1] forSome { 
             type _$1
           })]) = {
-            implicit val eTo: Elem[To] = this
+            implicit val eTo: Elem[To] = this;
             val conv = fun(((x: Rep[NumMonoid[A]]) => convertNumMonoid(x)));
             tryConvert(element[NumMonoid[A]], this, x, conv)
           };
@@ -55,7 +55,7 @@ package paradise {
             val n = p;
             PlusMonoid(n)
           };
-          lazy val defaultRepTo = Default.defaultVal[Rep[PlusMonoid[A]]](PlusMonoid(element[Numer[A]].defaultRepValue));
+          lazy val defaultRepTo: Rep[PlusMonoid[A]] = PlusMonoid(element[Numer[A]].defaultRepValue);
           lazy val eTo = new PlusMonoidElem[A](this)
         };
         abstract class PlusMonoidCompanionAbs extends CompanionBase[PlusMonoidCompanionAbs] with PlusMonoidCompanion {

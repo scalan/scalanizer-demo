@@ -9,7 +9,7 @@ package paradise.linalgebra {
       import scala.reflect._;
       import scalan.common.Default;
       trait VecsAbs extends Vecs with ScalanDsl { self: LinearAlgebraDsl =>
-        implicit def proxyVec[T](p: Rep[Vec[T]]): Vec[T] = proxyOps[Vec[T]](p)(classTag[Vec[T]]);
+        implicit def proxyVec[T](p: Rep[Vec[T]]): Vec[T] = proxyOps[Vec[T]](p)(scala.reflect.classTag[Vec[T]]);
         class VecElem[T, To <: Vec[T]](implicit val eeT: Elem[T]) extends EntityElem[To] {
           override def isEntityType = true;
           override lazy val tag = {
@@ -19,7 +19,7 @@ package paradise.linalgebra {
           override def convert(x: Rep[(Reifiable[_$1] forSome { 
             type _$1
           })]) = {
-            implicit val eTo: Elem[To] = this
+            implicit val eTo: Elem[To] = this;
             val conv = fun(((x: Rep[Vec[T]]) => convertVec(x)));
             tryConvert(element[Vec[T]], this, x, conv)
           };
@@ -57,7 +57,7 @@ package paradise.linalgebra {
             val items = p;
             DenseVec(items)
           };
-          lazy val defaultRepTo = Default.defaultVal[Rep[DenseVec[T]]](DenseVec(element[Col[T]].defaultRepValue));
+          lazy val defaultRepTo: Rep[DenseVec[T]] = DenseVec(element[Col[T]].defaultRepValue);
           lazy val eTo = new DenseVecElem[T](this)
         };
         abstract class DenseVecCompanionAbs extends CompanionBase[DenseVecCompanionAbs] with DenseVecCompanion {
