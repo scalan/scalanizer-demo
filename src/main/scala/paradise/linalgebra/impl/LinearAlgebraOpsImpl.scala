@@ -2,7 +2,7 @@ package paradise.linalgebra {
   package implOfLinearAlgebraOps {
     object StagedEvaluation {
       import scalan._;
-      import paradise.implOfNumers.StagedEvaluation._;
+      import paradise.implOfNums.StagedEvaluation._;
       import paradise.implOfNumMonoids.StagedEvaluation._;
       import paradise.linalgebra.implOfVecs.StagedEvaluation._;
       import paradise.linalgebra.implOfMatrs.StagedEvaluation._;
@@ -124,17 +124,17 @@ package paradise.linalgebra {
           object mvm {
             def unapply(d: (Def[_$2] forSome { 
               type _$2
-            })): Option[(scala.Tuple6[Rep[LA], Rep[Matr[T]], Rep[Vec[T]], Rep[Numer[T]], Rep[NumMonoid[T]], Rep[Elem[T]]] forSome { 
+            })): Option[(scala.Tuple6[Rep[LA], Rep[Matr[T]], Rep[Vec[T]], Rep[Num[T]], Rep[NumMonoid[T]], Rep[Elem[T]]] forSome { 
               type T
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), Seq((matrix @ _), (vector @ _), (n @ _), (m @ _), (emT @ _), _*), _) if receiver.elem.isInstanceOf[LAElem].&&(method.getName.==("mvm")) => Some(scala.Tuple6(receiver, matrix, vector, n, m, emT)).asInstanceOf[Option[(scala.Tuple6[Rep[LA], Rep[Matr[T]], Rep[Vec[T]], Rep[Numer[T]], Rep[NumMonoid[T]], Rep[Elem[T]]] forSome { 
+              case MethodCall((receiver @ _), (method @ _), Seq((matrix @ _), (vector @ _), (n @ _), (m @ _), (emT @ _), _*), _) if receiver.elem.isInstanceOf[LAElem].&&(method.getName.==("mvm")) => Some(scala.Tuple6(receiver, matrix, vector, n, m, emT)).asInstanceOf[Option[(scala.Tuple6[Rep[LA], Rep[Matr[T]], Rep[Vec[T]], Rep[Num[T]], Rep[NumMonoid[T]], Rep[Elem[T]]] forSome { 
                 type T
               })]]
               case _ => None
             };
             def unapply(exp: (Exp[_$3] forSome { 
               type _$3
-            })): Option[(scala.Tuple6[Rep[LA], Rep[Matr[T]], Rep[Vec[T]], Rep[Numer[T]], Rep[NumMonoid[T]], Rep[Elem[T]]] forSome { 
+            })): Option[(scala.Tuple6[Rep[LA], Rep[Matr[T]], Rep[Vec[T]], Rep[Num[T]], Rep[NumMonoid[T]], Rep[Elem[T]]] forSome { 
               type T
             })] = exp match {
               case Def((d @ _)) => unapply(d)
@@ -169,19 +169,19 @@ package paradise.linalgebra {
           object mvm {
             def unapply(d: (Def[_$7] forSome { 
               type _$7
-            })): Option[(scala.Tuple6[Rep[LinearAlgebraOp], Rep[Matr[T]], Rep[Vec[T]], Rep[Numer[T]], Rep[NumMonoid[T]], Rep[Elem[T]]] forSome { 
+            })): Option[(scala.Tuple6[Rep[LinearAlgebraOp], Rep[Matr[T]], Rep[Vec[T]], Rep[Num[T]], Rep[NumMonoid[T]], Rep[Elem[T]]] forSome { 
               type T
             })] = d match {
               case MethodCall((receiver @ _), (method @ _), Seq((matrix @ _), (vector @ _), (n @ _), (m @ _), (emT @ _), _*), _) if receiver.elem.isInstanceOf[(LinearAlgebraOpElem[_$8] forSome { 
   type _$8
-})].&&(method.getName.==("mvm")) => Some(scala.Tuple6(receiver, matrix, vector, n, m, emT)).asInstanceOf[Option[(scala.Tuple6[Rep[LinearAlgebraOp], Rep[Matr[T]], Rep[Vec[T]], Rep[Numer[T]], Rep[NumMonoid[T]], Rep[Elem[T]]] forSome { 
+})].&&(method.getName.==("mvm")) => Some(scala.Tuple6(receiver, matrix, vector, n, m, emT)).asInstanceOf[Option[(scala.Tuple6[Rep[LinearAlgebraOp], Rep[Matr[T]], Rep[Vec[T]], Rep[Num[T]], Rep[NumMonoid[T]], Rep[Elem[T]]] forSome { 
                 type T
               })]]
               case _ => None
             };
             def unapply(exp: (Exp[_$9] forSome { 
               type _$9
-            })): Option[(scala.Tuple6[Rep[LinearAlgebraOp], Rep[Matr[T]], Rep[Vec[T]], Rep[Numer[T]], Rep[NumMonoid[T]], Rep[Elem[T]]] forSome { 
+            })): Option[(scala.Tuple6[Rep[LinearAlgebraOp], Rep[Matr[T]], Rep[Vec[T]], Rep[Num[T]], Rep[NumMonoid[T]], Rep[Elem[T]]] forSome { 
               type T
             })] = exp match {
               case Def((d @ _)) => unapply(d)
@@ -193,15 +193,15 @@ package paradise.linalgebra {
       };
       trait LinearAlgebraOps extends Base { self: LinearAlgebraDsl =>
         trait LinearAlgebraOp extends Reifiable[LinearAlgebraOp] {
-          def mvm[T](matrix: Rep[Matr[T]], vector: Rep[Vec[T]])(n: Rep[Numer[T]], m: Rep[NumMonoid[T]])(implicit emT: Elem[T]): Rep[Vec[T]]
+          def mvm[T](matrix: Rep[Matr[T]], vector: Rep[Vec[T]])(n: Rep[Num[T]], m: Rep[NumMonoid[T]])(implicit emT: Elem[T]): Rep[Vec[T]]
         };
         abstract class LA extends LinearAlgebraOp with Product with Serializable {
-          def mvm[T](matrix: Rep[Matr[T]], vector: Rep[Vec[T]])(n: Rep[Numer[T]], m: Rep[NumMonoid[T]])(implicit emT: Elem[T]): Rep[Vec[T]] = DenseVec(matrix.rows.map(fun(((r: Rep[Vec[T]]) => r.dot(vector)(n, m)))))
+          def mvm[T](matrix: Rep[Matr[T]], vector: Rep[Vec[T]])(n: Rep[Num[T]], m: Rep[NumMonoid[T]])(implicit emT: Elem[T]): Rep[Vec[T]] = DenseVec(matrix.rows.map(fun(((r: Rep[Vec[T]]) => r.dot(vector)(n, m)))))
         };
         trait LinearAlgebraOpCompanion;
         trait LACompanion {
           @HotSpot(CppKernel) def ddmvm(m: Rep[Array[Array[Double]]], v: Rep[Array[Double]]): Rep[Array[Double]] = {
-            val doubleNumer: Rep[Numer[Double]] = DoubleNumer();
+            val doubleNumer: Rep[Numer[Double]] = DoubleNum();
             val plusMonoid: Rep[NumMonoid[Double]] = PlusMonoid[Double](doubleNumer);
             val width = m(toRep(0)).length;
             val matrix: Rep[Matr[Double]] = CompoundMatr(Col(array_map(m, fun(((r: Rep[Array[Double]]) => DenseVec(Col(r)))))), width);
@@ -243,6 +243,7 @@ package paradise.linalgebra {
       import scalan.compilation.lms.{CommunityLmsBackend, CoreBridge};
       import scalan.compilation.lms.scalac.CommunityLmsCompilerScala;
       import scalan.primitives.EffectfulCompiler;
+      import scalan.compilation.lms.uni.LmsCompilerUni;
       import paradise.linalgebra.implOfLinearAlgebra.StagedEvaluation._;
       lazy val scalanContext = new Scalan();
       def getScalanContext = scalanContext;

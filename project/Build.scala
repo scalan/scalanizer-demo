@@ -23,7 +23,8 @@ object ScalanParadiseRootBuild extends Build {
       "-language:implicitConversions",
       "-language:existentials",
       "-language:postfixOps",
-      "-Xplugin:/home/mgekk/scalan/scalan-plugin/target/scala-2.11/scalan-plugin_2.11.6-0.0.1-fat.jar"
+      s"-Xplugin:/Users/slesarenko/Projects/scalan/scalanizer/target/scala-2.11/scalan-plugin_2.11.6-0.0.1-fat.jar"
+//      s"-Xplugin:${Path.userHome.absolutePath}/.ivy2/local/com.huawei/scalan-plugin_2.11.6/0.0.1/jars/scalan-plugin_2.11.6.jar"
     ),
     crossScalaVersions := Seq("2.10.2", "2.10.3", "2.10.4", "2.10.5",
                               "2.11.0", "2.11.1", "2.11.2", "2.11.3", "2.11.4", "2.11.5", "2.11.6"
@@ -41,18 +42,19 @@ object ScalanParadiseRootBuild extends Build {
     def addTestConfigsAndCommonSettings =
       p.configs(ItTest).settings(commonSettings: _*)
   }
-  def liteDependency(name: String) = "com.huawei.scalan" %% name % "0.2.9-SNAPSHOT"
+  def scalanDependency(name: String) = "com.huawei.scalan" %% name % "0.2.9-SNAPSHOT"
 
-  lazy val metaDeps = liteDependency("meta")
-  lazy val scalanParadiseMeta = Project(
-    id = "scalan-paradise-meta",
-    base = file("meta")
-  ).addTestConfigsAndCommonSettings.settings(libraryDependencies ++= Seq(metaDeps))
+  lazy val metaDeps = scalanDependency("meta")
 
-  lazy val core = liteDependency("core")
-  lazy val common = liteDependency("common")
-  lazy val community = liteDependency("community-edition")
-  lazy val lmsbackend = liteDependency("lms-backend")
+//  lazy val scalanParadiseMeta = Project(
+//    id = "scalan-paradise-meta",
+//    base = file("meta")
+//  ).addTestConfigsAndCommonSettings.settings(libraryDependencies ++= Seq(metaDeps))
+
+  lazy val core = scalanDependency("core")
+  lazy val common = scalanDependency("common")
+  lazy val community = scalanDependency("community-edition")
+  lazy val lmsbackend = scalanDependency("lms-backend")
   lazy val scalanParadise = Project(
     id = "scalan-paradise",
     base = file(".")
