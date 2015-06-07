@@ -23,7 +23,7 @@ object ScalanParadiseRootBuild extends Build {
       "-language:implicitConversions",
       "-language:existentials",
       "-language:postfixOps",
-      s"-Xplugin:/Users/slesarenko/Projects/scalan/scalanizer/target/scala-2.11/scalan-plugin_2.11.6-0.0.1-fat.jar"
+      s"-Xplugin:/Users/slesarenko/Projects/scalan/scalanizer/target/scala-2.11/scalanizer_2.11.6-0.0.1-fat.jar"
 //      s"-Xplugin:${Path.userHome.absolutePath}/.ivy2/local/com.huawei/scalan-plugin_2.11.6/0.0.1/jars/scalan-plugin_2.11.6.jar"
     ),
     crossScalaVersions := Seq("2.10.2", "2.10.3", "2.10.4", "2.10.5",
