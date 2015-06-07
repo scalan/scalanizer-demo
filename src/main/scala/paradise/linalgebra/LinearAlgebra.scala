@@ -1,7 +1,7 @@
-package paradise.linalgebra
+package scalanizer.linalgebra
 
-import paradise.NumMonoids
-import paradise.collections.Cols
+import scalanizer.NumMonoids
+import scalanizer.collections.Cols
 
 trait LinearAlgebra extends NumMonoids
 with Cols

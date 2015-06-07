@@ -1,6 +1,6 @@
-package paradise.collections
+package scalanizer.collections
 
-import paradise.NumMonoids
+import scalanizer.NumMonoids
 import scala.collection.generic.CanBuildFrom
 import scala.reflect.ClassTag
 

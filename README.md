@@ -1,5 +1,6 @@
-scalan-paradise
-==============
+scalanier-sample
+================
 
-Scalan Paradise is new frontend of Scalan framework.
+Scalanizer is a new frontend for Scalan framework.
+This project is an example how Scalanizer can be used for hot-spot optimization.
 

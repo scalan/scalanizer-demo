@@ -1,4 +1,4 @@
-package paradise
+package scalanizer
 
 trait Nums {
   trait Num[T] {

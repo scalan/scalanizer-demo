@@ -55,8 +55,8 @@ object ScalanParadiseRootBuild extends Build {
   lazy val common = scalanDependency("common")
   lazy val community = scalanDependency("community-edition")
   lazy val lmsbackend = scalanDependency("lms-backend")
-  lazy val scalanParadise = Project(
-    id = "scalan-paradise",
+  lazy val scalanizerSample = Project(
+    id = "scalanizer-sample",
     base = file(".")
   ).addTestConfigsAndCommonSettings.settings(libraryDependencies ++= Seq(
     core,

@@ -1,4 +1,4 @@
-package paradise
+package scalanizer
 
 trait NumMonoids extends Nums {
   trait NumMonoid[A] {

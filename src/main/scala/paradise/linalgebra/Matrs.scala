@@ -1,4 +1,4 @@
-package paradise.linalgebra
+package scalanizer.linalgebra
 
 import scala.reflect.ClassTag
 

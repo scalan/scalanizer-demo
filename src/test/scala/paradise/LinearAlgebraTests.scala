@@ -1,7 +1,7 @@
-package paradise
+package scalanizer
 
 import org.scalatest._
-import paradise.linalgebra.LinearAlgebra
+import scalanizer.linalgebra.LinearAlgebra
 import scala.util.Random
 
 class LinearAlgebraTests extends FunSuite with LinearAlgebra {
