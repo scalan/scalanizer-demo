@@ -11,7 +11,7 @@ trait Matrs { self: LinearAlgebra =>
     def columns(implicit n: Num[T]): Col[Vec[T]]
   }
 
-  case class CompoundMatr[T](val rows: Col[Vec[T]], val numColumns: Int)
+  case class DenseMatr[T](val rows: Col[Vec[T]], val numColumns: Int)
                               (implicit val ctT: ClassTag[T])
     extends Matr[T] {
 

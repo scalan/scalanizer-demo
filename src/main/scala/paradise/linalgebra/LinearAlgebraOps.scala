@@ -18,14 +18,14 @@ trait LinearAlgebraOps { self: LinearAlgebra =>
   }
 
   object LA {
-    @HotSpot(ScalaKernel)
+    @HotSpot(CppKernel)
     def ddmvm(m: Array[Array[Double]], v: Array[Double]): Array[Double] = {
       val doubleNumer: Num[Double] = DoubleNum()
       val plusMonoid: NumMonoid[Double] = PlusMonoid[Double](doubleNumer)
 
       val width = m(0).length
       val matrix: Matr[Double] = {
-        CompoundMatr(Col((m: Array[Array[Double]]).map { r: Array[Double] => DenseVec(Col(r)) }), width)
+        DenseMatr(Col((m: Array[Array[Double]]).map { r: Array[Double] => DenseVec(Col(r)) }), width)
       }
       val vector: Vec[Double] = DenseVec(Col(v))
 
