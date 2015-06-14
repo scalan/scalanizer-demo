@@ -15,7 +15,8 @@ object ScalanParadiseRootBuild extends Build {
 
   val buildSettings = Seq(
     organization := "com.huawei.scalan",
-    scalaVersion := "2.11.6",
+    scalaVersion := "2.11.2",
+	scalaOrganization := "org.scala-lang.virtualized",
     scalacOptions ++= Seq(
       "-unchecked", "-deprecation",
       "-feature",
@@ -23,12 +24,9 @@ object ScalanParadiseRootBuild extends Build {
       "-language:implicitConversions",
       "-language:existentials",
       "-language:postfixOps",
-      s"-Xplugin:/Users/slesarenko/Projects/scalan/scalanizer/target/scala-2.11/scalanizer_2.11.6-0.0.1-fat.jar"
+      s"-Xplugin:F:/MyProgramming/scalanizer/target/scala-2.11/scalanizer_2.11.2-0.0.2-SNAPSHOT-fat.jar"
 //      s"-Xplugin:${Path.userHome.absolutePath}/.ivy2/local/com.huawei/scalan-plugin_2.11.6/0.0.1/jars/scalan-plugin_2.11.6.jar"
     ),
-    crossScalaVersions := Seq("2.10.2", "2.10.3", "2.10.4", "2.10.5",
-                              "2.11.0", "2.11.1", "2.11.2", "2.11.3", "2.11.4", "2.11.5", "2.11.6"
-                             ),
     resolvers += Resolver.sonatypeRepo("snapshots"),
     resolvers += Resolver.sonatypeRepo("releases")
     //addCompilerPlugin("org.scalamacros" % "paradise" % paradiseVersion cross CrossVersion.full)
@@ -42,7 +40,7 @@ object ScalanParadiseRootBuild extends Build {
     def addTestConfigsAndCommonSettings =
       p.configs(ItTest).settings(commonSettings: _*)
   }
-  def scalanDependency(name: String) = "com.huawei.scalan" %% name % "0.2.9-SNAPSHOT"
+  def scalanDependency(name: String) = "com.huawei.scalan" %% ("scalan-" + name) % "0.2.9-SNAPSHOT"
 
   lazy val metaDeps = scalanDependency("meta")
 
@@ -53,7 +51,7 @@ object ScalanParadiseRootBuild extends Build {
 
   lazy val core = scalanDependency("core")
   lazy val common = scalanDependency("common")
-  lazy val community = scalanDependency("community-edition")
+  lazy val community = scalanDependency("library")
   lazy val lmsbackend = scalanDependency("lms-backend")
   lazy val scalanizerSample = Project(
     id = "scalanizer-sample",

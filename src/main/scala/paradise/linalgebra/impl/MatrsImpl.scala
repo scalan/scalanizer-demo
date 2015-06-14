@@ -137,7 +137,7 @@ package scalanizer.linalgebra {
             })] = d match {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(CompoundMatrElem[_$3] forSome { 
   type _$3
-})].&&(method.getName.==("numRows")) => Some(receiver).asInstanceOf[Option[(Rep[CompoundMatr[T]] forSome { 
+})].&&(__equal(method.getName, "numRows")) => Some(receiver).asInstanceOf[Option[(Rep[CompoundMatr[T]] forSome { 
                 type T
               })]]
               case _ => None
@@ -159,7 +159,7 @@ package scalanizer.linalgebra {
             })] = d match {
               case MethodCall((receiver @ _), (method @ _), Seq((n @ _), _*), _) if receiver.elem.isInstanceOf[(CompoundMatrElem[_$6] forSome { 
   type _$6
-})].&&(method.getName.==("columns")) => Some(scala.Tuple2(receiver, n)).asInstanceOf[Option[(scala.Tuple2[Rep[CompoundMatr[T]], Rep[Num[T]]] forSome { 
+})].&&(__equal(method.getName, "columns")) => Some(scala.Tuple2(receiver, n)).asInstanceOf[Option[(scala.Tuple2[Rep[CompoundMatr[T]], Rep[Num[T]]] forSome { 
                 type T
               })]]
               case _ => None
@@ -192,7 +192,7 @@ package scalanizer.linalgebra {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(MatrElem[_$10, _$11] forSome { 
   type _$10;
   type _$11
-})].&&(method.getName.==("numColumns")) => Some(receiver).asInstanceOf[Option[(Rep[Matr[T]] forSome { 
+})].&&(__equal(method.getName, "numColumns")) => Some(receiver).asInstanceOf[Option[(Rep[Matr[T]] forSome { 
                 type T
               })]]
               case _ => None
@@ -215,7 +215,7 @@ package scalanizer.linalgebra {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(MatrElem[_$14, _$15] forSome { 
   type _$14;
   type _$15
-})].&&(method.getName.==("numRows")) => Some(receiver).asInstanceOf[Option[(Rep[Matr[T]] forSome { 
+})].&&(__equal(method.getName, "numRows")) => Some(receiver).asInstanceOf[Option[(Rep[Matr[T]] forSome { 
                 type T
               })]]
               case _ => None
@@ -238,7 +238,7 @@ package scalanizer.linalgebra {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(MatrElem[_$18, _$19] forSome { 
   type _$18;
   type _$19
-})].&&(method.getName.==("rows")) => Some(receiver).asInstanceOf[Option[(Rep[Matr[T]] forSome { 
+})].&&(__equal(method.getName, "rows")) => Some(receiver).asInstanceOf[Option[(Rep[Matr[T]] forSome { 
                 type T
               })]]
               case _ => None
@@ -261,7 +261,7 @@ package scalanizer.linalgebra {
               case MethodCall((receiver @ _), (method @ _), Seq((n @ _), _*), _) if receiver.elem.isInstanceOf[(MatrElem[_$22, _$23] forSome { 
   type _$22;
   type _$23
-})].&&(method.getName.==("columns")) => Some(scala.Tuple2(receiver, n)).asInstanceOf[Option[(scala.Tuple2[Rep[Matr[T]], Rep[Num[T]]] forSome { 
+})].&&(__equal(method.getName, "columns")) => Some(scala.Tuple2(receiver, n)).asInstanceOf[Option[(scala.Tuple2[Rep[Matr[T]], Rep[Num[T]]] forSome { 
                 type T
               })]]
               case _ => None
