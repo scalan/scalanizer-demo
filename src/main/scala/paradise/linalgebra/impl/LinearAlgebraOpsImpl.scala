@@ -127,7 +127,7 @@ package scalanizer.linalgebra {
             })): Option[(scala.Tuple6[Rep[LA], Rep[Matr[T]], Rep[Vec[T]], Rep[Num[T]], Rep[NumMonoid[T]], Rep[Elem[T]]] forSome { 
               type T
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), Seq((matrix @ _), (vector @ _), (n @ _), (m @ _), (emT @ _), _*), _) if receiver.elem.isInstanceOf[LAElem].&&(method.getName.==("mvm")) => Some(scala.Tuple6(receiver, matrix, vector, n, m, emT)).asInstanceOf[Option[(scala.Tuple6[Rep[LA], Rep[Matr[T]], Rep[Vec[T]], Rep[Num[T]], Rep[NumMonoid[T]], Rep[Elem[T]]] forSome { 
+              case MethodCall((receiver @ _), (method @ _), Seq((matrix @ _), (vector @ _), (n @ _), (m @ _), (emT @ _), _*), _) if receiver.elem.isInstanceOf[LAElem].&&(__equal(method.getName, "mvm")) => Some(scala.Tuple6(receiver, matrix, vector, n, m, emT)).asInstanceOf[Option[(scala.Tuple6[Rep[LA], Rep[Matr[T]], Rep[Vec[T]], Rep[Num[T]], Rep[NumMonoid[T]], Rep[Elem[T]]] forSome { 
                 type T
               })]]
               case _ => None
@@ -147,7 +147,7 @@ package scalanizer.linalgebra {
             def unapply(d: (Def[_$4] forSome { 
               type _$4
             })): Option[scala.Tuple2[Rep[Array[Array[Double]]], Rep[Array[Double]]]] = d match {
-              case MethodCall((receiver @ _), (method @ _), Seq((m @ _), (v @ _), _*), _) if receiver.elem.==(LACompanionElem).&&(method.getName.==("ddmvm")) => Some(scala.Tuple2(m, v)).asInstanceOf[Option[scala.Tuple2[Rep[Array[Array[Double]]], Rep[Array[Double]]]]]
+              case MethodCall((receiver @ _), (method @ _), Seq((m @ _), (v @ _), _*), _) if __equal(receiver.elem, LACompanionElem).&&(__equal(method.getName, "ddmvm")) => Some(scala.Tuple2(m, v)).asInstanceOf[Option[scala.Tuple2[Rep[Array[Array[Double]]], Rep[Array[Double]]]]]
               case _ => None
             };
             def unapply(exp: (Exp[_$5] forSome { 
@@ -174,7 +174,7 @@ package scalanizer.linalgebra {
             })] = d match {
               case MethodCall((receiver @ _), (method @ _), Seq((matrix @ _), (vector @ _), (n @ _), (m @ _), (emT @ _), _*), _) if receiver.elem.isInstanceOf[(LinearAlgebraOpElem[_$8] forSome { 
   type _$8
-})].&&(method.getName.==("mvm")) => Some(scala.Tuple6(receiver, matrix, vector, n, m, emT)).asInstanceOf[Option[(scala.Tuple6[Rep[LinearAlgebraOp], Rep[Matr[T]], Rep[Vec[T]], Rep[Num[T]], Rep[NumMonoid[T]], Rep[Elem[T]]] forSome { 
+})].&&(__equal(method.getName, "mvm")) => Some(scala.Tuple6(receiver, matrix, vector, n, m, emT)).asInstanceOf[Option[(scala.Tuple6[Rep[LinearAlgebraOp], Rep[Matr[T]], Rep[Vec[T]], Rep[Num[T]], Rep[NumMonoid[T]], Rep[Elem[T]]] forSome { 
                 type T
               })]]
               case _ => None
@@ -227,7 +227,7 @@ package scalanizer.linalgebra {
       import scalan.compilation.GraphVizConfig;
       lazy val ddmvmKernel = {
         val ctx = HotSpotManager.getScalanContext;
-        val compilerOutput = ctx.buildExecutable(new File("./"), "ddmvm", ctx.ddmvmWrapper, GraphVizConfig.default)(ctx.defaultCompilerConfig);
+        val compilerOutput = ctx.buildExecutable(new File("./it-out/".+("ddmvm")), "ddmvm", ctx.ddmvmWrapper, GraphVizConfig.default)(ctx.CompilerConfig(Some("2.11.2"), Seq.empty));
         val x$1 = (ctx.loadMethod(compilerOutput): @scala.unchecked) match {
           case scala.Tuple2((cls @ _), (method @ _)) => scala.Tuple2(cls, method)
         };

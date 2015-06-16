@@ -122,7 +122,7 @@ package scalanizer {
             def unapply(d: (Def[_$2] forSome { 
               type _$2
             })): Option[Rep[DoubleNum]] = d match {
-              case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[DoubleNumElem].&&(method.getName.==("zero")) => Some(receiver).asInstanceOf[Option[Rep[DoubleNum]]]
+              case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[DoubleNumElem].&&(__equal(method.getName, "zero")) => Some(receiver).asInstanceOf[Option[Rep[DoubleNum]]]
               case _ => None
             };
             def unapply(exp: (Exp[_$3] forSome { 
@@ -136,7 +136,7 @@ package scalanizer {
             def unapply(d: (Def[_$4] forSome { 
               type _$4
             })): Option[Rep[DoubleNum]] = d match {
-              case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[DoubleNumElem].&&(method.getName.==("one")) => Some(receiver).asInstanceOf[Option[Rep[DoubleNum]]]
+              case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[DoubleNumElem].&&(__equal(method.getName, "one")) => Some(receiver).asInstanceOf[Option[Rep[DoubleNum]]]
               case _ => None
             };
             def unapply(exp: (Exp[_$5] forSome { 
@@ -150,7 +150,7 @@ package scalanizer {
             def unapply(d: (Def[_$6] forSome { 
               type _$6
             })): Option[scala.Tuple3[Rep[DoubleNum], Rep[Double], Rep[Double]]] = d match {
-              case MethodCall((receiver @ _), (method @ _), Seq((a @ _), (b @ _), _*), _) if receiver.elem.isInstanceOf[DoubleNumElem].&&(method.getName.==("plus")) => Some(scala.Tuple3(receiver, a, b)).asInstanceOf[Option[scala.Tuple3[Rep[DoubleNum], Rep[Double], Rep[Double]]]]
+              case MethodCall((receiver @ _), (method @ _), Seq((a @ _), (b @ _), _*), _) if receiver.elem.isInstanceOf[DoubleNumElem].&&(__equal(method.getName, "plus")) => Some(scala.Tuple3(receiver, a, b)).asInstanceOf[Option[scala.Tuple3[Rep[DoubleNum], Rep[Double], Rep[Double]]]]
               case _ => None
             };
             def unapply(exp: (Exp[_$7] forSome { 
@@ -164,7 +164,7 @@ package scalanizer {
             def unapply(d: (Def[_$8] forSome { 
               type _$8
             })): Option[scala.Tuple3[Rep[DoubleNum], Rep[Double], Rep[Double]]] = d match {
-              case MethodCall((receiver @ _), (method @ _), Seq((a @ _), (b @ _), _*), _) if receiver.elem.isInstanceOf[DoubleNumElem].&&(method.getName.==("times")) => Some(scala.Tuple3(receiver, a, b)).asInstanceOf[Option[scala.Tuple3[Rep[DoubleNum], Rep[Double], Rep[Double]]]]
+              case MethodCall((receiver @ _), (method @ _), Seq((a @ _), (b @ _), _*), _) if receiver.elem.isInstanceOf[DoubleNumElem].&&(__equal(method.getName, "times")) => Some(scala.Tuple3(receiver, a, b)).asInstanceOf[Option[scala.Tuple3[Rep[DoubleNum], Rep[Double], Rep[Double]]]]
               case _ => None
             };
             def unapply(exp: (Exp[_$9] forSome { 
@@ -193,7 +193,7 @@ package scalanizer {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(NumElem[_$12, _$13] forSome { 
   type _$12;
   type _$13
-})].&&(method.getName.==("zero")) => Some(receiver).asInstanceOf[Option[(Rep[Num[T]] forSome { 
+})].&&(__equal(method.getName, "zero")) => Some(receiver).asInstanceOf[Option[(Rep[Num[T]] forSome { 
                 type T
               })]]
               case _ => None
@@ -216,7 +216,7 @@ package scalanizer {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(NumElem[_$16, _$17] forSome { 
   type _$16;
   type _$17
-})].&&(method.getName.==("one")) => Some(receiver).asInstanceOf[Option[(Rep[Num[T]] forSome { 
+})].&&(__equal(method.getName, "one")) => Some(receiver).asInstanceOf[Option[(Rep[Num[T]] forSome { 
                 type T
               })]]
               case _ => None
@@ -239,7 +239,7 @@ package scalanizer {
               case MethodCall((receiver @ _), (method @ _), Seq((a @ _), (b @ _), _*), _) if receiver.elem.isInstanceOf[(NumElem[_$20, _$21] forSome { 
   type _$20;
   type _$21
-})].&&(method.getName.==("plus")) => Some(scala.Tuple3(receiver, a, b)).asInstanceOf[Option[(scala.Tuple3[Rep[Num[T]], Rep[T], Rep[T]] forSome { 
+})].&&(__equal(method.getName, "plus")) => Some(scala.Tuple3(receiver, a, b)).asInstanceOf[Option[(scala.Tuple3[Rep[Num[T]], Rep[T], Rep[T]] forSome { 
                 type T
               })]]
               case _ => None
@@ -262,7 +262,7 @@ package scalanizer {
               case MethodCall((receiver @ _), (method @ _), Seq((a @ _), (b @ _), _*), _) if receiver.elem.isInstanceOf[(NumElem[_$24, _$25] forSome { 
   type _$24;
   type _$25
-})].&&(method.getName.==("times")) => Some(scala.Tuple3(receiver, a, b)).asInstanceOf[Option[(scala.Tuple3[Rep[Num[T]], Rep[T], Rep[T]] forSome { 
+})].&&(__equal(method.getName, "times")) => Some(scala.Tuple3(receiver, a, b)).asInstanceOf[Option[(scala.Tuple3[Rep[Num[T]], Rep[T], Rep[T]] forSome { 
                 type T
               })]]
               case _ => None

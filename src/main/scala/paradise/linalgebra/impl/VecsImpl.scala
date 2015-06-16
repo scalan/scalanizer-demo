@@ -131,7 +131,7 @@ package scalanizer.linalgebra {
             })] = d match {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(DenseVecElem[_$3] forSome { 
   type _$3
-})].&&(method.getName.==("length")) => Some(receiver).asInstanceOf[Option[(Rep[DenseVec[T]] forSome { 
+})].&&(__equal(method.getName, "length")) => Some(receiver).asInstanceOf[Option[(Rep[DenseVec[T]] forSome { 
                 type T
               })]]
               case _ => None
@@ -153,7 +153,7 @@ package scalanizer.linalgebra {
             })] = d match {
               case MethodCall((receiver @ _), (method @ _), Seq((i @ _), _*), _) if receiver.elem.isInstanceOf[(DenseVecElem[_$6] forSome { 
   type _$6
-})].&&(method.getName.==("apply")) => Some(scala.Tuple2(receiver, i)).asInstanceOf[Option[(scala.Tuple2[Rep[DenseVec[T]], Rep[Int]] forSome { 
+})].&&(__equal(method.getName, "apply")) => Some(scala.Tuple2(receiver, i)).asInstanceOf[Option[(scala.Tuple2[Rep[DenseVec[T]], Rep[Int]] forSome { 
                 type T
               })]]
               case _ => None
@@ -175,7 +175,7 @@ package scalanizer.linalgebra {
             })] = d match {
               case MethodCall((receiver @ _), (method @ _), Seq((other @ _), (n @ _), (m @ _), _*), _) if receiver.elem.isInstanceOf[(DenseVecElem[_$9] forSome { 
   type _$9
-})].&&(method.getName.==("dot")) => Some(scala.Tuple4(receiver, other, n, m)).asInstanceOf[Option[(scala.Tuple4[Rep[DenseVec[T]], Rep[Vec[T]], Rep[Num[T]], Rep[NumMonoid[T]]] forSome { 
+})].&&(__equal(method.getName, "dot")) => Some(scala.Tuple4(receiver, other, n, m)).asInstanceOf[Option[(scala.Tuple4[Rep[DenseVec[T]], Rep[Vec[T]], Rep[Num[T]], Rep[NumMonoid[T]]] forSome { 
                 type T
               })]]
               case _ => None
@@ -208,7 +208,7 @@ package scalanizer.linalgebra {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(VecElem[_$13, _$14] forSome { 
   type _$13;
   type _$14
-})].&&(method.getName.==("length")) => Some(receiver).asInstanceOf[Option[(Rep[Vec[T]] forSome { 
+})].&&(__equal(method.getName, "length")) => Some(receiver).asInstanceOf[Option[(Rep[Vec[T]] forSome { 
                 type T
               })]]
               case _ => None
@@ -231,7 +231,7 @@ package scalanizer.linalgebra {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(VecElem[_$17, _$18] forSome { 
   type _$17;
   type _$18
-})].&&(method.getName.==("items")) => Some(receiver).asInstanceOf[Option[(Rep[Vec[T]] forSome { 
+})].&&(__equal(method.getName, "items")) => Some(receiver).asInstanceOf[Option[(Rep[Vec[T]] forSome { 
                 type T
               })]]
               case _ => None
@@ -254,7 +254,7 @@ package scalanizer.linalgebra {
               case MethodCall((receiver @ _), (method @ _), Seq((i @ _), _*), _) if receiver.elem.isInstanceOf[(VecElem[_$21, _$22] forSome { 
   type _$21;
   type _$22
-})].&&(method.getName.==("apply")) => Some(scala.Tuple2(receiver, i)).asInstanceOf[Option[(scala.Tuple2[Rep[Vec[T]], Rep[Int]] forSome { 
+})].&&(__equal(method.getName, "apply")) => Some(scala.Tuple2(receiver, i)).asInstanceOf[Option[(scala.Tuple2[Rep[Vec[T]], Rep[Int]] forSome { 
                 type T
               })]]
               case _ => None
@@ -277,7 +277,7 @@ package scalanizer.linalgebra {
               case MethodCall((receiver @ _), (method @ _), Seq((other @ _), (n @ _), (m @ _), _*), _) if receiver.elem.isInstanceOf[(VecElem[_$25, _$26] forSome { 
   type _$25;
   type _$26
-})].&&(method.getName.==("dot")) => Some(scala.Tuple4(receiver, other, n, m)).asInstanceOf[Option[(scala.Tuple4[Rep[Vec[T]], Rep[Vec[T]], Rep[Num[T]], Rep[NumMonoid[T]]] forSome { 
+})].&&(__equal(method.getName, "dot")) => Some(scala.Tuple4(receiver, other, n, m)).asInstanceOf[Option[(scala.Tuple4[Rep[Vec[T]], Rep[Vec[T]], Rep[Num[T]], Rep[NumMonoid[T]]] forSome { 
                 type T
               })]]
               case _ => None

@@ -15,7 +15,7 @@ object ScalanParadiseRootBuild extends Build {
 
   val buildSettings = Seq(
     organization := "com.huawei.scalan",
-    scalaVersion := "2.11.6",
+    scalaVersion := "2.11.2",
     scalacOptions ++= Seq(
       "-unchecked", "-deprecation",
       "-feature",
@@ -23,7 +23,7 @@ object ScalanParadiseRootBuild extends Build {
       "-language:implicitConversions",
       "-language:existentials",
       "-language:postfixOps",
-      s"-Xplugin:/Users/slesarenko/Projects/scalan/scalanizer/target/scala-2.11/scalanizer_2.11.6-0.0.1-fat.jar"
+      s"-Xplugin:/home/mgekk/scalan/scalan-plugin/target/scala-2.11/scalanizer_2.11.6-0.0.1-fat.jar"
 //      s"-Xplugin:${Path.userHome.absolutePath}/.ivy2/local/com.huawei/scalan-plugin_2.11.6/0.0.1/jars/scalan-plugin_2.11.6.jar"
     ),
     crossScalaVersions := Seq("2.10.2", "2.10.3", "2.10.4", "2.10.5",
@@ -67,7 +67,9 @@ object ScalanParadiseRootBuild extends Build {
     "org.scalatest" %% "scalatest" % "2.2.1" % "test",
     "org.scalacheck" %% "scalacheck" % "1.11.5" % "test",
     lmsbackend
-  ))
+    ),
+    scalaOrganization := "org.scala-lang.virtualized",
+    scalaVersion := "2.11.2")
 
   def itFilter(name: String): Boolean = name endsWith "ItTests"
   def unitFilter(name: String): Boolean = !itFilter(name)
