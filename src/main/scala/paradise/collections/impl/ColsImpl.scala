@@ -188,7 +188,7 @@ package scalanizer.collections {
             })] = d match {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(ColOverArrayElem[_$3] forSome { 
   type _$3
-})].&&(method.getName.==("length")) => Some(receiver).asInstanceOf[Option[(Rep[ColOverArray[A]] forSome { 
+})].&&(__equal(method.getName, "length")) => Some(receiver).asInstanceOf[Option[(Rep[ColOverArray[A]] forSome { 
                 type A
               })]]
               case _ => None
@@ -210,7 +210,7 @@ package scalanizer.collections {
             })] = d match {
               case MethodCall((receiver @ _), (method @ _), Seq((i @ _), _*), _) if receiver.elem.isInstanceOf[(ColOverArrayElem[_$6] forSome { 
   type _$6
-})].&&(method.getName.==("apply")) => Some(scala.Tuple2(receiver, i)).asInstanceOf[Option[(scala.Tuple2[Rep[ColOverArray[A]], Rep[Int]] forSome { 
+})].&&(__equal(method.getName, "apply")) => Some(scala.Tuple2(receiver, i)).asInstanceOf[Option[(scala.Tuple2[Rep[ColOverArray[A]], Rep[Int]] forSome { 
                 type A
               })]]
               case _ => None
@@ -255,7 +255,7 @@ package scalanizer.collections {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(PairColElem[_$10, _$11] forSome { 
   type _$10;
   type _$11
-})].&&(method.getName.==("arr")) => Some(receiver).asInstanceOf[Option[(Rep[PairCol[A, B]] forSome { 
+})].&&(__equal(method.getName, "arr")) => Some(receiver).asInstanceOf[Option[(Rep[PairCol[A, B]] forSome { 
                 type A;
                 type B
               })]]
@@ -281,7 +281,7 @@ package scalanizer.collections {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(PairColElem[_$14, _$15] forSome { 
   type _$14;
   type _$15
-})].&&(method.getName.==("length")) => Some(receiver).asInstanceOf[Option[(Rep[PairCol[A, B]] forSome { 
+})].&&(__equal(method.getName, "length")) => Some(receiver).asInstanceOf[Option[(Rep[PairCol[A, B]] forSome { 
                 type A;
                 type B
               })]]
@@ -307,7 +307,7 @@ package scalanizer.collections {
               case MethodCall((receiver @ _), (method @ _), Seq((i @ _), _*), _) if receiver.elem.isInstanceOf[(PairColElem[_$18, _$19] forSome { 
   type _$18;
   type _$19
-})].&&(method.getName.==("apply")) => Some(scala.Tuple2(receiver, i)).asInstanceOf[Option[(scala.Tuple2[Rep[PairCol[A, B]], Rep[Int]] forSome { 
+})].&&(__equal(method.getName, "apply")) => Some(scala.Tuple2(receiver, i)).asInstanceOf[Option[(scala.Tuple2[Rep[PairCol[A, B]], Rep[Int]] forSome { 
                 type A;
                 type B
               })]]
@@ -342,7 +342,7 @@ package scalanizer.collections {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(ColElem[_$23, _$24] forSome { 
   type _$23;
   type _$24
-})].&&(method.getName.==("arr")) => Some(receiver).asInstanceOf[Option[(Rep[Col[A]] forSome { 
+})].&&(__equal(method.getName, "arr")) => Some(receiver).asInstanceOf[Option[(Rep[Col[A]] forSome { 
                 type A
               })]]
               case _ => None
@@ -365,7 +365,7 @@ package scalanizer.collections {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(ColElem[_$27, _$28] forSome { 
   type _$27;
   type _$28
-})].&&(method.getName.==("length")) => Some(receiver).asInstanceOf[Option[(Rep[Col[A]] forSome { 
+})].&&(__equal(method.getName, "length")) => Some(receiver).asInstanceOf[Option[(Rep[Col[A]] forSome { 
                 type A
               })]]
               case _ => None
@@ -388,7 +388,7 @@ package scalanizer.collections {
               case MethodCall((receiver @ _), (method @ _), Seq((i @ _), _*), _) if receiver.elem.isInstanceOf[(ColElem[_$31, _$32] forSome { 
   type _$31;
   type _$32
-})].&&(method.getName.==("apply")) => Some(scala.Tuple2(receiver, i)).asInstanceOf[Option[(scala.Tuple2[Rep[Col[A]], Rep[Int]] forSome { 
+})].&&(__equal(method.getName, "apply")) => Some(scala.Tuple2(receiver, i)).asInstanceOf[Option[(scala.Tuple2[Rep[Col[A]], Rep[Int]] forSome { 
                 type A
               })]]
               case _ => None
@@ -411,7 +411,7 @@ package scalanizer.collections {
               case MethodCall((receiver @ _), (method @ _), Seq((m @ _), _*), _) if receiver.elem.isInstanceOf[(ColElem[_$35, _$36] forSome { 
   type _$35;
   type _$36
-})].&&(method.getName.==("reduce")) => Some(scala.Tuple2(receiver, m)).asInstanceOf[Option[(scala.Tuple2[Rep[Col[A]], Rep[NumMonoid[A]]] forSome { 
+})].&&(__equal(method.getName, "reduce")) => Some(scala.Tuple2(receiver, m)).asInstanceOf[Option[(scala.Tuple2[Rep[Col[A]], Rep[NumMonoid[A]]] forSome { 
                 type A
               })]]
               case _ => None
@@ -435,7 +435,7 @@ package scalanizer.collections {
               case MethodCall((receiver @ _), (method @ _), Seq((ys @ _), (emB @ _), _*), _) if receiver.elem.isInstanceOf[(ColElem[_$39, _$40] forSome { 
   type _$39;
   type _$40
-})].&&(method.getName.==("zip")) => Some(scala.Tuple3(receiver, ys, emB)).asInstanceOf[Option[(scala.Tuple3[Rep[Col[A]], Rep[Col[B]], Rep[Elem[B]]] forSome { 
+})].&&(__equal(method.getName, "zip")) => Some(scala.Tuple3(receiver, ys, emB)).asInstanceOf[Option[(scala.Tuple3[Rep[Col[A]], Rep[Col[B]], Rep[Elem[B]]] forSome { 
                 type A;
                 type B
               })]]
@@ -459,7 +459,7 @@ package scalanizer.collections {
             })): Option[(scala.Tuple2[Rep[Array[T]], Rep[Elem[T]]] forSome { 
               type T
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), Seq((arr @ _), (emT @ _), _*), _) if receiver.elem.==(ColCompanionElem).&&(method.getName.==("apply")) => Some(scala.Tuple2(arr, emT)).asInstanceOf[Option[(scala.Tuple2[Rep[Array[T]], Rep[Elem[T]]] forSome { 
+              case MethodCall((receiver @ _), (method @ _), Seq((arr @ _), (emT @ _), _*), _) if __equal(receiver.elem, ColCompanionElem).&&(__equal(method.getName, "apply")) => Some(scala.Tuple2(arr, emT)).asInstanceOf[Option[(scala.Tuple2[Rep[Array[T]], Rep[Elem[T]]] forSome { 
                 type T
               })]]
               case _ => None
@@ -479,7 +479,7 @@ package scalanizer.collections {
             })): Option[(scala.Tuple2[Rep[Array[T]], Rep[Elem[T]]] forSome { 
               type T
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), Seq((arr @ _), (emT @ _), _*), _) if receiver.elem.==(ColCompanionElem).&&(method.getName.==("fromArray")) => Some(scala.Tuple2(arr, emT)).asInstanceOf[Option[(scala.Tuple2[Rep[Array[T]], Rep[Elem[T]]] forSome { 
+              case MethodCall((receiver @ _), (method @ _), Seq((arr @ _), (emT @ _), _*), _) if __equal(receiver.elem, ColCompanionElem).&&(__equal(method.getName, "fromArray")) => Some(scala.Tuple2(arr, emT)).asInstanceOf[Option[(scala.Tuple2[Rep[Array[T]], Rep[Elem[T]]] forSome { 
                 type T
               })]]
               case _ => None

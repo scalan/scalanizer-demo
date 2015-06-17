@@ -129,7 +129,7 @@ package scalanizer {
             })] = d match {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(PlusMonoidElem[_$3] forSome { 
   type _$3
-})].&&(method.getName.==("opName")) => Some(receiver).asInstanceOf[Option[(Rep[PlusMonoid[A]] forSome { 
+})].&&(__equal(method.getName, "opName")) => Some(receiver).asInstanceOf[Option[(Rep[PlusMonoid[A]] forSome { 
                 type A
               })]]
               case _ => None
@@ -151,7 +151,7 @@ package scalanizer {
             })] = d match {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(PlusMonoidElem[_$6] forSome { 
   type _$6
-})].&&(method.getName.==("zero")) => Some(receiver).asInstanceOf[Option[(Rep[PlusMonoid[A]] forSome { 
+})].&&(__equal(method.getName, "zero")) => Some(receiver).asInstanceOf[Option[(Rep[PlusMonoid[A]] forSome { 
                 type A
               })]]
               case _ => None
@@ -173,7 +173,7 @@ package scalanizer {
             })] = d match {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(PlusMonoidElem[_$9] forSome { 
   type _$9
-})].&&(method.getName.==("append")) => Some(receiver).asInstanceOf[Option[(Rep[PlusMonoid[A]] forSome { 
+})].&&(__equal(method.getName, "append")) => Some(receiver).asInstanceOf[Option[(Rep[PlusMonoid[A]] forSome { 
                 type A
               })]]
               case _ => None
@@ -195,7 +195,7 @@ package scalanizer {
             })] = d match {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(PlusMonoidElem[_$12] forSome { 
   type _$12
-})].&&(method.getName.==("isCommutative")) => Some(receiver).asInstanceOf[Option[(Rep[PlusMonoid[A]] forSome { 
+})].&&(__equal(method.getName, "isCommutative")) => Some(receiver).asInstanceOf[Option[(Rep[PlusMonoid[A]] forSome { 
                 type A
               })]]
               case _ => None
@@ -228,7 +228,7 @@ package scalanizer {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(NumMonoidElem[_$16, _$17] forSome { 
   type _$16;
   type _$17
-})].&&(method.getName.==("n")) => Some(receiver).asInstanceOf[Option[(Rep[NumMonoid[A]] forSome { 
+})].&&(__equal(method.getName, "n")) => Some(receiver).asInstanceOf[Option[(Rep[NumMonoid[A]] forSome { 
                 type A
               })]]
               case _ => None
@@ -251,7 +251,7 @@ package scalanizer {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(NumMonoidElem[_$20, _$21] forSome { 
   type _$20;
   type _$21
-})].&&(method.getName.==("opName")) => Some(receiver).asInstanceOf[Option[(Rep[NumMonoid[A]] forSome { 
+})].&&(__equal(method.getName, "opName")) => Some(receiver).asInstanceOf[Option[(Rep[NumMonoid[A]] forSome { 
                 type A
               })]]
               case _ => None
@@ -274,7 +274,7 @@ package scalanizer {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(NumMonoidElem[_$24, _$25] forSome { 
   type _$24;
   type _$25
-})].&&(method.getName.==("zero")) => Some(receiver).asInstanceOf[Option[(Rep[NumMonoid[A]] forSome { 
+})].&&(__equal(method.getName, "zero")) => Some(receiver).asInstanceOf[Option[(Rep[NumMonoid[A]] forSome { 
                 type A
               })]]
               case _ => None
@@ -297,7 +297,7 @@ package scalanizer {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(NumMonoidElem[_$28, _$29] forSome { 
   type _$28;
   type _$29
-})].&&(method.getName.==("append")) => Some(receiver).asInstanceOf[Option[(Rep[NumMonoid[A]] forSome { 
+})].&&(__equal(method.getName, "append")) => Some(receiver).asInstanceOf[Option[(Rep[NumMonoid[A]] forSome { 
                 type A
               })]]
               case _ => None
@@ -320,7 +320,7 @@ package scalanizer {
               case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(NumMonoidElem[_$32, _$33] forSome { 
   type _$32;
   type _$33
-})].&&(method.getName.==("isCommutative")) => Some(receiver).asInstanceOf[Option[(Rep[NumMonoid[A]] forSome { 
+})].&&(__equal(method.getName, "isCommutative")) => Some(receiver).asInstanceOf[Option[(Rep[NumMonoid[A]] forSome { 
                 type A
               })]]
               case _ => None
