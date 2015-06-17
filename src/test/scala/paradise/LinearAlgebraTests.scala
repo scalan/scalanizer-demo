@@ -19,15 +19,23 @@ class LinearAlgebraTests extends FunSuite with LinearAlgebra {
   }
 
   test("ddmvm") {
-    val rows = 1000
+    val rows = 10000
     val cols = rows;
 
-    println(s"""Generating random matrix ${rows}x${cols} dense format "Array[Array[Double]]" ...""")
+    println( s"""Generating random matrix ${rows}x${cols} dense format "Array[Array[Double]]" ...""")
     val inM = CommonData.genMatr(rows, cols)
-    println(s"""Generating random vector ${rows} elements "Array[Double]" ...""")
+    println( s"""Generating random vector ${rows} elements "Array[Double]" ...""")
     val inV = CommonData.genArray(cols)
 
-    val correctRes = inM.map({r:Array[Double] => r.zip(inV).map({p => p._1 * p._2}).fold(0.0)(_+_)})
+    val correctRes = {
+      println("Calculating expected result")
+      val t1 = System.currentTimeMillis()
+    val correctRes = inM.map({ r: Array[Double] => r.zip(inV).map({ p => p._1 * p._2 }).fold(0.0)(_ + _) })
+    val t2 = System.currentTimeMillis()
+    val dt = t2 - t1
+    println(s"  $dt ms")
+    correctRes
+  }
 
     {
       println(s"Heating up JVM ...")
