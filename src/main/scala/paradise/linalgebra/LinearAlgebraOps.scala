@@ -18,7 +18,7 @@ trait LinearAlgebraOps { self: LinearAlgebra =>
   }
 
   object LA {
-    @HotSpot(ScalaKernel)
+    @HotSpot(CppKernel)
     def ddmvm(m: Array[Array[Double]], v: Array[Double]): Array[Double] = {
       val doubleNumer: Num[Double] = DoubleNum()
       val plusMonoid: NumMonoid[Double] = PlusMonoid[Double](doubleNumer)
