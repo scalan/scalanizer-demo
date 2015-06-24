@@ -344,9 +344,7 @@ package scalanizer.linalgebra {
       import scalan.compilation.lms.uni.LmsCompilerUni;
       lazy val scalanContextUni = new ScalanUni();
       def getScalanContextUni = scalanContextUni;
-      class ScalanUni extends LinearAlgebraDslExp with LmsCompilerUni with CoreBridge with ScalanCommunityDslExp with EffectfulCompiler with CommunityMethodMappingDSL {
-        val lms = new CommunityLmsBackend()
-      }
+      class ScalanUni extends LinearAlgebraDslExp with LmsCompilerUni with CoreBridge with ScalanCommunityDslExp with EffectfulCompiler with CommunityMethodMappingDSL
     }
   }
 }

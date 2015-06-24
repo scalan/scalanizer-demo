@@ -553,9 +553,7 @@ package scalanizer.collections {
       import scalan.compilation.lms.uni.LmsCompilerUni;
       lazy val scalanContextUni = new ScalanUni();
       def getScalanContextUni = scalanContextUni;
-      class ScalanUni extends ColsDslExp with LmsCompilerUni with CoreBridge with ScalanCommunityDslExp with EffectfulCompiler with CommunityMethodMappingDSL {
-        val lms = new CommunityLmsBackend()
-      }
+      class ScalanUni extends ColsDslExp with LmsCompilerUni with CoreBridge with ScalanCommunityDslExp with EffectfulCompiler with CommunityMethodMappingDSL
     }
   }
 }

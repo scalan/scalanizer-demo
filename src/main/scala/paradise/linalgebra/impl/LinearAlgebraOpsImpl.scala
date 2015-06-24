@@ -258,8 +258,7 @@ package scalanizer.linalgebra {
           val m: Rep[Array[Array[Double]]] = in._1;
           val v: Rep[Array[Double]] = in._2;
           LA.ddmvm(m, v)
-        }));
-        val lms = new CommunityLmsBackend()
+        }))
       }
     }
   }
