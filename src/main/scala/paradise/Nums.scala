@@ -8,7 +8,7 @@ trait Nums {
     def times(a: T, b: T): T
   }
 
-  case class DoubleNum() extends Num[Double] {
+  class DoubleNum extends Num[Double] {
     def zero: Double = 0.0
     def one: Double = 1.0
     def plus(a: Double, b: Double) = a + b
