@@ -11,10 +11,10 @@ trait Vecs { self: LinearAlgebra =>
     def dot(other: Vec[T])(implicit n: Num[T], m: NumMonoid[T]): T
   }
 
-  case class DenseVec[T](val items: Col[T])(implicit val ctT: ClassTag[T]) extends Vec[T] {
+  class DenseVec[T](val items: Col[T])(implicit val ctT: ClassTag[T]) extends Vec[T] {
     def length = items.length
     def apply(i: Int): T = items(i)
-    def map[R: ClassTag](f: T => R): Vec[R] = DenseVec(items.map(f))
+    def map[R: ClassTag](f: T => R): Vec[R] = new DenseVec(items.map(f))
     def dot(other: Vec[T])(implicit n: Num[T], m: NumMonoid[T]): T = {
       (other.items zip items).map((v: (T, T)) => n.times(v._1, v._2)).reduce(m)
     }
