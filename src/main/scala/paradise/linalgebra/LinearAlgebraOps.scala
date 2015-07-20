@@ -21,7 +21,7 @@ trait LinearAlgebraOps { self: LinearAlgebra =>
     @HotSpot(CppKernel)
     def ddmvm(m: Array[Array[Double]], v: Array[Double]): Array[Double] = {
       val doubleNumer: Num[Double] = new DoubleNum
-      val plusMonoid: NumMonoid[Double] = PlusMonoid[Double](doubleNumer)
+      val plusMonoid: NumMonoid[Double] = new PlusMonoid[Double](doubleNumer)
 
       val width = m(0).length
       val matrix: Matr[Double] = {
