@@ -5,6 +5,7 @@ trait BaseArr[T] {
 }
 
 class Arr[T] extends BaseArr[T] {
-  def length: Int = throw new Error()
+//  def length: Int = throw new Error()
+  val length = 0
 }
 

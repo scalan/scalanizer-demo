@@ -9,7 +9,7 @@ trait Cols {
   }
 
   class ColOverArray(val arr: Arr[Int]) extends Col[Int] {
-    def length = arr.length
+    val length = arr.length
     def apply(i: Int) = arr(i)
   }
 }
