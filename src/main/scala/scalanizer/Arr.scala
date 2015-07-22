@@ -1,7 +1,10 @@
 package scalanizer
 
-class Arr[T] {
+trait BaseArr[T] {
+  def apply(j: Int): T = throw new Error()
+}
+
+class Arr[T] extends BaseArr[T] {
   def length: Int = throw new Error()
-  def apply(i: Int): T = throw new Error()
 }
 

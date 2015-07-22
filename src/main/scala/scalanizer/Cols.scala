@@ -8,7 +8,7 @@ trait Cols {
     def apply(i: Int): A
   }
 
-  class ColOverArray[A](val arr: Arr[A]) extends Col[A] {
+  class ColOverArray(val arr: Arr[Int]) extends Col[Int] {
     def length = arr.length
     def apply(i: Int) = arr(i)
   }
