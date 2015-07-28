@@ -1,4 +1,4 @@
-package scalanizer.wrappers
+package wrappers
 
 import scalan._
 

@@ -1,4 +1,4 @@
-package scalanizer.wrappers
+package wrappers
 package impl
 
 import scalanizer.MyArr
