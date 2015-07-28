@@ -1,13 +1,10 @@
 package scalanizer.wrappers
 
+import scalanizer.MyArr
 import scalan._
 import scalan.common.Default
-import scalanizer.MyArr
-import impl._
 
 trait MyArrWrappers extends Base with TypeWrappers {self: WrappersDsl =>
-  type RepMyArr[T] = Rep[MyArrWrapper[T]]
-
   trait MyArrWrapper[T] extends TypeWrapper[MyArr[T], MyArrWrapper[T]] {self =>
     def wrappedValueOfBaseType: Rep[MyArr[T]];
     implicit def eeT: Elem[T];
@@ -17,19 +14,17 @@ trait MyArrWrappers extends Base with TypeWrappers {self: WrappersDsl =>
 
   trait MyArrWrapperCompanion
 
-  def DefaultOfMyArr[T:Elem]: Default[MyArr[T]] = {
-    null
-  }
+  def DefaultOfMyArr[T:Elem]: Default[MyArr[T]] = null
 }
 
-trait MyArrWrappersDsl extends MyArrWrappersAbs {self: WrappersDsl =>
-
-}
-
-trait MyArrWrappersDslSeq extends MyArrWrappersSeq {self: WrappersDslSeq =>
+trait MyArrWrappersDsl extends impl.MyArrWrappersAbs {self: WrappersDsl =>
 
 }
 
-trait MyArrWrappersDslExp extends MyArrWrappersExp {self: WrappersDslExp =>
+trait MyArrWrappersDslSeq extends impl.MyArrWrappersSeq {self: WrappersDslSeq =>
+
+}
+
+trait MyArrWrappersDslExp extends impl.MyArrWrappersExp {self: WrappersDslExp =>
 
 }

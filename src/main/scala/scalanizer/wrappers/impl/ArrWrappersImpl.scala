@@ -1,8 +1,9 @@
 package scalanizer.wrappers
 package impl
 
-import scalan._
 import scalanizer.MyArr
+import scalan._
+import scalan.common.Default
 import scala.reflect.runtime.universe.{WeakTypeTag, weakTypeTag}
 
 // Abs -----------------------------------
@@ -251,5 +252,8 @@ trait MyArrWrappersExp extends MyArrWrappersDsl with scalan.ScalanExp {
         case _ => None
       }
     }
+  }
+
+  object MyArrWrapperCompanionMethods {
   }
 }
