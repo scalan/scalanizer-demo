@@ -1,30 +1,33 @@
-package wrappers
+package wrappers {
+  import scalan._
 
-import scalanizer.MyArr
-import scalan._
-import scalan.common.Default
+  import scalan.common.Default
 
-trait MyArrWrappers extends Base with TypeWrappers {self: WrappersDsl =>
-  trait MyArrWrapper[T] extends TypeWrapper[MyArr[T], MyArrWrapper[T]] {self =>
-    def wrappedValueOfBaseType: Rep[MyArr[T]];
-    implicit def eeT: Elem[T];
-    @External def apply(j: Rep[Int]): Rep[T];
-    @External def length: Rep[Int]
+  import impl._
+
+  import scalanizer.MyArr
+
+  trait MyArrWrappers extends Base with TypeWrappers { self: WrappersDsl =>
+    trait MyArrWrapper[T] extends TypeWrapper[MyArr[T], MyArrWrapper[T]] { self =>
+      implicit def eeT: Elem[T];
+      def wrappedValueOfBaseType: Rep[MyArr[T]];
+      @External def apply(j: Rep[Int]): Rep[T];
+      @External def length: Rep[Int]
+    };
+    trait MyArrWrapperCompanion
+
+    def DefaultOfMyArr[T:Elem]: Default[MyArr[T]] = null
   }
 
-  trait MyArrWrapperCompanion
+  trait MyArrWrappersDsl extends MyArrWrappersAbs { self: WrappersDsl =>
+    
+  }
 
-  def DefaultOfMyArr[T:Elem]: Default[MyArr[T]] = null
-}
+  trait MyArrWrappersDslSeq extends MyArrWrappersSeq { self: WrappersDslSeq =>
+    
+  }
 
-trait MyArrWrappersDsl extends impl.MyArrWrappersAbs {self: WrappersDsl =>
-
-}
-
-trait MyArrWrappersDslSeq extends impl.MyArrWrappersSeq {self: WrappersDslSeq =>
-
-}
-
-trait MyArrWrappersDslExp extends impl.MyArrWrappersExp {self: WrappersDslExp =>
-
+  trait MyArrWrappersDslExp extends MyArrWrappersExp { self: WrappersDslExp =>
+    
+  }
 }
