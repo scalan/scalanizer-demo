@@ -14,9 +14,8 @@ package wrappers {
       @External def apply(j: Rep[Int]): Rep[T];
       @External def length: Rep[Int]
     };
-    trait MyArrWrapperCompanion
-
-    def DefaultOfMyArr[T:Elem]: Default[MyArr[T]] = null
+    trait MyArrWrapperCompanion;
+    def DefaultOfMyArr[T]: Default[MyArr[T]] = ???
   }
 
   trait MyArrWrappersDsl extends MyArrWrappersAbs { self: WrappersDsl =>
