@@ -5,10 +5,11 @@ import scalan._
 import scalan.common.Default
 import impl._
 import scalanizer.MyArr
-import scala.reflect.runtime.universe.{WeakTypeTag, weakTypeTag}
+import scala.reflect.runtime.universe._
+import scala.reflect._
 
 // Abs -----------------------------------
-trait MyArrWrappersAbs extends MyArrWrappers with scalan.Scalan {
+trait MyArrWrappersAbs extends MyArrWrappers with ScalanDsl {
   self: WrappersDsl =>
 
   // single proxy for each type family
@@ -141,7 +142,7 @@ trait MyArrWrappersAbs extends MyArrWrappers with scalan.Scalan {
 }
 
 // Seq -----------------------------------
-trait MyArrWrappersSeq extends MyArrWrappersDsl with scalan.ScalanSeq {
+trait MyArrWrappersSeq extends MyArrWrappersDsl with ScalanSeq {
   self: WrappersDslSeq =>
   lazy val MyArrWrapper: Rep[MyArrWrapperCompanionAbs] = new MyArrWrapperCompanionAbs with UserTypeSeq[MyArrWrapperCompanionAbs] {
     lazy val selfType = element[MyArrWrapperCompanionAbs]
@@ -182,7 +183,7 @@ trait MyArrWrappersSeq extends MyArrWrappersDsl with scalan.ScalanSeq {
 }
 
 // Exp -----------------------------------
-trait MyArrWrappersExp extends MyArrWrappersDsl with scalan.ScalanExp {
+trait MyArrWrappersExp extends MyArrWrappersDsl with ScalanExp {
   self: WrappersDslExp =>
   lazy val MyArrWrapper: Rep[MyArrWrapperCompanionAbs] = new MyArrWrapperCompanionAbs with UserTypeDef[MyArrWrapperCompanionAbs] {
     lazy val selfType = element[MyArrWrapperCompanionAbs]
