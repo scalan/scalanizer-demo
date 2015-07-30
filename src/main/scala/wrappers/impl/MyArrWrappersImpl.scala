@@ -1,9 +1,10 @@
 package wrappers
 package impl
 
-import scalanizer.MyArr
 import scalan._
 import scalan.common.Default
+import impl._
+import scalanizer.MyArr
 import scala.reflect.runtime.universe.{WeakTypeTag, weakTypeTag}
 
 // Abs -----------------------------------
