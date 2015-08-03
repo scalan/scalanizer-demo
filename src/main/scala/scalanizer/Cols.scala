@@ -1,5 +1,8 @@
 package scalanizer
 
+import scalan.HotSpot
+import scalan.compilation.KernelTypes._
+
 trait Cols {
 
   trait Col[A] {
@@ -10,6 +13,10 @@ trait Cols {
 
   class ColOverArray(val arr: MyArr[Int]) extends Col[Int] {
     val length = arr.length
-    def apply(i: Int) = arr(i)
+    @HotSpot(ScalaKernel)
+    def apply(i: Int) = {
+      if (i < arr.length) arr(i)
+      else throw new IllegalArgumentException(s"arr.length = ${arr.length} i = $i")
+    }
   }
 }
