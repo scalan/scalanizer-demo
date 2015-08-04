@@ -53,7 +53,7 @@ package scalanizer {
             val arr = p;
             ColOverArray(arr)
           };
-          lazy val defaultRepTo: Rep[ColOverArray] = ColOverArray(element[MyArr[Int]].defaultRepValue);
+          lazy val defaultRepTo: Rep[ColOverArray] = ColOverArray(element[MyArrWrapper[Int]].defaultRepValue);
           lazy val eTo = new ColOverArrayElem(this)
         };
         abstract class ColOverArrayCompanionAbs extends CompanionBase[ColOverArrayCompanionAbs] with ColOverArrayCompanion {
