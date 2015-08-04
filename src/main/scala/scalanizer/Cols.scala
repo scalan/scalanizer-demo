@@ -15,8 +15,9 @@ trait Cols {
     val length = arr.length
     @HotSpot(ScalaKernel)
     def apply(i: Int) = {
-      if (i < arr.length) arr(i)
-      else throw new IllegalArgumentException(s"arr.length = ${arr.length} i = $i")
+      if (arr.length <= i) arr(arr.length - 1)
+      else if (i < 0) arr(0)
+      else arr(i)
     }
   }
 }
