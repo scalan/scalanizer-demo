@@ -49,7 +49,7 @@ package scalanizer {
         type ColOverArrayData = MyArr[Int];
         class ColOverArrayIso extends Iso[ColOverArrayData, ColOverArray] {
           override def from(p: Rep[ColOverArray]) = p.arr;
-          override def to(p: Rep[MyArr[Int]]) = {
+          override def to(p: Rep[MyArrWrapper[Int]]) = {
             val arr = p;
             ColOverArray(arr)
           };
@@ -58,7 +58,7 @@ package scalanizer {
         };
         abstract class ColOverArrayCompanionAbs extends CompanionBase[ColOverArrayCompanionAbs] with ColOverArrayCompanion {
           override def toString = "ColOverArray";
-          def apply(arr: Rep[MyArr[Int]]): Rep[ColOverArray] = mkColOverArray(arr)
+          def apply(arr:Rep[MyArrWrapper[Int]]): Rep[ColOverArray] = mkColOverArray(arr)
         };
         object ColOverArrayMatcher {
           def unapply(p: Rep[Col[Int]]) = unmkColOverArray(p)
@@ -74,7 +74,7 @@ package scalanizer {
           def toData: Rep[ColOverArrayData] = isoColOverArray.from(p)
         };
         implicit def isoColOverArray: Iso[ColOverArrayData, ColOverArray] = new ColOverArrayIso();
-        def mkColOverArray(arr: Rep[MyArr[Int]]): Rep[ColOverArray];
+        def mkColOverArray(arr:Rep[MyArrWrapper[Int]]): Rep[ColOverArray];
         def unmkColOverArray(p: Rep[Col[Int]]): Option[Rep[MyArr[Int]]]
       };
       trait ColsSeq extends ColsDsl with ScalanSeq { self: DemoDslSeq =>
@@ -84,7 +84,7 @@ package scalanizer {
           };
           new $anon()
         };
-        case class SeqColOverArray(override val arr: Rep[MyArr[Int]]) extends ColOverArray(arr) with UserTypeSeq[ColOverArray] {
+        case class SeqColOverArray(override val arr:Rep[MyArrWrapper[Int]]) extends ColOverArray(arr) with UserTypeSeq[ColOverArray] {
           lazy val selfType = element[ColOverArray]
         };
         lazy val ColOverArray = {
@@ -93,7 +93,7 @@ package scalanizer {
           };
           new $anon()
         };
-        def mkColOverArray(arr: Rep[MyArr[Int]]): Rep[ColOverArray] = new SeqColOverArray(arr);
+        def mkColOverArray(arr:Rep[MyArrWrapper[Int]]): Rep[ColOverArray] = new SeqColOverArray(arr);
         def unmkColOverArray(p: Rep[Col[Int]]) = p match {
           case (p @ ((_): ColOverArray @unchecked)) => Some(p.arr)
           case _ => None
@@ -107,7 +107,7 @@ package scalanizer {
           };
           new $anon()
         };
-        case class ExpColOverArray(override val arr: Rep[MyArr[Int]]) extends ColOverArray(arr) with UserTypeDef[ColOverArray] {
+        case class ExpColOverArray(override val arr:Rep[MyArrWrapper[Int]]) extends ColOverArray(arr) with UserTypeDef[ColOverArray] {
           lazy val selfType = element[ColOverArray];
           override def mirror(t: Transformer) = ExpColOverArray(t(arr))
         };
@@ -135,7 +135,7 @@ package scalanizer {
           }
         };
         object ColOverArrayCompanionMethods;
-        def mkColOverArray(arr: Rep[MyArr[Int]]): Rep[ColOverArray] = new ExpColOverArray(arr);
+        def mkColOverArray(arr:Rep[MyArrWrapper[Int]]): Rep[ColOverArray] = new ExpColOverArray(arr);
         def unmkColOverArray(p: Rep[Col[Int]]) = p.elem.asInstanceOf[(Elem[_$4] forSome { 
           type _$4
         })] match {
@@ -195,12 +195,12 @@ package scalanizer {
       trait Cols extends Base { self: DemoDsl =>
         trait Col[A] extends Reifiable[Col[A]] {
           implicit def eeA: Elem[A];
-          def arr: Rep[MyArr[A]];
+          def arr: Rep[MyArrWrapper[A]];
           def apply(i: Rep[Int]): Rep[A]
         };
-        abstract class ColOverArray(val arr: Rep[MyArr[Int]]) extends Col[Int] {
+        abstract class ColOverArray(val arr: Rep[MyArrWrapper[Int]]) extends Col[Int] {
           def eeA: Elem[Int] = element[Int];
-          def apply(i: Rep[Int]): Rep[Int] = IF(ColOverArray.this.arr.length.<=(i)).THEN(ColOverArray.this.arr.apply(ColOverArray.this.arr.length.-(toRep(1)))).ELSE(IF(i.<(toRep(0))).THEN(ColOverArray.this.arr.apply(toRep(0))).ELSE(ColOverArray.this.arr.apply(i)))
+          def apply(i: Rep[Int]): Rep[Int] = IF(arr.length.<=(i)).THEN(arr.apply(arr.length.-(toRep(1)))).ELSE(IF(i.<(toRep(0))).THEN(apply(toRep(0))).ELSE(arr.apply(i)))
         };
         trait ColCompanion;
         trait ColOverArrayCompanion
