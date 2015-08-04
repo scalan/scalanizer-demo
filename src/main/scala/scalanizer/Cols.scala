@@ -11,11 +11,15 @@ trait Cols {self: Demo =>
   }
 
   class ColOverArray(val arr: MyArr[Int]) extends Col[Int] {
+    def apply(i: Int) = arr(i)
+  }
+
+  object ColOverArray {
     @HotSpot(ScalaKernel)
-    def apply(i: Int) = {
-      if (arr.length <= i) arr(arr.length - 1)
-      else if (i < 0) arr(0)
-      else arr(i)
+    def safeApply(arr: MyArr[Int], index: Int) = {
+      if (arr.length <= index) arr(arr.length - 1)
+      else if (index < 0) arr(0)
+      else arr(index)
     }
   }
 }
