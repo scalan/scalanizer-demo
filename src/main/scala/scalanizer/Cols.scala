@@ -17,10 +17,9 @@ trait Cols {self: Demo =>
   object ColOverArray {
     @HotSpot(ScalaKernel)
     def safeApply(arr: MyArr[Int], index: Int) = {
-//      if (arr.length <= index) arr(arr.length - 1)
-//      else if (index < 0) arr(0)
-//      else arr(index)
-      implOfCols.HotSpotKernels.safeApplyKernel(arr, index)
+      if (arr.length <= index) arr(arr.length - 1)
+      else if (index < 0) arr(0)
+      else arr(index)
     }
   }
 }
