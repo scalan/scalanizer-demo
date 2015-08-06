@@ -17,8 +17,8 @@ trait Cols {self: Demo =>
   object ColOverArray {
     @HotSpot(ScalaKernel)
     def safeApply(arr: MyArr[Int], index: Int) = {
-      if (arr.length <= index) arr(arr.length - 1)
-      else if (index < 0) arr(0)
+      if (arr.length <= index) Int.MaxValue
+      else if (index < 0) Int.MinValue
       else arr(index)
     }
   }
