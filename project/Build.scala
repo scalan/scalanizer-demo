@@ -13,7 +13,7 @@ object ScalanParadiseRootBuild extends Build {
       "-language:existentials",
       "-language:postfixOps"
     ),
-    addCompilerPlugin("com.huawei" %% "scalanizer" % "0.0.1" classifier "assembly")
+    addCompilerPlugin("com.huawei" %% "scalanizer" % "0.0.2" classifier "assembly")
   )
 
   lazy val scalanizerSample = Project(
@@ -22,7 +22,7 @@ object ScalanParadiseRootBuild extends Build {
   ).settings(
     buildSettings,
     libraryDependencies ++= Seq(
-      "com.huawei.scalan" %% "scalan-lms-backend" % "0.2.9-SNAPSHOT",
+      "com.huawei.scalan" %% "scalan-lms-backend" % "0.2.11-SNAPSHOT",
       "org.scalatest" %% "scalatest" % "2.2.1" % "test"
     ),
     scalaOrganization := "org.scala-lang.virtualized",

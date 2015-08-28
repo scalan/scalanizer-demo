@@ -1,7 +1,8 @@
 package scalanizer.collections {
   package implOfCols {
-    object StagedEvaluation {
+  object StagedEvaluation {
       import scalan._;
+      import scalan.meta.ScalanAst._;
       import scalanizer.implOfNumMonoids.StagedEvaluation._;
       import scala.reflect.runtime.universe._;
       import scala.reflect._;
@@ -9,13 +10,21 @@ package scalanizer.collections {
       trait ColsAbs extends Cols with ScalanDsl { self: ColsDsl =>
         implicit def proxyCol[A](p: Rep[Col[A]]): Col[A] = proxyOps[Col[A]](p)(scala.reflect.classTag[Col[A]]);
         class ColElem[A, To <: Col[A]](implicit val eeA: Elem[A]) extends EntityElem[To] {
+          lazy val parent: Option[(Elem[_$1] forSome { 
+            type _$1
+          })] = None;
+          lazy val entityDef: STraitOrClassDef = {
+            val module = getModules("Cols");
+            module.entities.find(((x$1) => __equal(x$1.name, "Col"))).get
+          };
+          lazy val tyArgSubst: Map[String, TypeDesc] = Map("A".->(Left(eeA)));
           override def isEntityType = true;
           override lazy val tag = {
             implicit val tagA = eeA.tag;
             weakTypeTag[Col[A]].asInstanceOf[WeakTypeTag[To]]
           };
-          override def convert(x: Rep[(Reifiable[_$1] forSome { 
-            type _$1
+          override def convert(x: Rep[(Reifiable[_$2] forSome { 
+            type _$2
           })]) = {
             implicit val eTo: Elem[To] = this;
             val conv = fun(((x: Rep[Col[A]]) => convertCol(x)));
@@ -41,6 +50,14 @@ package scalanizer.collections {
         def Col: Rep[ColCompanionAbs];
         implicit def proxyColCompanion(p: Rep[ColCompanion]): ColCompanion = proxyOps[ColCompanion](p);
         class ColOverArrayElem[A](val iso: Iso[ColOverArrayData[A], ColOverArray[A]])(implicit eeA: Elem[A]) extends ColElem[A, ColOverArray[A]] with ConcreteElem[ColOverArrayData[A], ColOverArray[A]] {
+          override lazy val parent: Option[(Elem[_$3] forSome { 
+            type _$3
+          })] = Some(colElement(element[A]));
+          override lazy val entityDef = {
+            val module = getModules("Cols");
+            module.concreteSClasses.find(((x$2) => __equal(x$2.name, "ColOverArray"))).get
+          };
+          override lazy val tyArgSubst: Map[String, TypeDesc] = Map("A".->(Left(eeA)));
           override def convertCol(x: Rep[Col[A]]) = ColOverArray(x.arr);
           override def getDefaultRep = super[ConcreteElem].getDefaultRep;
           override lazy val tag = {
@@ -79,6 +96,14 @@ package scalanizer.collections {
         def mkColOverArray[A](arr: Rep[Array[A]])(implicit eeA: Elem[A]): Rep[ColOverArray[A]];
         def unmkColOverArray[A](p: Rep[Col[A]]): Option[Rep[Array[A]]];
         class PairColElem[A, B](val iso: Iso[PairColData[A, B], PairCol[A, B]])(implicit eeA: Elem[scala.Tuple2[A, B]], ecA: Elem[A], ecB: Elem[B]) extends ColElem[scala.Tuple2[A, B], PairCol[A, B]] with ConcreteElem[PairColData[A, B], PairCol[A, B]] {
+          override lazy val parent: Option[(Elem[_$4] forSome { 
+            type _$4
+          })] = Some(colElement(pairElement(element[A], element[B])));
+          override lazy val entityDef = {
+            val module = getModules("Cols");
+            module.concreteSClasses.find(((x$3) => __equal(x$3.name, "PairCol"))).get
+          };
+          override lazy val tyArgSubst: Map[String, TypeDesc] = Map("A".->(Left(ecA)), "B".->(Left(ecB)));
           override def convertCol(x: Rep[Col[scala.Tuple2[A, B]]]) = !!!("Cannot convert from Col to PairCol: missing fields List(as, bs)");
           override def getDefaultRep = super[ConcreteElem].getDefaultRep;
           override lazy val tag = {
@@ -92,11 +117,11 @@ package scalanizer.collections {
         class PairColIso[A, B](implicit eeA: Elem[scala.Tuple2[A, B]], ecA: Elem[A], ecB: Elem[B]) extends Iso[PairColData[A, B], PairCol[A, B]]()(pairElement(implicitly[Elem[Col[A]]], implicitly[Elem[Col[B]]])) {
           override def from(p: Rep[PairCol[A, B]]) = scala.Tuple2(p.as, p.bs);
           override def to(p: Rep[scala.Tuple2[Col[A], Col[B]]]) = {
-            val x$1 = (p: @scala.unchecked) match {
+            val x$4 = (p: @scala.unchecked) match {
               case Pair((as @ _), (bs @ _)) => scala.Tuple2(as, bs)
             };
-            val as = x$1._1;
-            val bs = x$1._2;
+            val as = x$4._1;
+            val bs = x$4._2;
             PairCol(as, bs)
           };
           lazy val defaultRepTo: Rep[PairCol[A, B]] = PairCol(element[Col[A]].defaultRepValue, element[Col[B]].defaultRepValue);
@@ -122,7 +147,8 @@ package scalanizer.collections {
         };
         implicit def isoPairCol[A, B](implicit eeA: Elem[scala.Tuple2[A, B]], ecA: Elem[A], ecB: Elem[B]): Iso[PairColData[A, B], PairCol[A, B]] = new PairColIso[A, B]();
         def mkPairCol[A, B](as: Rep[Col[A]], bs: Rep[Col[B]])(implicit eeA: Elem[scala.Tuple2[A, B]], ecA: Elem[A], ecB: Elem[B]): Rep[PairCol[A, B]];
-        def unmkPairCol[A, B](p: Rep[Col[scala.Tuple2[A, B]]]): Option[scala.Tuple2[Rep[Col[A]], Rep[Col[B]]]]
+        def unmkPairCol[A, B](p: Rep[Col[scala.Tuple2[A, B]]]): Option[scala.Tuple2[Rep[Col[A]], Rep[Col[B]]]];
+        registerModule(scalan.meta.ScalanCodegen.loadModule(Cols_Module.dump))
       };
       trait ColsSeq extends ColsDsl with ScalanSeq { self: ColsDslSeq =>
         lazy val Col: Rep[ColCompanionAbs] = {
@@ -181,20 +207,20 @@ package scalanizer.collections {
         };
         object ColOverArrayMethods {
           object length {
-            def unapply(d: (Def[_$2] forSome { 
-              type _$2
+            def unapply(d: (Def[_$5] forSome { 
+              type _$5
             })): Option[(Rep[ColOverArray[A]] forSome { 
               type A
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(ColOverArrayElem[_$3] forSome { 
-  type _$3
+              case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(ColOverArrayElem[_$6] forSome { 
+  type _$6
 })].&&(__equal(method.getName, "length")) => Some(receiver).asInstanceOf[Option[(Rep[ColOverArray[A]] forSome { 
                 type A
               })]]
               case _ => None
             };
-            def unapply(exp: (Exp[_$4] forSome { 
-              type _$4
+            def unapply(exp: (Exp[_$7] forSome { 
+              type _$7
             })): Option[(Rep[ColOverArray[A]] forSome { 
               type A
             })] = exp match {
@@ -203,20 +229,20 @@ package scalanizer.collections {
             }
           };
           object apply {
-            def unapply(d: (Def[_$5] forSome { 
-              type _$5
+            def unapply(d: (Def[_$8] forSome { 
+              type _$8
             })): Option[(scala.Tuple2[Rep[ColOverArray[A]], Rep[Int]] forSome { 
               type A
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), Seq((i @ _), _*), _) if receiver.elem.isInstanceOf[(ColOverArrayElem[_$6] forSome { 
-  type _$6
+              case MethodCall((receiver @ _), (method @ _), Seq((i @ _), _*), _) if receiver.elem.isInstanceOf[(ColOverArrayElem[_$9] forSome { 
+  type _$9
 })].&&(__equal(method.getName, "apply")) => Some(scala.Tuple2(receiver, i)).asInstanceOf[Option[(scala.Tuple2[Rep[ColOverArray[A]], Rep[Int]] forSome { 
                 type A
               })]]
               case _ => None
             };
-            def unapply(exp: (Exp[_$7] forSome { 
-              type _$7
+            def unapply(exp: (Exp[_$10] forSome { 
+              type _$10
             })): Option[(scala.Tuple2[Rep[ColOverArray[A]], Rep[Int]] forSome { 
               type A
             })] = exp match {
@@ -227,8 +253,8 @@ package scalanizer.collections {
         };
         object ColOverArrayCompanionMethods;
         def mkColOverArray[A](arr: Rep[Array[A]])(implicit eeA: Elem[A]): Rep[ColOverArray[A]] = new ExpColOverArray[A](arr);
-        def unmkColOverArray[A](p: Rep[Col[A]]) = p.elem.asInstanceOf[(Elem[_$8] forSome { 
-          type _$8
+        def unmkColOverArray[A](p: Rep[Col[A]]) = p.elem.asInstanceOf[(Elem[_$11] forSome { 
+          type _$11
         })] match {
           case ((_): ColOverArrayElem[A] @unchecked) => Some(p.asRep[ColOverArray[A]].arr)
           case _ => None
@@ -246,23 +272,23 @@ package scalanizer.collections {
         };
         object PairColMethods {
           object arr {
-            def unapply(d: (Def[_$9] forSome { 
-              type _$9
+            def unapply(d: (Def[_$12] forSome { 
+              type _$12
             })): Option[(Rep[PairCol[A, B]] forSome { 
               type A;
               type B
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(PairColElem[_$10, _$11] forSome { 
-  type _$10;
-  type _$11
+              case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(PairColElem[_$13, _$14] forSome { 
+  type _$13;
+  type _$14
 })].&&(__equal(method.getName, "arr")) => Some(receiver).asInstanceOf[Option[(Rep[PairCol[A, B]] forSome { 
                 type A;
                 type B
               })]]
               case _ => None
             };
-            def unapply(exp: (Exp[_$12] forSome { 
-              type _$12
+            def unapply(exp: (Exp[_$15] forSome { 
+              type _$15
             })): Option[(Rep[PairCol[A, B]] forSome { 
               type A;
               type B
@@ -272,23 +298,23 @@ package scalanizer.collections {
             }
           };
           object length {
-            def unapply(d: (Def[_$13] forSome { 
-              type _$13
+            def unapply(d: (Def[_$16] forSome { 
+              type _$16
             })): Option[(Rep[PairCol[A, B]] forSome { 
               type A;
               type B
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(PairColElem[_$14, _$15] forSome { 
-  type _$14;
-  type _$15
+              case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(PairColElem[_$17, _$18] forSome { 
+  type _$17;
+  type _$18
 })].&&(__equal(method.getName, "length")) => Some(receiver).asInstanceOf[Option[(Rep[PairCol[A, B]] forSome { 
                 type A;
                 type B
               })]]
               case _ => None
             };
-            def unapply(exp: (Exp[_$16] forSome { 
-              type _$16
+            def unapply(exp: (Exp[_$19] forSome { 
+              type _$19
             })): Option[(Rep[PairCol[A, B]] forSome { 
               type A;
               type B
@@ -298,23 +324,23 @@ package scalanizer.collections {
             }
           };
           object apply {
-            def unapply(d: (Def[_$17] forSome { 
-              type _$17
+            def unapply(d: (Def[_$20] forSome { 
+              type _$20
             })): Option[(scala.Tuple2[Rep[PairCol[A, B]], Rep[Int]] forSome { 
               type A;
               type B
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), Seq((i @ _), _*), _) if receiver.elem.isInstanceOf[(PairColElem[_$18, _$19] forSome { 
-  type _$18;
-  type _$19
+              case MethodCall((receiver @ _), (method @ _), Seq((i @ _), _*), _) if receiver.elem.isInstanceOf[(PairColElem[_$21, _$22] forSome { 
+  type _$21;
+  type _$22
 })].&&(__equal(method.getName, "apply")) => Some(scala.Tuple2(receiver, i)).asInstanceOf[Option[(scala.Tuple2[Rep[PairCol[A, B]], Rep[Int]] forSome { 
                 type A;
                 type B
               })]]
               case _ => None
             };
-            def unapply(exp: (Exp[_$20] forSome { 
-              type _$20
+            def unapply(exp: (Exp[_$23] forSome { 
+              type _$23
             })): Option[(scala.Tuple2[Rep[PairCol[A, B]], Rep[Int]] forSome { 
               type A;
               type B
@@ -326,29 +352,29 @@ package scalanizer.collections {
         };
         object PairColCompanionMethods;
         def mkPairCol[A, B](as: Rep[Col[A]], bs: Rep[Col[B]])(implicit eeA: Elem[scala.Tuple2[A, B]], ecA: Elem[A], ecB: Elem[B]): Rep[PairCol[A, B]] = new ExpPairCol[A, B](as, bs);
-        def unmkPairCol[A, B](p: Rep[Col[scala.Tuple2[A, B]]]) = p.elem.asInstanceOf[(Elem[_$21] forSome { 
-          type _$21
+        def unmkPairCol[A, B](p: Rep[Col[scala.Tuple2[A, B]]]) = p.elem.asInstanceOf[(Elem[_$24] forSome { 
+          type _$24
         })] match {
           case ((_): PairColElem[A, B] @unchecked) => Some(scala.Tuple2(p.asRep[PairCol[A, B]].as, p.asRep[PairCol[A, B]].bs))
           case _ => None
         };
         object ColMethods {
           object arr {
-            def unapply(d: (Def[_$22] forSome { 
-              type _$22
+            def unapply(d: (Def[_$25] forSome { 
+              type _$25
             })): Option[(Rep[Col[A]] forSome { 
               type A
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(ColElem[_$23, _$24] forSome { 
-  type _$23;
-  type _$24
+              case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(ColElem[_$26, _$27] forSome { 
+  type _$26;
+  type _$27
 })].&&(__equal(method.getName, "arr")) => Some(receiver).asInstanceOf[Option[(Rep[Col[A]] forSome { 
                 type A
               })]]
               case _ => None
             };
-            def unapply(exp: (Exp[_$25] forSome { 
-              type _$25
+            def unapply(exp: (Exp[_$28] forSome { 
+              type _$28
             })): Option[(Rep[Col[A]] forSome { 
               type A
             })] = exp match {
@@ -357,21 +383,21 @@ package scalanizer.collections {
             }
           };
           object length {
-            def unapply(d: (Def[_$26] forSome { 
-              type _$26
+            def unapply(d: (Def[_$29] forSome { 
+              type _$29
             })): Option[(Rep[Col[A]] forSome { 
               type A
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(ColElem[_$27, _$28] forSome { 
-  type _$27;
-  type _$28
+              case MethodCall((receiver @ _), (method @ _), _, _) if receiver.elem.isInstanceOf[(ColElem[_$30, _$31] forSome { 
+  type _$30;
+  type _$31
 })].&&(__equal(method.getName, "length")) => Some(receiver).asInstanceOf[Option[(Rep[Col[A]] forSome { 
                 type A
               })]]
               case _ => None
             };
-            def unapply(exp: (Exp[_$29] forSome { 
-              type _$29
+            def unapply(exp: (Exp[_$32] forSome { 
+              type _$32
             })): Option[(Rep[Col[A]] forSome { 
               type A
             })] = exp match {
@@ -380,21 +406,21 @@ package scalanizer.collections {
             }
           };
           object apply {
-            def unapply(d: (Def[_$30] forSome { 
-              type _$30
+            def unapply(d: (Def[_$33] forSome { 
+              type _$33
             })): Option[(scala.Tuple2[Rep[Col[A]], Rep[Int]] forSome { 
               type A
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), Seq((i @ _), _*), _) if receiver.elem.isInstanceOf[(ColElem[_$31, _$32] forSome { 
-  type _$31;
-  type _$32
+              case MethodCall((receiver @ _), (method @ _), Seq((i @ _), _*), _) if receiver.elem.isInstanceOf[(ColElem[_$34, _$35] forSome { 
+  type _$34;
+  type _$35
 })].&&(__equal(method.getName, "apply")) => Some(scala.Tuple2(receiver, i)).asInstanceOf[Option[(scala.Tuple2[Rep[Col[A]], Rep[Int]] forSome { 
                 type A
               })]]
               case _ => None
             };
-            def unapply(exp: (Exp[_$33] forSome { 
-              type _$33
+            def unapply(exp: (Exp[_$36] forSome { 
+              type _$36
             })): Option[(scala.Tuple2[Rep[Col[A]], Rep[Int]] forSome { 
               type A
             })] = exp match {
@@ -403,21 +429,21 @@ package scalanizer.collections {
             }
           };
           object reduce {
-            def unapply(d: (Def[_$34] forSome { 
-              type _$34
+            def unapply(d: (Def[_$37] forSome { 
+              type _$37
             })): Option[(scala.Tuple2[Rep[Col[A]], Rep[NumMonoid[A]]] forSome { 
               type A
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), Seq((m @ _), _*), _) if receiver.elem.isInstanceOf[(ColElem[_$35, _$36] forSome { 
-  type _$35;
-  type _$36
+              case MethodCall((receiver @ _), (method @ _), Seq((m @ _), _*), _) if receiver.elem.isInstanceOf[(ColElem[_$38, _$39] forSome { 
+  type _$38;
+  type _$39
 })].&&(__equal(method.getName, "reduce")) => Some(scala.Tuple2(receiver, m)).asInstanceOf[Option[(scala.Tuple2[Rep[Col[A]], Rep[NumMonoid[A]]] forSome { 
                 type A
               })]]
               case _ => None
             };
-            def unapply(exp: (Exp[_$37] forSome { 
-              type _$37
+            def unapply(exp: (Exp[_$40] forSome { 
+              type _$40
             })): Option[(scala.Tuple2[Rep[Col[A]], Rep[NumMonoid[A]]] forSome { 
               type A
             })] = exp match {
@@ -426,23 +452,23 @@ package scalanizer.collections {
             }
           };
           object zip {
-            def unapply(d: (Def[_$38] forSome { 
-              type _$38
+            def unapply(d: (Def[_$41] forSome { 
+              type _$41
             })): Option[(scala.Tuple3[Rep[Col[A]], Rep[Col[B]], Rep[Elem[B]]] forSome { 
               type A;
               type B
             })] = d match {
-              case MethodCall((receiver @ _), (method @ _), Seq((ys @ _), (emB @ _), _*), _) if receiver.elem.isInstanceOf[(ColElem[_$39, _$40] forSome { 
-  type _$39;
-  type _$40
+              case MethodCall((receiver @ _), (method @ _), Seq((ys @ _), (emB @ _), _*), _) if receiver.elem.isInstanceOf[(ColElem[_$42, _$43] forSome { 
+  type _$42;
+  type _$43
 })].&&(__equal(method.getName, "zip")) => Some(scala.Tuple3(receiver, ys, emB)).asInstanceOf[Option[(scala.Tuple3[Rep[Col[A]], Rep[Col[B]], Rep[Elem[B]]] forSome { 
                 type A;
                 type B
               })]]
               case _ => None
             };
-            def unapply(exp: (Exp[_$41] forSome { 
-              type _$41
+            def unapply(exp: (Exp[_$44] forSome { 
+              type _$44
             })): Option[(scala.Tuple3[Rep[Col[A]], Rep[Col[B]], Rep[Elem[B]]] forSome { 
               type A;
               type B
@@ -454,8 +480,8 @@ package scalanizer.collections {
         };
         object ColCompanionMethods {
           object apply {
-            def unapply(d: (Def[_$42] forSome { 
-              type _$42
+            def unapply(d: (Def[_$45] forSome { 
+              type _$45
             })): Option[(scala.Tuple2[Rep[Array[T]], Rep[Elem[T]]] forSome { 
               type T
             })] = d match {
@@ -464,8 +490,8 @@ package scalanizer.collections {
               })]]
               case _ => None
             };
-            def unapply(exp: (Exp[_$43] forSome { 
-              type _$43
+            def unapply(exp: (Exp[_$46] forSome { 
+              type _$46
             })): Option[(scala.Tuple2[Rep[Array[T]], Rep[Elem[T]]] forSome { 
               type T
             })] = exp match {
@@ -474,8 +500,8 @@ package scalanizer.collections {
             }
           };
           object fromArray {
-            def unapply(d: (Def[_$44] forSome { 
-              type _$44
+            def unapply(d: (Def[_$47] forSome { 
+              type _$47
             })): Option[(scala.Tuple2[Rep[Array[T]], Rep[Elem[T]]] forSome { 
               type T
             })] = d match {
@@ -484,8 +510,8 @@ package scalanizer.collections {
               })]]
               case _ => None
             };
-            def unapply(exp: (Exp[_$45] forSome { 
-              type _$45
+            def unapply(exp: (Exp[_$48] forSome { 
+              type _$48
             })): Option[(scala.Tuple2[Rep[Array[T]], Rep[Elem[T]]] forSome { 
               type T
             })] = exp match {
@@ -494,6 +520,11 @@ package scalanizer.collections {
             }
           }
         }
+      };
+      object Cols_Module {
+        val packageName = "scalanizer.collections";
+        val name = "Cols";
+        val dump = "H4sIAAAAAAAAALVWTYgjRRSu9Ewmkx92x7/BAcWZIf5rMqgwhzksSTbrD9nJMD0HictCpVPJ9Fpd3VNVGZIFF/EkehOvInvfmxdB8CaIB0+igmdP63pY1MWD4qvq32yn44DYh6K7+r1X733f9173rTsoLzh6SliYYlZziMQ1U983hKyabSZtOb3sDsaUXCTD99Y/ty6zpjDQ+R5aOcbioqA9VPRv2hMvujfJSQcVMbOIkC4XEm119Al1y6WUWNJ2Wd12nLHEfUrqHVvIvQ5a7ruD6Qm6gXIdtGa5zOJEErNFsRBEBPurRGVkR89F/TztevEZrK6qqCeqOOLYlpA+nLHm2x8Sz5wyl00dic4FqXU9lRbYFGzHc7kMjyhAuGN3ED4uMwwb6MHONXyK63DEqG5KbrMReJY9bL2NR2QfTJT5MiQsCB0eTT39vNRBJUFOAKDXHY/qnYmHEAIGXtJJ1GJ8ahE+NYVP1STcxtS+jtXLA+5Opsi/cksITTwI8cK/hAgjkDYbVD+4Yr11zyw7hnKeqFQKusIVCPREhho0FYDj14cfibuv3tw1UKmHSrZo9IXk2JJJygO0ypgxV+qcIwAxHwFb21ls6VMaYHOfJIqW63iYQaQAygrwRG3LlspY7VUCdjKgL0iPhKY5wD2qdzOjXq2bFqb04PbGi0/+0n7TQMbsEUUIaYLweRhUoqWWS4PIaj0vUa6h4VVLcRJuFoDCwdiSMfKwWYlIBs4STr5RdqIRZE/f/nXw1Q66YkRAB3mdjVsIkRc/fl/+7tkLBlrt6U64RPGoB1iLNiVOl7dcJnto1T0l3H9TOMVU3c3lujAgQzymMmAgCd0SQCfRZmbPekThuqf7IxcCUPYlvu8yUr10UP3D/ObjW0rBHFX8N34T/23v/vXTuaHU4gZKMOchxPkG53i6gKBZxEt+WNN1yAPbd+2rNz+UGtvcZHYEdPvXoOf2tN/mApjDUfR7b8f4beOHTw1UBDT7tnSwV905YwP9n00RIREvWwDhI6DqLnCu0Wslz9yKFbyRgPWxXA7FwbaABEIaIeDLSku+sVoeSiIPXZA8S3tH6n08C1ZdxPph52F658KXBsq/gfJDEKXooHzfHbNBiA58ViSZyGa4l5tFB9DAHDsRGvraRIkkJFrVrXKER2G+6f4uo1mBJWbCAml45GjsUfLKF39eff/d1zyts9SAmavc6LGZErL/Si3rCVO1PJoaMCkOo9YLODSg8HRJmWMu7d9f5J9OPk7rGb0+nyXPtQNsw2ii/1GZank51mUzWUvay0p7LcBijn8z2z+Nhfpk+EUmW0KtuzMyjRyP4/IzLNh8tawEWM+mVDwk9tBWH6ZMbc8rPkXnmTmtzOfTU+v1M2LwztxM5KxRAQaSKkKidb814ReJJ36jRJAtR9sZrWsGMxUG+417n+w/9+1nP+tfhZKazvCtYtHPZDxs7m/lgkoB/gwTGUNealrrbP8BsZgAwqkLAAA="
       };
       trait Cols extends Base with NumMonoidsDsl { self: ColsDsl =>
         trait Col[A] extends Reifiable[Col[A]] {
@@ -530,7 +561,7 @@ package scalanizer.collections {
       trait ColsDslExp extends ColsExp with NumMonoidsDslExp { self: ColsDslExp =>
         
       };
-      val serializedMetaAst = "rO0ABXNyACZzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU0VudGl0eU1vZHVsZURlZqplOx8xRQC7AgAMTAAJYW5jZXN0b3JzdAAhTHNjYWxhL2NvbGxlY3Rpb24vaW1tdXRhYmxlL0xpc3Q7TAAEYm9keXEAfgABTAAQY29uY3JldGVTQ2xhc3Nlc3EAfgABTAAIZW50aXRpZXNxAH4AAUwACWVudGl0eU9wc3QAIUxzY2FsYW4vbWV0YS9TY2FsYW5Bc3QkU1RyYWl0RGVmO0wAEGVudGl0eVJlcFN5bm9ueW10AA5Mc2NhbGEvT3B0aW9uO0wAB2ltcG9ydHNxAH4AAUwAB21ldGhvZHNxAH4AAUwABG5hbWV0ABJMamF2YS9sYW5nL1N0cmluZztMAAtwYWNrYWdlTmFtZXEAfgAETAAIc2VsZlR5cGVxAH4AA0wACnNlcURzbEltcGxxAH4AA3hwc3IAMnNjYWxhLmNvbGxlY3Rpb24uaW1tdXRhYmxlLkxpc3QkU2VyaWFsaXphdGlvblByb3h5AAAAAAAAAAEDAAB4cHNyACBzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU1RyYWl0Q2FsbFDrGS0l7EVYAgACTAAEbmFtZXEAfgAETAAJdHBlU0V4cHJzcQB+AAF4cHQACk51bU1vbm9pZHNzcQB+AAZzcgAsc2NhbGEuY29sbGVjdGlvbi5pbW11dGFibGUuTGlzdFNlcmlhbGl6ZUVuZCSKXGNb91MLbQIAAHhweHEAfgANeHEAfgALc3EAfgAGc3IAH3NjYWxhbi5tZXRhLlNjYWxhbkFzdCRTQ2xhc3NEZWYH0H1o8ahwMwIACloACmlzQWJzdHJhY3RMAAlhbmNlc3RvcnNxAH4AAUwAC2Fubm90YXRpb25zcQB+AAFMAARhcmdzdAAiTHNjYWxhbi9tZXRhL1NjYWxhbkFzdCRTQ2xhc3NBcmdzO0wABGJvZHlxAH4AAUwACWNvbXBhbmlvbnEAfgADTAAMaW1wbGljaXRBcmdzcQB+ABBMAARuYW1lcQB+AARMAAhzZWxmVHlwZXEAfgADTAAHdHBlQXJnc3EAfgABeHAAc3EAfgAGc3EAfgAIdAADQ29sc3EAfgAGc3EAfgAIdAABQXEAfgALcQB+AA14c3EAfgAIdAAHUHJvZHVjdHEAfgALc3EAfgAIdAAMU2VyaWFsaXphYmxlcQB+AAtxAH4ADXhxAH4AC3NyACBzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU0NsYXNzQXJncyfr7mTFMABcAgABTAAEYXJnc3EAfgABeHBzcQB+AAZzcgAfc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNDbGFzc0FyZwVz2NYL1Ck/AgAIWgAHaW1wRmxhZ1oADGlzRWxlbU9yQ29udFoACG92ZXJGbGFnWgAHdmFsRmxhZ0wAC2Fubm90YXRpb25zcQB+AAFMAAdkZWZhdWx0cQB+AANMAARuYW1lcQB+AARMAAN0cGV0ACBMc2NhbGFuL21ldGEvU2NhbGFuQXN0JFNUcGVFeHByO3hwAAAAAXEAfgALc3IAC3NjYWxhLk5vbmUkRlAk9lPKlKwCAAB4cgAMc2NhbGEuT3B0aW9u/mk3/dsOZnQCAAB4cHQAA2FycnNxAH4ACHQABUFycmF5c3EAfgAGc3EAfgAIdAABQXEAfgALcQB+AA14cQB+AA14c3EAfgAGc3IAIHNjYWxhbi5tZXRhLlNjYWxhbkFzdCRTTWV0aG9kRGVm3VlxcbcwKw4CAApaAAxpc0VsZW1PckNvbnRaAAppc0ltcGxpY2l0WgAKaXNPdmVycmlkZUwAC2Fubm90YXRpb25zcQB+AAFMAAthcmdTZWN0aW9uc3EAfgABTAAEYm9keXEAfgADTAAEbmFtZXEAfgAETAAKb3ZlcmxvYWRJZHEAfgADTAAHdHBlQXJnc3EAfgABTAAGdHBlUmVzcQB+AAN4cAAAAHEAfgALcQB+AAtzcgAKc2NhbGEuU29tZREi8mleoYt0AgABTAABeHQAEkxqYXZhL2xhbmcvT2JqZWN0O3hxAH4AI3NyAB1zY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU1NlbGVjdAvdaWVlQPmFAgACTAAEZXhwcnQAHUxzY2FsYW4vbWV0YS9TY2FsYW5Bc3QkU0V4cHI7TAAFdG5hbWVxAH4ABHhwc3IAG3NjYWxhbi5tZXRhLlNjYWxhbkFzdCRTQXNjcmDEeSeFkj7MAgACTAAEZXhwcnEAfgAyTAACcHRxAH4AIHhwc3IAHHNjYWxhbi5tZXRhLlNjYWxhbkFzdCRTSWRlbnQnEqX78AnXTwIAAUwABG5hbWVxAH4ABHhwdAADYXJyc3EAfgAIdAAFQXJyYXlzcQB+AAZzcQB+AAh0AAFBcQB+AAtxAH4ADXh0AAZsZW5ndGhxAH4APnEAfgAkcQB+AAtxAH4AJHNxAH4ALAAAAHEAfgALc3EAfgAGc3IAIXNjYWxhbi5tZXRhLlNjYWxhbkFzdCRTTWV0aG9kQXJncynCJ5ZedbqLAgABTAAEYXJnc3EAfgABeHBzcQB+AAZzcgAgc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNNZXRob2RBcmcD3P/Lk3JzAwIAB1oAB2ltcEZsYWdaAAxpc0VsZW1PckNvbnRaAAhvdmVyRmxhZ0wAC2Fubm90YXRpb25zcQB+AAFMAAdkZWZhdWx0cQB+AANMAARuYW1lcQB+AARMAAN0cGVxAH4AIHhwAAAAcQB+AAtxAH4AJHQAAWlzcgAjc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNUcGVQcmltaXRpdmU1w7tV8L5OBQIAAkwAEmRlZmF1bHRWYWx1ZVN0cmluZ3EAfgAETAAEbmFtZXEAfgAEeHB0AAEwdAADSW50cQB+AA14cQB+AA14c3EAfgAuc3IAHHNjYWxhbi5tZXRhLlNjYWxhbkFzdCRTQXBwbHmEZimf0pr8fwIAA0wABWFyZ3NzcQB+AAFMAANmdW5xAH4AMkwAAnRzcQB+AAF4cHNxAH4ABnNxAH4ABnNxAH4ANnQAAWlxAH4ADXhxAH4ADXhzcQB+ADFzcQB+ADRzcQB+ADZ0AANhcnJzcQB+AAh0AAVBcnJheXNxAH4ABnNxAH4ACHQAAUFxAH4AC3EAfgANeHQABWFwcGx5cQB+AAtxAH4AW3EAfgAkcQB+AAtxAH4AJHEAfgANeHEAfgAkc3EAfgAccQB+AAt0AAxDb2xPdmVyQXJyYXlxAH4AJHNxAH4ABnNyAB1zY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU1RwZUFyZ5JbJkhy8ZuJAgAETAAFYm91bmRxAH4AA0wADGNvbnRleHRCb3VuZHEAfgABTAAEbmFtZXEAfgAETAAHdHBhcmFtc3EAfgABeHBxAH4AJHNxAH4ABnQACENsYXNzVGFncQB+AA14dAABQXEAfgALcQB+AA14c3EAfgAPAHNxAH4ABnNxAH4ACHQAA0NvbHNxAH4ABnNyAB9zY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU1RwZVR1cGxlNLv5XoiASHACAAFMAAl0cGVTRXhwcnNxAH4AAXhwc3EAfgAGc3EAfgAIdAABQXEAfgALc3EAfgAIdAABQnEAfgALcQB+AA14cQB+AA14c3EAfgAIcQB+ABlxAH4AC3NxAH4ACHEAfgAbcQB+AAtxAH4ADXhxAH4AC3NxAH4AHHNxAH4ABnNxAH4AHwAAAAFxAH4AC3EAfgAkdAACYXNzcQB+AAh0AANDb2xzcQB+AAZzcQB+AAh0AAFBcQB+AAtxAH4ADXhzcQB+AB8AAAABcQB+AAtxAH4AJHQAAmJzc3EAfgAIdAADQ29sc3EAfgAGc3EAfgAIdAABQnEAfgALcQB+AA14cQB+AA14c3EAfgAGc3EAfgAsAAAAcQB+AAtxAH4AC3NxAH4ALnNxAH4ATHNxAH4ABnNxAH4ABnNxAH4AMXNxAH4ANnQAAmJzdAADYXJycQB+AA14cQB+AA14c3EAfgAxc3EAfgAxc3EAfgA2dAACYXN0AANhcnJ0AAN6aXBxAH4AC3QAA2FycnEAfgAkcQB+AAtzcQB+AC5zcQB+AAh0AAVBcnJheXNxAH4ABnNxAH4AaXNxAH4ABnNxAH4ACHQAAUFxAH4AC3NxAH4ACHQAAUJxAH4AC3EAfgANeHEAfgANeHNxAH4ALAAAAHEAfgALcQB+AAtzcQB+AC5zcQB+ADFzcQB+ADZ0AAJhc3EAfgA+cQB+AD5xAH4AJHEAfgALcQB+ACRzcQB+ACwAAABxAH4AC3NxAH4ABnNxAH4AQXNxAH4ABnNxAH4ARAAAAHEAfgALcQB+ACR0AAFpcQB+AEhxAH4ADXhxAH4ADXhzcQB+AC5zcgAcc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNUdXBsZWseKaba+ZUvAgABTAAFZXhwcnNxAH4AAXhwc3EAfgAGc3EAfgBMc3EAfgAGc3EAfgAGc3EAfgA2dAABaXEAfgANeHEAfgANeHNxAH4ANnQAAmFzcQB+AAtzcQB+AExzcQB+AAZzcQB+AAZzcQB+ADZ0AAFpcQB+AA14cQB+AA14c3EAfgA2dAACYnNxAH4AC3EAfgANeHEAfgBbcQB+ACRxAH4AC3EAfgAkcQB+AA14cQB+ACRzcQB+ABxxAH4AC3QAB1BhaXJDb2xxAH4AJHNxAH4ABnNxAH4AX3EAfgAkcQB+AAt0AAFBcQB+AAtzcQB+AF9xAH4AJHEAfgALdAABQnEAfgALcQB+AA14cQB+AA14c3EAfgAGc3IAH3NjYWxhbi5tZXRhLlNjYWxhbkFzdCRTVHJhaXREZWYBvjSSNBSxsgIACVoACGJpdG1hcCQwTAAJYW5jZXN0b3JzcQB+AAFMAAthbm5vdGF0aW9uc3EAfgABTAAEYm9keXEAfgABTAAJY29tcGFuaW9ucQB+AANMAAxpbXBsaWNpdEFyZ3NxAH4AEEwABG5hbWVxAH4ABEwACHNlbGZUeXBlcQB+AANMAAd0cGVBcmdzcQB+AAF4cABxAH4AC3EAfgALc3EAfgAGc3EAfgAsAAAAcQB+AAtxAH4AC3EAfgAkdAADYXJycQB+ACRxAH4AC3NxAH4ALnNxAH4ACHQABUFycmF5c3EAfgAGc3EAfgAIdAABQXEAfgALcQB+AA14c3EAfgAsAAAAcQB+AAtxAH4AC3EAfgAkcQB+AD5xAH4AJHEAfgALc3EAfgAucQB+AEhzcQB+ACwAAABxAH4AC3NxAH4ABnNxAH4AQXNxAH4ABnNxAH4ARAAAAHEAfgALcQB+ACR0AAFpcQB+AEhxAH4ADXhxAH4ADXhxAH4AJHEAfgBbcQB+ACRxAH4AC3NxAH4ALnNxAH4ACHQAAUFxAH4AC3NxAH4ALAAAAHEAfgALc3EAfgAGc3EAfgBBc3EAfgAGc3EAfgBEAAAAcQB+AAtxAH4AJHQAAWZzcgAec2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNUcGVGdW5j1EmZEw8dX+ECAAJMAAZkb21haW5xAH4AIEwABXJhbmdlcQB+ACB4cHNxAH4ACHQAAUFxAH4AC3NxAH4ACHQAAUJxAH4AC3EAfgANeHEAfgANeHNxAH4ALnNxAH4ATHNxAH4ABnNxAH4ABnNxAH4ATHNxAH4ABnNxAH4ABnNxAH4ANnEAfgDdcQB+AA14c3EAfgAGc3IAIHNjYWxhbi5tZXRhLlNjYWxhbkFzdCRTVHlwZUFwcGx5Gt+vzfXl+lACAAJMAANmdW5xAH4AMkwAAnRzcQB+AAF4cHNxAH4ANnQACmltcGxpY2l0bHlzcQB+AAZzcQB+AAh0AAxDYW5CdWlsZEZyb21zcQB+AAZzcQB+AAh0AAVBcnJheXNxAH4ABnNxAH4ACHQAAUFxAH4AC3EAfgANeHNxAH4ACHQAAUJxAH4AC3NxAH4ACHQABUFycmF5c3EAfgAGc3EAfgAIdAABQnEAfgALcQB+AA14cQB+AA14cQB+AA14cQB+AA14cQB+AA14c3EAfgAxc3EAfgA0c3EAfgA2dAADYXJyc3EAfgAIdAAFQXJyYXlzcQB+AAZzcQB+AAh0AAFBcQB+AAtxAH4ADXh0AANtYXBxAH4AC3EAfgANeHEAfgANeHNxAH4ANnQAA0NvbHEAfgALcQB+AQpxAH4AJHNxAH4ABnNxAH4AX3EAfgAkc3EAfgAGdAAIQ2xhc3NUYWdxAH4ADXh0AAFCcQB+AAtxAH4ADXhzcQB+AC5zcQB+AAh0AANDb2xzcQB+AAZzcQB+AAh0AAFCcQB+AAtxAH4ADXhzcQB+ACwAAABxAH4AC3NxAH4ABnNxAH4AQXNxAH4ABnNxAH4ARAEAAHEAfgALcQB+ACR0AAFtc3EAfgAIdAAJTnVtTW9ub2lkc3EAfgAGc3EAfgAIdAABQXEAfgALcQB+AA14cQB+AA14cQB+AA14c3EAfgAuc3EAfgBMc3EAfgAGc3EAfgAGc3EAfgAxc3EAfgA2dAABbXQABmFwcGVuZHEAfgANeHEAfgANeHNxAH4AMXNxAH4ANHNxAH4ANnQAA2FycnNxAH4ACHQABUFycmF5c3EAfgAGc3EAfgAIdAABQXEAfgALcQB+AA14dAAGcmVkdWNlcQB+AAt0AAZyZWR1Y2VxAH4AJHEAfgALc3EAfgAuc3EAfgAIdAABQXEAfgALc3EAfgAsAAAAcQB+AAtzcQB+AAZzcQB+AEFzcQB+AAZzcQB+AEQAAABxAH4AC3EAfgAkdAACeXNzcQB+AAh0AANDb2xzcQB+AAZzcQB+AAh0AAFCcQB+AAtxAH4ADXhxAH4ADXhxAH4ADXhzcQB+AC5zcQB+AExzcQB+AAZzcQB+AAZzcgAbc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNUaGlz6h7QxqBfi2cCAAFMAAh0eXBlTmFtZXEAfgAEeHB0AABzcQB+ADZ0AAJ5c3EAfgANeHEAfgANeHNxAH4ANnQAB1BhaXJDb2xxAH4AC3QAA3ppcHEAfgAkc3EAfgAGc3EAfgBfcQB+ACRxAH4AC3QAAUJxAH4AC3EAfgANeHNxAH4ALnNxAH4ACHQAB1BhaXJDb2xzcQB+AAZzcQB+AAh0AAFBcQB+AAtzcQB+AAh0AAFCcQB+AAtxAH4ADXhxAH4ADXhzcQB+AC5zcgAgc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNPYmplY3REZWaAVdGTdAl6YwIAA0wACWFuY2VzdG9yc3EAfgABTAAEYm9keXEAfgABTAAEbmFtZXEAfgAEeHBxAH4AC3NxAH4ABnNxAH4ALAAAAHEAfgALc3EAfgAGc3EAfgBBc3EAfgAGc3EAfgBEAAAAcQB+AAtxAH4AJHQAA2FycnNxAH4ACHQABUFycmF5c3EAfgAGc3EAfgAIdAABVHEAfgALcQB+AA14cQB+AA14cQB+AA14c3EAfgAuc3EAfgBMc3EAfgAGc3EAfgAGc3EAfgA2dAADYXJycQB+AA14cQB+AA14c3EAfgA2dAAJZnJvbUFycmF5cQB+AAtxAH4AW3EAfgAkc3EAfgAGc3EAfgBfcQB+ACRzcQB+AAZ0AAhDbGFzc1RhZ3EAfgANeHQAAVRxAH4AC3EAfgANeHNxAH4ALnNxAH4ACHQAA0NvbHNxAH4ABnNxAH4ACHQAAVRxAH4AC3EAfgANeHNxAH4ALAAAAHEAfgALc3EAfgAGc3EAfgBBc3EAfgAGc3EAfgBEAAAAcQB+AAtxAH4AJHQAA2FycnNxAH4ACHQABUFycmF5c3EAfgAGc3EAfgAIdAABVHEAfgALcQB+AA14cQB+AA14cQB+AA14c3EAfgAuc3EAfgBMc3EAfgAGc3EAfgAGc3EAfgA2dAADYXJycQB+AA14cQB+AA14c3EAfgA2dAAMQ29sT3ZlckFycmF5cQB+AAt0AAlmcm9tQXJyYXlxAH4AJHNxAH4ABnNxAH4AX3EAfgAkc3EAfgAGdAAIQ2xhc3NUYWdxAH4ADXh0AAFUcQB+AAtxAH4ADXhzcQB+AC5zcQB+AAh0AANDb2xzcQB+AAZzcQB+AAh0AAFUcQB+AAtxAH4ADXhxAH4ADXh0AANDb2xwdAADQ29scQB+ACRzcQB+AAZzcQB+AF9xAH4AJHEAfgALdAABQXEAfgALcQB+AA14cQB+AA14cQB+AMNxAH4AJHNxAH4ABnNyACFzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU0ltcG9ydFN0YXSsgKBKw8YbIgIAAUwABG5hbWVxAH4ABHhwdAAVc2NhbGFuaXplci5OdW1Nb25vaWRzc3EAfgGidAAlc2NhbGEuY29sbGVjdGlvbi5nZW5lcmljLkNhbkJ1aWxkRnJvbXNxAH4BonQAFnNjYWxhLnJlZmxlY3QuQ2xhc3NUYWdxAH4ADXhxAH4AC3QABENvbHN0ABZzY2FsYW5pemVyLmNvbGxlY3Rpb25zcQB+ACRxAH4AJA=="
+      val serializedMetaAst = "rO0ABXNyACZzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU0VudGl0eU1vZHVsZURlZoIWuGNNbkJzAgAPWgAGaGFzRHNsWgAJaGFzRHNsRXhwWgAJaGFzRHNsU2VxTAAJYW5jZXN0b3JzdAAhTHNjYWxhL2NvbGxlY3Rpb24vaW1tdXRhYmxlL0xpc3Q7TAAEYm9keXEAfgABTAAQY29uY3JldGVTQ2xhc3Nlc3EAfgABTAAIZW50aXRpZXNxAH4AAUwACWVudGl0eU9wc3QAIUxzY2FsYW4vbWV0YS9TY2FsYW5Bc3QkU1RyYWl0RGVmO0wAEGVudGl0eVJlcFN5bm9ueW10AA5Mc2NhbGEvT3B0aW9uO0wAB2ltcG9ydHNxAH4AAUwAB21ldGhvZHNxAH4AAUwABG5hbWV0ABJMamF2YS9sYW5nL1N0cmluZztMAAtwYWNrYWdlTmFtZXEAfgAETAAIc2VsZlR5cGVxAH4AA0wACnNlcURzbEltcGxxAH4AA3hwAAAAc3IAMnNjYWxhLmNvbGxlY3Rpb24uaW1tdXRhYmxlLkxpc3QkU2VyaWFsaXphdGlvblByb3h5AAAAAAAAAAEDAAB4cHNyACBzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU1RyYWl0Q2FsbFDrGS0l7EVYAgACTAAEbmFtZXEAfgAETAAJdHBlU0V4cHJzcQB+AAF4cHQACk51bU1vbm9pZHNzcQB+AAZzcgAsc2NhbGEuY29sbGVjdGlvbi5pbW11dGFibGUuTGlzdFNlcmlhbGl6ZUVuZCSKXGNb91MLbQIAAHhweHEAfgANeHEAfgALc3EAfgAGc3IAH3NjYWxhbi5tZXRhLlNjYWxhbkFzdCRTQ2xhc3NEZWbIUpJz8kehNwIACloACmlzQWJzdHJhY3RMAAlhbmNlc3RvcnNxAH4AAUwAC2Fubm90YXRpb25zcQB+AAFMAARhcmdzdAAiTHNjYWxhbi9tZXRhL1NjYWxhbkFzdCRTQ2xhc3NBcmdzO0wABGJvZHlxAH4AAUwACWNvbXBhbmlvbnEAfgADTAAMaW1wbGljaXRBcmdzcQB+ABBMAARuYW1lcQB+AARMAAhzZWxmVHlwZXEAfgADTAAHdHBlQXJnc3EAfgABeHAAc3EAfgAGc3EAfgAIdAADQ29sc3EAfgAGc3EAfgAIdAABQXEAfgALcQB+AA14c3EAfgAIdAAHUHJvZHVjdHEAfgALc3EAfgAIdAAMU2VyaWFsaXphYmxlcQB+AAtxAH4ADXhxAH4AC3NyACBzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU0NsYXNzQXJncyfr7mTFMABcAgABTAAEYXJnc3EAfgABeHBzcQB+AAZzcgAfc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNDbGFzc0FyZwVz2NYL1Ck/AgAIWgAHaW1wRmxhZ1oADGlzRWxlbU9yQ29udFoACG92ZXJGbGFnWgAHdmFsRmxhZ0wAC2Fubm90YXRpb25zcQB+AAFMAAdkZWZhdWx0cQB+AANMAARuYW1lcQB+AARMAAN0cGV0ACBMc2NhbGFuL21ldGEvU2NhbGFuQXN0JFNUcGVFeHByO3hwAAAAAXEAfgALc3IAC3NjYWxhLk5vbmUkRlAk9lPKlKwCAAB4cgAMc2NhbGEuT3B0aW9u/mk3/dsOZnQCAAB4cHQAA2FycnNxAH4ACHQABUFycmF5c3EAfgAGc3EAfgAIdAABQXEAfgALcQB+AA14cQB+AA14c3EAfgAGc3IAIHNjYWxhbi5tZXRhLlNjYWxhbkFzdCRTTWV0aG9kRGVm3VlxcbcwKw4CAApaAAxpc0VsZW1PckNvbnRaAAppc0ltcGxpY2l0WgAKaXNPdmVycmlkZUwAC2Fubm90YXRpb25zcQB+AAFMAAthcmdTZWN0aW9uc3EAfgABTAAEYm9keXEAfgADTAAEbmFtZXEAfgAETAAKb3ZlcmxvYWRJZHEAfgADTAAHdHBlQXJnc3EAfgABTAAGdHBlUmVzcQB+AAN4cAAAAHEAfgALcQB+AAtzcgAKc2NhbGEuU29tZREi8mleoYt0AgABTAABeHQAEkxqYXZhL2xhbmcvT2JqZWN0O3hxAH4AI3NyAB1zY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU1NlbGVjdAvdaWVlQPmFAgACTAAEZXhwcnQAHUxzY2FsYW4vbWV0YS9TY2FsYW5Bc3QkU0V4cHI7TAAFdG5hbWVxAH4ABHhwc3IAG3NjYWxhbi5tZXRhLlNjYWxhbkFzdCRTQXNjcmDEeSeFkj7MAgACTAAEZXhwcnEAfgAyTAACcHRxAH4AIHhwc3IAHHNjYWxhbi5tZXRhLlNjYWxhbkFzdCRTSWRlbnQnEqX78AnXTwIAAUwABG5hbWVxAH4ABHhwdAADYXJyc3EAfgAIdAAFQXJyYXlzcQB+AAZzcQB+AAh0AAFBcQB+AAtxAH4ADXh0AAZsZW5ndGhxAH4APnEAfgAkcQB+AAtxAH4AJHNxAH4ALAAAAHEAfgALc3EAfgAGc3IAIXNjYWxhbi5tZXRhLlNjYWxhbkFzdCRTTWV0aG9kQXJncynCJ5ZedbqLAgABTAAEYXJnc3EAfgABeHBzcQB+AAZzcgAgc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNNZXRob2RBcmcD3P/Lk3JzAwIAB1oAB2ltcEZsYWdaAAxpc0VsZW1PckNvbnRaAAhvdmVyRmxhZ0wAC2Fubm90YXRpb25zcQB+AAFMAAdkZWZhdWx0cQB+AANMAARuYW1lcQB+AARMAAN0cGVxAH4AIHhwAAAAcQB+AAtxAH4AJHQAAWlzcgAjc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNUcGVQcmltaXRpdmU1w7tV8L5OBQIAAkwAEmRlZmF1bHRWYWx1ZVN0cmluZ3EAfgAETAAEbmFtZXEAfgAEeHB0AAEwdAADSW50cQB+AA14cQB+AA14c3EAfgAuc3IAHHNjYWxhbi5tZXRhLlNjYWxhbkFzdCRTQXBwbHmEZimf0pr8fwIAA0wABWFyZ3NzcQB+AAFMAANmdW5xAH4AMkwAAnRzcQB+AAF4cHNxAH4ABnNxAH4ABnNxAH4ANnQAAWlxAH4ADXhxAH4ADXhzcQB+ADFzcQB+ADRzcQB+ADZ0AANhcnJzcQB+AAh0AAVBcnJheXNxAH4ABnNxAH4ACHQAAUFxAH4AC3EAfgANeHQABWFwcGx5cQB+AAtxAH4AW3EAfgAkcQB+AAtxAH4AJHEAfgANeHEAfgAkc3EAfgAccQB+AAt0AAxDb2xPdmVyQXJyYXlxAH4AJHNxAH4ABnNyAB1zY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU1RwZUFyZxZSTBRs7T++AgAFSgAFZmxhZ3NMAAVib3VuZHEAfgADTAAMY29udGV4dEJvdW5kcQB+AAFMAARuYW1lcQB+AARMAAd0cGFyYW1zcQB+AAF4cAAAAAAAACAAcQB+ACRzcQB+AAZ0AAhDbGFzc1RhZ3EAfgANeHQAAUFxAH4AC3EAfgANeHNxAH4ADwBzcQB+AAZzcQB+AAh0AANDb2xzcQB+AAZzcgAfc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNUcGVUdXBsZTS7+V6IgEhwAgABTAAJdHBlU0V4cHJzcQB+AAF4cHNxAH4ABnNxAH4ACHQAAUFxAH4AC3NxAH4ACHQAAUJxAH4AC3EAfgANeHEAfgANeHNxAH4ACHEAfgAZcQB+AAtzcQB+AAhxAH4AG3EAfgALcQB+AA14cQB+AAtzcQB+ABxzcQB+AAZzcQB+AB8AAAABcQB+AAtxAH4AJHQAAmFzc3EAfgAIdAADQ29sc3EAfgAGc3EAfgAIdAABQXEAfgALcQB+AA14c3EAfgAfAAAAAXEAfgALcQB+ACR0AAJic3NxAH4ACHQAA0NvbHNxAH4ABnNxAH4ACHQAAUJxAH4AC3EAfgANeHEAfgANeHNxAH4ABnNxAH4ALAAAAHEAfgALcQB+AAtzcQB+AC5zcQB+AExzcQB+AAZzcQB+AAZzcQB+ADFzcQB+ADZ0AAJic3QAA2FycnEAfgANeHEAfgANeHNxAH4AMXNxAH4AMXNxAH4ANnQAAmFzdAADYXJydAADemlwcQB+AAt0AANhcnJxAH4AJHEAfgALc3EAfgAuc3EAfgAIdAAFQXJyYXlzcQB+AAZzcQB+AGlzcQB+AAZzcQB+AAh0AAFBcQB+AAtzcQB+AAh0AAFCcQB+AAtxAH4ADXhxAH4ADXhzcQB+ACwAAABxAH4AC3EAfgALc3EAfgAuc3EAfgAxc3EAfgA2dAACYXNxAH4APnEAfgA+cQB+ACRxAH4AC3EAfgAkc3EAfgAsAAAAcQB+AAtzcQB+AAZzcQB+AEFzcQB+AAZzcQB+AEQAAABxAH4AC3EAfgAkdAABaXEAfgBIcQB+AA14cQB+AA14c3EAfgAuc3IAHHNjYWxhbi5tZXRhLlNjYWxhbkFzdCRTVHVwbGVrHimm2vmVLwIAAUwABWV4cHJzcQB+AAF4cHNxAH4ABnNxAH4ATHNxAH4ABnNxAH4ABnNxAH4ANnQAAWlxAH4ADXhxAH4ADXhzcQB+ADZ0AAJhc3EAfgALc3EAfgBMc3EAfgAGc3EAfgAGc3EAfgA2dAABaXEAfgANeHEAfgANeHNxAH4ANnQAAmJzcQB+AAtxAH4ADXhxAH4AW3EAfgAkcQB+AAtxAH4AJHEAfgANeHEAfgAkc3EAfgAccQB+AAt0AAdQYWlyQ29scQB+ACRzcQB+AAZzcQB+AF8AAAAAAAAgAHEAfgAkcQB+AAt0AAFBcQB+AAtzcQB+AF8AAAAAAAAgAHEAfgAkcQB+AAt0AAFCcQB+AAtxAH4ADXhxAH4ADXhzcQB+AAZzcgAfc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNUcmFpdERlZvVaMAL0GdefAgAJWgAIYml0bWFwJDBMAAlhbmNlc3RvcnNxAH4AAUwAC2Fubm90YXRpb25zcQB+AAFMAARib2R5cQB+AAFMAAljb21wYW5pb25xAH4AA0wADGltcGxpY2l0QXJnc3EAfgAQTAAEbmFtZXEAfgAETAAIc2VsZlR5cGVxAH4AA0wAB3RwZUFyZ3NxAH4AAXhwAHEAfgALcQB+AAtzcQB+AAZzcQB+ACwAAABxAH4AC3EAfgALcQB+ACR0AANhcnJxAH4AJHEAfgALc3EAfgAuc3EAfgAIdAAFQXJyYXlzcQB+AAZzcQB+AAh0AAFBcQB+AAtxAH4ADXhzcQB+ACwAAABxAH4AC3EAfgALcQB+ACRxAH4APnEAfgAkcQB+AAtzcQB+AC5xAH4ASHNxAH4ALAAAAHEAfgALc3EAfgAGc3EAfgBBc3EAfgAGc3EAfgBEAAAAcQB+AAtxAH4AJHQAAWlxAH4ASHEAfgANeHEAfgANeHEAfgAkcQB+AFtxAH4AJHEAfgALc3EAfgAuc3EAfgAIdAABQXEAfgALc3EAfgAsAAAAcQB+AAtzcQB+AAZzcQB+AEFzcQB+AAZzcQB+AEQAAABxAH4AC3EAfgAkdAABZnNyAB5zY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU1RwZUZ1bmPUSZkTDx1f4QIAAkwABmRvbWFpbnEAfgAgTAAFcmFuZ2VxAH4AIHhwc3EAfgAIdAABQXEAfgALc3EAfgAIdAABQnEAfgALcQB+AA14cQB+AA14c3EAfgAuc3EAfgBMc3EAfgAGc3EAfgAGc3EAfgBMc3EAfgAGc3EAfgAGc3EAfgA2cQB+AN1xAH4ADXhzcQB+AAZzcgAgc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNUeXBlQXBwbHka36/N9eX6UAIAAkwAA2Z1bnEAfgAyTAACdHNxAH4AAXhwc3EAfgA2dAAKaW1wbGljaXRseXNxAH4ABnNxAH4ACHQADENhbkJ1aWxkRnJvbXNxAH4ABnNxAH4ACHQABUFycmF5c3EAfgAGc3EAfgAIdAABQXEAfgALcQB+AA14c3EAfgAIdAABQnEAfgALc3EAfgAIdAAFQXJyYXlzcQB+AAZzcQB+AAh0AAFCcQB+AAtxAH4ADXhxAH4ADXhxAH4ADXhxAH4ADXhxAH4ADXhzcQB+ADFzcQB+ADRzcQB+ADZ0AANhcnJzcQB+AAh0AAVBcnJheXNxAH4ABnNxAH4ACHQAAUFxAH4AC3EAfgANeHQAA21hcHEAfgALcQB+AA14cQB+AA14c3EAfgA2dAADQ29scQB+AAtxAH4BCnEAfgAkc3EAfgAGc3EAfgBfAAAAAAAAIABxAH4AJHNxAH4ABnQACENsYXNzVGFncQB+AA14dAABQnEAfgALcQB+AA14c3EAfgAuc3EAfgAIdAADQ29sc3EAfgAGc3EAfgAIdAABQnEAfgALcQB+AA14c3EAfgAsAAAAcQB+AAtzcQB+AAZzcQB+AEFzcQB+AAZzcQB+AEQBAABxAH4AC3EAfgAkdAABbXNxAH4ACHQACU51bU1vbm9pZHNxAH4ABnNxAH4ACHQAAUFxAH4AC3EAfgANeHEAfgANeHEAfgANeHNxAH4ALnNxAH4ATHNxAH4ABnNxAH4ABnNxAH4AMXNxAH4ANnQAAW10AAZhcHBlbmRxAH4ADXhxAH4ADXhzcQB+ADFzcQB+ADRzcQB+ADZ0AANhcnJzcQB+AAh0AAVBcnJheXNxAH4ABnNxAH4ACHQAAUFxAH4AC3EAfgANeHQABnJlZHVjZXEAfgALdAAGcmVkdWNlcQB+ACRxAH4AC3NxAH4ALnNxAH4ACHQAAUFxAH4AC3NxAH4ALAAAAHEAfgALc3EAfgAGc3EAfgBBc3EAfgAGc3EAfgBEAAAAcQB+AAtxAH4AJHQAAnlzc3EAfgAIdAADQ29sc3EAfgAGc3EAfgAIdAABQnEAfgALcQB+AA14cQB+AA14cQB+AA14c3EAfgAuc3EAfgBMc3EAfgAGc3EAfgAGc3IAG3NjYWxhbi5tZXRhLlNjYWxhbkFzdCRTVGhpc+oe0MagX4tnAgABTAAIdHlwZU5hbWVxAH4ABHhwdAAAc3EAfgA2dAACeXNxAH4ADXhxAH4ADXhzcQB+ADZ0AAdQYWlyQ29scQB+AAt0AAN6aXBxAH4AJHNxAH4ABnNxAH4AXwAAAAAAACAAcQB+ACRxAH4AC3QAAUJxAH4AC3EAfgANeHNxAH4ALnNxAH4ACHQAB1BhaXJDb2xzcQB+AAZzcQB+AAh0AAFBcQB+AAtzcQB+AAh0AAFCcQB+AAtxAH4ADXhxAH4ADXhzcQB+AC5zcgAgc2NhbGFuLm1ldGEuU2NhbGFuQXN0JFNPYmplY3REZWbiZrKG4r59UQIAA0wACWFuY2VzdG9yc3EAfgABTAAEYm9keXEAfgABTAAEbmFtZXEAfgAEeHBxAH4AC3NxAH4ABnNxAH4ALAAAAHEAfgALc3EAfgAGc3EAfgBBc3EAfgAGc3EAfgBEAAAAcQB+AAtxAH4AJHQAA2FycnNxAH4ACHQABUFycmF5c3EAfgAGc3EAfgAIdAABVHEAfgALcQB+AA14cQB+AA14cQB+AA14c3EAfgAuc3EAfgBMc3EAfgAGc3EAfgAGc3EAfgA2dAADYXJycQB+AA14cQB+AA14c3EAfgA2dAAJZnJvbUFycmF5cQB+AAtxAH4AW3EAfgAkc3EAfgAGc3EAfgBfAAAAAAAAIABxAH4AJHNxAH4ABnQACENsYXNzVGFncQB+AA14dAABVHEAfgALcQB+AA14c3EAfgAuc3EAfgAIdAADQ29sc3EAfgAGc3EAfgAIdAABVHEAfgALcQB+AA14c3EAfgAsAAAAcQB+AAtzcQB+AAZzcQB+AEFzcQB+AAZzcQB+AEQAAABxAH4AC3EAfgAkdAADYXJyc3EAfgAIdAAFQXJyYXlzcQB+AAZzcQB+AAh0AAFUcQB+AAtxAH4ADXhxAH4ADXhxAH4ADXhzcQB+AC5zcQB+AExzcQB+AAZzcQB+AAZzcQB+ADZ0AANhcnJxAH4ADXhxAH4ADXhzcQB+ADZ0AAxDb2xPdmVyQXJyYXlxAH4AC3QACWZyb21BcnJheXEAfgAkc3EAfgAGc3EAfgBfAAAAAAAAIABxAH4AJHNxAH4ABnQACENsYXNzVGFncQB+AA14dAABVHEAfgALcQB+AA14c3EAfgAuc3EAfgAIdAADQ29sc3EAfgAGc3EAfgAIdAABVHEAfgALcQB+AA14cQB+AA14dAADQ29scHQAA0NvbHEAfgAkc3EAfgAGc3EAfgBfAAAAAAAAIABxAH4AJHEAfgALdAABQXEAfgALcQB+AA14cQB+AA14cQB+AMNxAH4AJHNxAH4ABnNyACFzY2FsYW4ubWV0YS5TY2FsYW5Bc3QkU0ltcG9ydFN0YXSsgKBKw8YbIgIAAUwABG5hbWVxAH4ABHhwdAAVc2NhbGFuaXplci5OdW1Nb25vaWRzc3EAfgGidAAlc2NhbGEuY29sbGVjdGlvbi5nZW5lcmljLkNhbkJ1aWxkRnJvbXNxAH4BonQAFnNjYWxhLnJlZmxlY3QuQ2xhc3NUYWdxAH4ADXhxAH4AC3QABENvbHN0ABZzY2FsYW5pemVyLmNvbGxlY3Rpb25zcQB+ACRxAH4AJA=="
     }
 
     object HotSpotKernels {
@@ -540,20 +571,19 @@ package scalanizer.collections {
 
     object HotSpotManager {
       import scalan.ScalanCommunityDslExp;
-      import scalan.compilation.lms.{CommunityLmsBackend, CoreBridge};
       import scalan.compilation.lms.scalac.CommunityLmsCompilerScala;
-      import scalan.primitives.EffectfulCompiler;
       import scalanizer.collections.implOfCols.StagedEvaluation._;
-      lazy val scalanContext = new Scalan();
-      def getScalanContext = scalanContext;
-      class Scalan extends ColsDslExp with CommunityLmsCompilerScala with CoreBridge with ScalanCommunityDslExp with EffectfulCompiler {
-        val lms = new CommunityLmsBackend()
-      };
-      import scalan.CommunityMethodMappingDSL;
+      import scalan.{CommunityMethodMappingDSL, JNIExtractorOpsExp}
+      import scalan.compilation.lms.CommunityBridge
+
+      lazy val moduleExp = new ColsDslExp with ScalanCommunityDslExp with JNIExtractorOpsExp
+
+      lazy val compiler = new CommunityLmsCompilerScala(moduleExp) with CommunityBridge with CommunityMethodMappingDSL;
+      def getScalanContext = compiler;
+
       import scalan.compilation.lms.uni.LmsCompilerUni;
-      lazy val scalanContextUni = new ScalanUni();
-      def getScalanContextUni = scalanContextUni;
-      class ScalanUni extends ColsDslExp with LmsCompilerUni with CoreBridge with ScalanCommunityDslExp with EffectfulCompiler with CommunityMethodMappingDSL
+      lazy val compilerUni = new LmsCompilerUni(moduleExp) with CommunityBridge with CommunityMethodMappingDSL;
+      def getScalanContextUni = compilerUni;
     }
   }
 }
