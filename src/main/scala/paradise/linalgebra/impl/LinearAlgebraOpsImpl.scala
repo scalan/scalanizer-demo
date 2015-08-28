@@ -248,10 +248,10 @@ package scalanizer.linalgebra {
     object HotSpotKernels {
       import java.io.File;
       import scalan.compilation.GraphVizConfig;
-      import scala.language.reflectiveCalls
+      import scala.language.reflectiveCalls;
       lazy val ddmvmKernel = {
         val ctx = HotSpotManager.getScalanContextUni;
-        val config = new ctx.CompilerConfig(Some("2.11.2"), Seq.empty)
+        val config = new ctx.CompilerConfig(Some("2.11.2"), Seq.empty);
         val compilerOutput = ctx.buildExecutable(new File("./it-out/".+("ddmvm")), "ddmvm", ctx.scalan.ddmvmWrapper, GraphVizConfig.default)(config);
         val x$1 = (ctx.loadMethod(compilerOutput): @scala.unchecked) match {
           case scala.Tuple2((cls @ _), (method @ _)) => scala.Tuple2(cls, method)
@@ -266,24 +266,34 @@ package scalanizer.linalgebra {
     object HotSpotManager {
       import scalan.ScalanCommunityDslExp;
       import scalan.compilation.lms.scalac.CommunityLmsCompilerScala;
+      import scalan.{CommunityMethodMappingDSL, JNIExtractorOpsExp};
+      import scalan.compilation.lms.CommunityBridge;
       import scalanizer.linalgebra.implOfLinearAlgebra.StagedEvaluation._;
-      import scalan.{CommunityMethodMappingDSL, JNIExtractorOpsExp}
-      import scalan.compilation.lms.CommunityBridge
-
-      lazy val moduleExp = new LinearAlgebraDslExp with ScalanCommunityDslExp with JNIExtractorOpsExp {
-        lazy val ddmvmWrapper = fun(((in: Rep[scala.Tuple2[Array[Array[Double]], Array[Double]]]) => {
-          val m: Rep[Array[Array[Double]]] = in._1;
-          val v: Rep[Array[Double]] = in._2;
-          LA.ddmvm(m, v)
-        }))
-      }
-
-      lazy val compiler = new CommunityLmsCompilerScala(moduleExp) with CommunityBridge with CommunityMethodMappingDSL;
+      lazy val prog = {
+        final class $anon extends LinearAlgebraDslExp with ScalanCommunityDslExp with JNIExtractorOpsExp;
+        new $anon()
+      };
+      lazy val compiler = {
+        final class $anon extends CommunityLmsCompilerScala(prog) with CommunityBridge with CommunityMethodMappingDSL;
+        new $anon()
+      };
       def getScalanContext = compiler;
-
       import scalan.compilation.lms.uni.LmsCompilerUni;
-      lazy val compilerUni = new LmsCompilerUni(moduleExp) with CommunityBridge with CommunityMethodMappingDSL;
-      def getScalanContextUni = compilerUni;
+      lazy val progUni = {
+        final class $anon extends LinearAlgebraDslExp with ScalanCommunityDslExp with JNIExtractorOpsExp {
+          lazy val ddmvmWrapper = fun(((in: Rep[scala.Tuple2[Array[Array[Double]], Array[Double]]]) => {
+            val m: Rep[Array[Array[Double]]] = in._1;
+            val v: Rep[Array[Double]] = in._2;
+            LA.ddmvm(m, v)
+          }))
+        };
+        new $anon()
+      };
+      lazy val compilerUni = {
+        final class $anon extends LmsCompilerUni(progUni) with CommunityBridge with CommunityMethodMappingDSL;
+        new $anon()
+      };
+      def getScalanContextUni = compilerUni
     }
   }
 }

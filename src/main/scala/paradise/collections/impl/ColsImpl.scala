@@ -1,6 +1,6 @@
 package scalanizer.collections {
   package implOfCols {
-  object StagedEvaluation {
+    object StagedEvaluation {
       import scalan._;
       import scalan.meta.ScalanAst._;
       import scalanizer.implOfNumMonoids.StagedEvaluation._;
@@ -566,24 +566,35 @@ package scalanizer.collections {
 
     object HotSpotKernels {
       import java.io.File;
-      import scalan.compilation.GraphVizConfig
+      import scalan.compilation.GraphVizConfig;
+      import scala.language.reflectiveCalls
     }
 
     object HotSpotManager {
       import scalan.ScalanCommunityDslExp;
       import scalan.compilation.lms.scalac.CommunityLmsCompilerScala;
+      import scalan.{CommunityMethodMappingDSL, JNIExtractorOpsExp};
+      import scalan.compilation.lms.CommunityBridge;
       import scalanizer.collections.implOfCols.StagedEvaluation._;
-      import scalan.{CommunityMethodMappingDSL, JNIExtractorOpsExp}
-      import scalan.compilation.lms.CommunityBridge
-
-      lazy val moduleExp = new ColsDslExp with ScalanCommunityDslExp with JNIExtractorOpsExp
-
-      lazy val compiler = new CommunityLmsCompilerScala(moduleExp) with CommunityBridge with CommunityMethodMappingDSL;
+      lazy val prog = {
+        final class $anon extends ColsDslExp with ScalanCommunityDslExp with JNIExtractorOpsExp;
+        new $anon()
+      };
+      lazy val compiler = {
+        final class $anon extends CommunityLmsCompilerScala(prog) with CommunityBridge with CommunityMethodMappingDSL;
+        new $anon()
+      };
       def getScalanContext = compiler;
-
       import scalan.compilation.lms.uni.LmsCompilerUni;
-      lazy val compilerUni = new LmsCompilerUni(moduleExp) with CommunityBridge with CommunityMethodMappingDSL;
-      def getScalanContextUni = compilerUni;
+      lazy val progUni = {
+        final class $anon extends ColsDslExp with ScalanCommunityDslExp with JNIExtractorOpsExp;
+        new $anon()
+      };
+      lazy val compilerUni = {
+        final class $anon extends LmsCompilerUni(progUni) with CommunityBridge with CommunityMethodMappingDSL;
+        new $anon()
+      };
+      def getScalanContextUni = compilerUni
     }
   }
 }
