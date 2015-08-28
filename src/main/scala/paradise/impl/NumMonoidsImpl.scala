@@ -2,8 +2,8 @@ package scalanizer {
   package implOfNumMonoids {
     object StagedEvaluation {
       import scalan._;
-      import scalan.meta.ScalanAst._;
       import scalanizer.implOfNums.StagedEvaluation._;
+      import scalan.meta.ScalanAst._;
       import scala.reflect.runtime.universe._;
       import scala.reflect._;
       import scalan.common.Default;

@@ -2,13 +2,13 @@ package scalanizer.linalgebra {
   package implOfLinearAlgebraOps {
     object StagedEvaluation {
       import scalan._;
-      import scalan.meta.ScalanAst._;
       import scalanizer.implOfNums.StagedEvaluation._;
       import scalanizer.implOfNumMonoids.StagedEvaluation._;
       import scalanizer.linalgebra.implOfVecs.StagedEvaluation._;
       import scalanizer.linalgebra.implOfMatrs.StagedEvaluation._;
       import scalanizer.linalgebra.implOfLinearAlgebra.StagedEvaluation._;
       import scalan.compilation.KernelTypes._;
+      import scalan.meta.ScalanAst._;
       import scala.reflect.runtime.universe._;
       import scala.reflect._;
       import scalan.common.Default;
