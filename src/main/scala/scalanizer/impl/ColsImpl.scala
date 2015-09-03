@@ -46,19 +46,21 @@ package scalanizer {
           override def getDefaultRep = super[ConcreteElem].getDefaultRep;
           override lazy val tag = weakTypeTag[ColOverArray]
         };
-        type ColOverArrayData = MyArrWrapper[Int];
+        type ColOverArrayData = WMyArr[Int];
         class ColOverArrayIso extends Iso[ColOverArrayData, ColOverArray] {
           override def from(p: Rep[ColOverArray]) = p.arr;
-          override def to(p: Rep[MyArrWrapper[Int]]) = {
+
+          override def to(p: Rep[WMyArr[Int]]) = {
             val arr = p;
             ColOverArray(arr)
           };
-          lazy val defaultRepTo: Rep[ColOverArray] = ColOverArray(element[MyArrWrapper[Int]].defaultRepValue);
+          lazy val defaultRepTo: Rep[ColOverArray] = ColOverArray(element[WMyArr[Int]].defaultRepValue);
           lazy val eTo = new ColOverArrayElem(this)
         };
         abstract class ColOverArrayCompanionAbs extends CompanionBase[ColOverArrayCompanionAbs] with ColOverArrayCompanion {
           override def toString = "ColOverArray";
-          def apply(arr: Rep[MyArrWrapper[Int]]): Rep[ColOverArray] = mkColOverArray(arr)
+
+          def apply(arr: Rep[WMyArr[Int]]): Rep[ColOverArray] = mkColOverArray(arr)
         };
         object ColOverArrayMatcher {
           def unapply(p: Rep[Col[Int]]) = unmkColOverArray(p)
@@ -74,8 +76,10 @@ package scalanizer {
           def toData: Rep[ColOverArrayData] = isoColOverArray.from(p)
         };
         implicit def isoColOverArray: Iso[ColOverArrayData, ColOverArray] = new ColOverArrayIso();
-        def mkColOverArray(arr: Rep[MyArrWrapper[Int]]): Rep[ColOverArray];
-        def unmkColOverArray(p: Rep[Col[Int]]): Option[Rep[MyArrWrapper[Int]]]
+
+        def mkColOverArray(arr: Rep[WMyArr[Int]]): Rep[ColOverArray];
+
+        def unmkColOverArray(p: Rep[Col[Int]]): Option[Rep[WMyArr[Int]]]
       };
       trait ColsSeq extends ColsDsl with ScalanSeq { self: DemoDslSeq =>
         lazy val Col: Rep[ColCompanionAbs] = {
@@ -84,7 +88,8 @@ package scalanizer {
           };
           new $anon()
         };
-        case class SeqColOverArray(override val arr: Rep[MyArrWrapper[Int]]) extends ColOverArray(arr) with UserTypeSeq[ColOverArray] {
+
+        case class SeqColOverArray(override val arr: Rep[WMyArr[Int]]) extends ColOverArray(arr) with UserTypeSeq[ColOverArray] {
           lazy val selfType = element[ColOverArray]
         };
         lazy val ColOverArray = {
@@ -93,7 +98,8 @@ package scalanizer {
           };
           new $anon()
         };
-        def mkColOverArray(arr: Rep[MyArrWrapper[Int]]): Rep[ColOverArray] = new SeqColOverArray(arr);
+
+        def mkColOverArray(arr: Rep[WMyArr[Int]]): Rep[ColOverArray] = new SeqColOverArray(arr);
         def unmkColOverArray(p: Rep[Col[Int]]) = p match {
           case (p @ ((_): ColOverArray @unchecked)) => Some(p.arr)
           case _ => None
@@ -107,7 +113,8 @@ package scalanizer {
           };
           new $anon()
         };
-        case class ExpColOverArray(override val arr: Rep[MyArrWrapper[Int]]) extends ColOverArray(arr) with UserTypeDef[ColOverArray] {
+
+        case class ExpColOverArray(override val arr: Rep[WMyArr[Int]]) extends ColOverArray(arr) with UserTypeDef[ColOverArray] {
           lazy val selfType = element[ColOverArray];
           override def mirror(t: Transformer) = ExpColOverArray(t(arr))
         };
@@ -138,19 +145,20 @@ package scalanizer {
           object safeApply {
             def unapply(d: (Def[_$4] forSome { 
               type _$4
-            })): Option[scala.Tuple2[Rep[MyArrWrapper[Int]], Rep[Int]]] = d match {
-              case MethodCall((receiver @ _), (method @ _), Seq((arr @ _), (index @ _), _*), _) if __equal(receiver.elem, ColOverArrayCompanionElem).&&(__equal(method.getName, "safeApply")) => Some(scala.Tuple2(arr, index)).asInstanceOf[Option[scala.Tuple2[Rep[MyArrWrapper[Int]], Rep[Int]]]]
+            })): Option[scala.Tuple2[Rep[WMyArr[Int]], Rep[Int]]] = d match {
+              case MethodCall((receiver@_), (method@_), Seq((arr@_), (index@_), _*), _) if __equal(receiver.elem, ColOverArrayCompanionElem).&&(__equal(method.getName, "safeApply")) => Some(scala.Tuple2(arr, index)).asInstanceOf[Option[scala.Tuple2[Rep[WMyArr[Int]], Rep[Int]]]]
               case _ => None
             };
             def unapply(exp: (Exp[_$5] forSome { 
               type _$5
-            })): Option[scala.Tuple2[Rep[MyArrWrapper[Int]], Rep[Int]]] = exp match {
+            })): Option[scala.Tuple2[Rep[WMyArr[Int]], Rep[Int]]] = exp match {
               case Def((d @ _)) => unapply(d)
               case _ => None
             }
           }
         };
-        def mkColOverArray(arr: Rep[MyArrWrapper[Int]]): Rep[ColOverArray] = new ExpColOverArray(arr);
+
+        def mkColOverArray(arr: Rep[WMyArr[Int]]): Rep[ColOverArray] = new ExpColOverArray(arr);
         def unmkColOverArray(p: Rep[Col[Int]]) = p.elem.asInstanceOf[(Elem[_$6] forSome { 
           type _$6
         })] match {
@@ -210,16 +218,18 @@ package scalanizer {
       trait Cols extends Base { self: DemoDsl =>
         trait Col[A] extends Reifiable[Col[A]] {
           implicit def eeA: Elem[A];
-          def arr: Rep[MyArrWrapper[A]];
+
+          def arr: Rep[WMyArr[A]];
           def apply(i: Rep[Int]): Rep[A]
         };
-        abstract class ColOverArray(val arr: Rep[MyArrWrapper[Int]]) extends Col[Int] {
+
+        abstract class ColOverArray(val arr: Rep[WMyArr[Int]]) extends Col[Int] {
           def eeA: Elem[Int] = element[Int];
           def apply(i: Rep[Int]): Rep[Int] = ColOverArray.this.arr.apply(i)
         };
         trait ColCompanion;
         trait ColOverArrayCompanion {
-          def safeApply(arr: Rep[MyArrWrapper[Int]], index: Rep[Int]): Rep[Int] = IF(arr.length.<=(index)).THEN(toRep(2147483647)).ELSE(IF(index.<(toRep(0))).THEN(toRep(-2147483648)).ELSE(arr.apply(index)))
+          def safeApply(arr: Rep[WMyArr[Int]], index: Rep[Int]): Rep[Int] = IF(arr.length.<=(index)).THEN(toRep(2147483647)).ELSE(IF(index.<(toRep(0))).THEN(toRep(-2147483648)).ELSE(arr.apply(index)))
         }
       };
       trait ColsDsl extends ColsAbs { self: DemoDsl =>
@@ -259,8 +269,8 @@ package scalanizer {
       lazy val scalanContext = new Scalan();
       def getScalanContext = scalanContext;
       class Scalan extends DemoDslExp with CommunityLmsCompilerScala with CoreBridge with ScalanCommunityDslExp with EffectfulCompiler {
-        lazy val safeApplyWrapper = fun(((in: Rep[scala.Tuple2[MyArrWrapper[Int], Int]]) => {
-          val arr: Rep[MyArrWrapper[Int]] = in._1;
+        lazy val safeApplyWrapper = fun(((in: Rep[scala.Tuple2[WMyArr[Int], Int]]) => {
+          val arr: Rep[WMyArr[Int]] = in._1;
           val index: Rep[Int] = in._2;
           ColOverArray.safeApply(arr, index)
         }));
