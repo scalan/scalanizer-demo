@@ -1,5 +1,6 @@
 package scalanizer.linalgebra
 
+import scalanizer._
 import scala.reflect.ClassTag
 
 trait Matrs { self: LinearAlgebra =>

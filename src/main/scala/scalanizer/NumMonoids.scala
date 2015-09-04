@@ -1,6 +1,6 @@
 package scalanizer
 
-trait NumMonoids extends Nums {
+trait NumMonoids {
   trait NumMonoid[A] {
     def n: Num[A]
     def opName: String

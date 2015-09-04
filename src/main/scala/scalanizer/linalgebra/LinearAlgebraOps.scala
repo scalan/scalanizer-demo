@@ -1,5 +1,6 @@
 package scalanizer.linalgebra
 
+import scalanizer._
 import scala.reflect.ClassTag
 import scalan.HotSpot
 import scalan.compilation.KernelTypes._
