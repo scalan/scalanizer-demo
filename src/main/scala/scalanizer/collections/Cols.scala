@@ -1,10 +1,10 @@
 package scalanizer.collections
 
-import scalanizer.NumMonoids
+import scalanizer._
 import scala.collection.generic.CanBuildFrom
 import scala.reflect.ClassTag
 
-trait Cols extends NumMonoids {
+trait Cols {
 
   trait Col[A] {
     def arr: Array[A]
