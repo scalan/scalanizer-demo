@@ -1,6 +1,7 @@
 package scalanizer.linalgebra
 
 import scalanizer._
+import scalanizer.collections._
 import scala.reflect.ClassTag
 import scalan.HotSpot
 import scalan.compilation.KernelTypes._
@@ -23,8 +24,9 @@ trait LinearAlgebraOps { self: LinearAlgebra =>
     def ddmvm(m: Array[Array[Double]], v: Array[Double]): Array[Double] = {
       val doubleNumer = new DoubleNum()
       val plusMonoid = new PlusMonoid(doubleNumer)
-      //
-      //      val width = m(0).length
+      val width = m(0).length
+
+      val vCol = Col(v)
       //      val matrix = DenseMatr[Double](Col(m.map(r => DenseVec(Col(r)))), width)
       //      val vector = DenseVec(Col(v))
       //

@@ -1,6 +1,7 @@
 package scalanizer.linalgebra
 
 import scalanizer._
+import scalanizer.collections._
 import scala.reflect.ClassTag
 
 trait Vecs { self: LinearAlgebra =>
