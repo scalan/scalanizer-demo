@@ -20,16 +20,15 @@ trait LinearAlgebraOps { self: LinearAlgebra =>
   object LA {
     @HotSpot(CppKernel)
     def ddmvm(m: Array[Array[Double]], v: Array[Double]): Array[Double] = {
-      val doubleNumer: Num[Double] = DoubleNum()
-      val plusMonoid: NumMonoid[Double] = PlusMonoid[Double](doubleNumer)
+      val doubleNumer = new DoubleNum()
+      val plusMonoid = new PlusMonoid[Double](doubleNumer)
 
       val width = m(0).length
-      val matrix: Matr[Double] = {
-        DenseMatr(Col((m: Array[Array[Double]]).map { r: Array[Double] => DenseVec(Col(r)) }), width)
-      }
-      val vector: Vec[Double] = DenseVec(Col(v))
-
-      LA().mvm(matrix, vector)(doubleNumer, plusMonoid).items.arr
+      //      val matrix = DenseMatr[Double](Col(m.map(r => DenseVec(Col(r)))), width)
+      //      val vector = DenseVec(Col(v))
+      //
+      //      LA().mvm(matrix, vector)(doubleNumer, plusMonoid).items.arr
+      v
     }
   }
 }
