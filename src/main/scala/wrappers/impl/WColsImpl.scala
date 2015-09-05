@@ -137,7 +137,7 @@ trait WColsSeq extends WColsDsl with ScalanSeq {
   self: WrappersDslSeq =>
   lazy val WCol: Rep[WColCompanionAbs] = new WColCompanionAbs with UserTypeSeq[WColCompanionAbs] {
     lazy val selfType = element[WColCompanionAbs]
-    override def apply[T:Elem](arr: Rep[Array[T]])(emT: Rep[Elem[T]]): Rep[WCol[T]] =
+    override def apply[T:Elem](arr: Rep[Array[T]])(emT: Elem[T]): Rep[WCol[T]] =
       WColImpl(Col.apply[T](arr)(emT))
   }
 
@@ -180,7 +180,7 @@ trait WColsExp extends WColsDsl with ScalanExp {
     lazy val selfType = element[WColCompanionAbs]
     override def mirror(t: Transformer) = this
 
-    def apply[T:Elem](arr: Rep[Array[T]])(emT: Rep[Elem[T]]): Rep[WCol[T]] =
+    def apply[T:Elem](arr: Rep[Array[T]])(emT: Elem[T]): Rep[WCol[T]] =
       methodCallEx[WCol[T]](self,
         this.getClass.getMethod("apply", classOf[AnyRef], classOf[AnyRef]),
         List(arr.asInstanceOf[AnyRef], emT.asInstanceOf[AnyRef]))
