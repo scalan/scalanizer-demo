@@ -233,12 +233,12 @@ trait WColsExp extends WColsDsl with ScalanExp {
 
   object WColCompanionMethods {
     object apply {
-      def unapply(d: Def[_]): Option[(Rep[Array[T]], Rep[Elem[T]]) forSome {type T}] = d match {
+      def unapply(d: Def[_]): Option[(Rep[Array[T]], Elem[T]) forSome {type T}] = d match {
         case MethodCall(receiver, method, Seq(arr, emT, _*), _) if receiver.elem == WColCompanionElem && method.getName == "apply" =>
-          Some((arr, emT)).asInstanceOf[Option[(Rep[Array[T]], Rep[Elem[T]]) forSome {type T}]]
+          Some((arr, emT)).asInstanceOf[Option[(Rep[Array[T]], Elem[T]) forSome {type T}]]
         case _ => None
       }
-      def unapply(exp: Exp[_]): Option[(Rep[Array[T]], Rep[Elem[T]]) forSome {type T}] = exp match {
+      def unapply(exp: Exp[_]): Option[(Rep[Array[T]], Elem[T]) forSome {type T}] = exp match {
         case Def(d) => unapply(d)
         case _ => None
       }
