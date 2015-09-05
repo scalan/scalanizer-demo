@@ -82,25 +82,25 @@ trait WPlusMonoidsAbs extends WPlusMonoids with ScalanDsl {
   }
 
   // state representation type
-  type WPlusMonoidImplData[A] = WPlusMonoid[A]
+  type WPlusMonoidImplData[A] = PlusMonoid[A]
 
   // 3) Iso for concrete class
   class WPlusMonoidImplIso[A](implicit eeA: Elem[A])
     extends Iso[WPlusMonoidImplData[A], WPlusMonoidImpl[A]] {
     override def from(p: Rep[WPlusMonoidImpl[A]]) =
       p.wrappedValueOfBaseType
-    override def to(p: Rep[WPlusMonoid[A]]) = {
+    override def to(p: Rep[PlusMonoid[A]]) = {
       val wrappedValueOfBaseType = p
       WPlusMonoidImpl(wrappedValueOfBaseType)
     }
-    lazy val defaultRepTo: Rep[WPlusMonoidImpl[A]] = WPlusMonoidImpl(element[WPlusMonoid[A]].defaultRepValue)
+    lazy val defaultRepTo: Rep[WPlusMonoidImpl[A]] = WPlusMonoidImpl(DefaultOfPlusMonoid[A].value)
     lazy val eTo = new WPlusMonoidImplElem[A](this)
   }
   // 4) constructor and deconstructor
   abstract class WPlusMonoidImplCompanionAbs extends CompanionBase[WPlusMonoidImplCompanionAbs] with WPlusMonoidImplCompanion {
     override def toString = "WPlusMonoidImpl"
 
-    def apply[A](wrappedValueOfBaseType: Rep[WPlusMonoid[A]])(implicit eeA: Elem[A]): Rep[WPlusMonoidImpl[A]] =
+    def apply[A](wrappedValueOfBaseType: Rep[PlusMonoid[A]])(implicit eeA: Elem[A]): Rep[WPlusMonoidImpl[A]] =
       mkWPlusMonoidImpl(wrappedValueOfBaseType)
   }
   object WPlusMonoidImplMatcher {
@@ -128,8 +128,8 @@ trait WPlusMonoidsAbs extends WPlusMonoids with ScalanDsl {
     new WPlusMonoidImplIso[A]
 
   // 6) smart constructor and deconstructor
-  def mkWPlusMonoidImpl[A](wrappedValueOfBaseType: Rep[WPlusMonoid[A]])(implicit eeA: Elem[A]): Rep[WPlusMonoidImpl[A]]
-  def unmkWPlusMonoidImpl[A](p: Rep[WPlusMonoid[A]]): Option[(Rep[WPlusMonoid[A]])]
+  def mkWPlusMonoidImpl[A](wrappedValueOfBaseType: Rep[PlusMonoid[A]])(implicit eeA: Elem[A]): Rep[WPlusMonoidImpl[A]]
+  def unmkWPlusMonoidImpl[A](p: Rep[WPlusMonoid[A]]): Option[(Rep[PlusMonoid[A]])]
 }
 
 // Seq -----------------------------------
@@ -149,7 +149,7 @@ trait WPlusMonoidsSeq extends WPlusMonoidsDsl with ScalanSeq {
   }
 
   case class SeqWPlusMonoidImpl[A]
-      (override val wrappedValueOfBaseType: Rep[WPlusMonoid[A]])
+      (override val wrappedValueOfBaseType: Rep[PlusMonoid[A]])
       (implicit eeA: Elem[A])
     extends WPlusMonoidImpl[A](wrappedValueOfBaseType)
         with UserTypeSeq[WPlusMonoidImpl[A]] {
@@ -160,7 +160,7 @@ trait WPlusMonoidsSeq extends WPlusMonoidsDsl with ScalanSeq {
   }
 
   def mkWPlusMonoidImpl[A]
-      (wrappedValueOfBaseType: Rep[WPlusMonoid[A]])(implicit eeA: Elem[A]): Rep[WPlusMonoidImpl[A]] =
+      (wrappedValueOfBaseType: Rep[PlusMonoid[A]])(implicit eeA: Elem[A]): Rep[WPlusMonoidImpl[A]] =
       new SeqWPlusMonoidImpl[A](wrappedValueOfBaseType)
   def unmkWPlusMonoidImpl[A](p: Rep[WPlusMonoid[A]]) = p match {
     case p: WPlusMonoidImpl[A] @unchecked =>
@@ -185,7 +185,7 @@ trait WPlusMonoidsExp extends WPlusMonoidsDsl with ScalanExp {
   }
 
   case class ExpWPlusMonoidImpl[A]
-      (override val wrappedValueOfBaseType: Rep[WPlusMonoid[A]])
+      (override val wrappedValueOfBaseType: Rep[PlusMonoid[A]])
       (implicit eeA: Elem[A])
     extends WPlusMonoidImpl[A](wrappedValueOfBaseType) with UserTypeDef[WPlusMonoidImpl[A]] {
     lazy val selfType = element[WPlusMonoidImpl[A]]
@@ -201,7 +201,7 @@ trait WPlusMonoidsExp extends WPlusMonoidsDsl with ScalanExp {
   }
 
   def mkWPlusMonoidImpl[A]
-    (wrappedValueOfBaseType: Rep[WPlusMonoid[A]])(implicit eeA: Elem[A]): Rep[WPlusMonoidImpl[A]] =
+    (wrappedValueOfBaseType: Rep[PlusMonoid[A]])(implicit eeA: Elem[A]): Rep[WPlusMonoidImpl[A]] =
     new ExpWPlusMonoidImpl[A](wrappedValueOfBaseType)
   def unmkWPlusMonoidImpl[A](p: Rep[WPlusMonoid[A]]) = p.elem.asInstanceOf[Elem[_]] match {
     case _: WPlusMonoidImplElem[A] @unchecked =>

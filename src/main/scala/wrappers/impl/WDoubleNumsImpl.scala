@@ -80,25 +80,25 @@ trait WDoubleNumsAbs extends WDoubleNums with ScalanDsl {
   }
 
   // state representation type
-  type WDoubleNumImplData = WDoubleNum
+  type WDoubleNumImplData = DoubleNum
 
   // 3) Iso for concrete class
   class WDoubleNumImplIso
     extends Iso[WDoubleNumImplData, WDoubleNumImpl] {
     override def from(p: Rep[WDoubleNumImpl]) =
       p.wrappedValueOfBaseType
-    override def to(p: Rep[WDoubleNum]) = {
+    override def to(p: Rep[DoubleNum]) = {
       val wrappedValueOfBaseType = p
       WDoubleNumImpl(wrappedValueOfBaseType)
     }
-    lazy val defaultRepTo: Rep[WDoubleNumImpl] = WDoubleNumImpl(element[WDoubleNum].defaultRepValue)
+    lazy val defaultRepTo: Rep[WDoubleNumImpl] = WDoubleNumImpl(DefaultOfDoubleNum.value)
     lazy val eTo = new WDoubleNumImplElem(this)
   }
   // 4) constructor and deconstructor
   abstract class WDoubleNumImplCompanionAbs extends CompanionBase[WDoubleNumImplCompanionAbs] with WDoubleNumImplCompanion {
     override def toString = "WDoubleNumImpl"
 
-    def apply(wrappedValueOfBaseType: Rep[WDoubleNum]): Rep[WDoubleNumImpl] =
+    def apply(wrappedValueOfBaseType: Rep[DoubleNum]): Rep[WDoubleNumImpl] =
       mkWDoubleNumImpl(wrappedValueOfBaseType)
   }
   object WDoubleNumImplMatcher {
@@ -126,8 +126,8 @@ trait WDoubleNumsAbs extends WDoubleNums with ScalanDsl {
     new WDoubleNumImplIso
 
   // 6) smart constructor and deconstructor
-  def mkWDoubleNumImpl(wrappedValueOfBaseType: Rep[WDoubleNum]): Rep[WDoubleNumImpl]
-  def unmkWDoubleNumImpl(p: Rep[WDoubleNum]): Option[(Rep[WDoubleNum])]
+  def mkWDoubleNumImpl(wrappedValueOfBaseType: Rep[DoubleNum]): Rep[WDoubleNumImpl]
+  def unmkWDoubleNumImpl(p: Rep[WDoubleNum]): Option[(Rep[DoubleNum])]
 }
 
 // Seq -----------------------------------
@@ -144,7 +144,7 @@ trait WDoubleNumsSeq extends WDoubleNumsDsl with ScalanSeq {
     implicit lazy val doubleNumElement: Elem[DoubleNum] = new SeqBaseElemEx[DoubleNum, WDoubleNum](element[WDoubleNum])(weakTypeTag[DoubleNum], DefaultOfDoubleNum)
 
   case class SeqWDoubleNumImpl
-      (override val wrappedValueOfBaseType: Rep[WDoubleNum])
+      (override val wrappedValueOfBaseType: Rep[DoubleNum])
 
     extends WDoubleNumImpl(wrappedValueOfBaseType)
         with UserTypeSeq[WDoubleNumImpl] {
@@ -155,7 +155,7 @@ trait WDoubleNumsSeq extends WDoubleNumsDsl with ScalanSeq {
   }
 
   def mkWDoubleNumImpl
-      (wrappedValueOfBaseType: Rep[WDoubleNum]): Rep[WDoubleNumImpl] =
+      (wrappedValueOfBaseType: Rep[DoubleNum]): Rep[WDoubleNumImpl] =
       new SeqWDoubleNumImpl(wrappedValueOfBaseType)
   def unmkWDoubleNumImpl(p: Rep[WDoubleNum]) = p match {
     case p: WDoubleNumImpl @unchecked =>
@@ -177,7 +177,7 @@ trait WDoubleNumsExp extends WDoubleNumsDsl with ScalanExp {
   implicit lazy val doubleNumElement: Elem[DoubleNum] = new ExpBaseElemEx[DoubleNum, WDoubleNum](element[WDoubleNum])(weakTypeTag[DoubleNum], DefaultOfDoubleNum)
 
   case class ExpWDoubleNumImpl
-      (override val wrappedValueOfBaseType: Rep[WDoubleNum])
+      (override val wrappedValueOfBaseType: Rep[DoubleNum])
 
     extends WDoubleNumImpl(wrappedValueOfBaseType) with UserTypeDef[WDoubleNumImpl] {
     lazy val selfType = element[WDoubleNumImpl]
@@ -193,7 +193,7 @@ trait WDoubleNumsExp extends WDoubleNumsDsl with ScalanExp {
   }
 
   def mkWDoubleNumImpl
-    (wrappedValueOfBaseType: Rep[WDoubleNum]): Rep[WDoubleNumImpl] =
+    (wrappedValueOfBaseType: Rep[DoubleNum]): Rep[WDoubleNumImpl] =
     new ExpWDoubleNumImpl(wrappedValueOfBaseType)
   def unmkWDoubleNumImpl(p: Rep[WDoubleNum]) = p.elem.asInstanceOf[Elem[_]] match {
     case _: WDoubleNumImplElem @unchecked =>

@@ -82,25 +82,25 @@ trait WColsAbs extends WCols with ScalanDsl {
   }
 
   // state representation type
-  type WColImplData[A] = WCol[A]
+  type WColImplData[A] = Col[A]
 
   // 3) Iso for concrete class
   class WColImplIso[A](implicit eeA: Elem[A])
     extends Iso[WColImplData[A], WColImpl[A]] {
     override def from(p: Rep[WColImpl[A]]) =
       p.wrappedValueOfBaseType
-    override def to(p: Rep[WCol[A]]) = {
+    override def to(p: Rep[Col[A]]) = {
       val wrappedValueOfBaseType = p
       WColImpl(wrappedValueOfBaseType)
     }
-    lazy val defaultRepTo: Rep[WColImpl[A]] = WColImpl(element[WCol[A]].defaultRepValue)
+    lazy val defaultRepTo: Rep[WColImpl[A]] = WColImpl(DefaultOfCol[A].value)
     lazy val eTo = new WColImplElem[A](this)
   }
   // 4) constructor and deconstructor
   abstract class WColImplCompanionAbs extends CompanionBase[WColImplCompanionAbs] with WColImplCompanion {
     override def toString = "WColImpl"
 
-    def apply[A](wrappedValueOfBaseType: Rep[WCol[A]])(implicit eeA: Elem[A]): Rep[WColImpl[A]] =
+    def apply[A](wrappedValueOfBaseType: Rep[Col[A]])(implicit eeA: Elem[A]): Rep[WColImpl[A]] =
       mkWColImpl(wrappedValueOfBaseType)
   }
   object WColImplMatcher {
@@ -128,8 +128,8 @@ trait WColsAbs extends WCols with ScalanDsl {
     new WColImplIso[A]
 
   // 6) smart constructor and deconstructor
-  def mkWColImpl[A](wrappedValueOfBaseType: Rep[WCol[A]])(implicit eeA: Elem[A]): Rep[WColImpl[A]]
-  def unmkWColImpl[A](p: Rep[WCol[A]]): Option[(Rep[WCol[A]])]
+  def mkWColImpl[A](wrappedValueOfBaseType: Rep[Col[A]])(implicit eeA: Elem[A]): Rep[WColImpl[A]]
+  def unmkWColImpl[A](p: Rep[WCol[A]]): Option[(Rep[Col[A]])]
 }
 
 // Seq -----------------------------------
@@ -151,7 +151,7 @@ trait WColsSeq extends WColsDsl with ScalanSeq {
   }
 
   case class SeqWColImpl[A]
-      (override val wrappedValueOfBaseType: Rep[WCol[A]])
+      (override val wrappedValueOfBaseType: Rep[Col[A]])
       (implicit eeA: Elem[A])
     extends WColImpl[A](wrappedValueOfBaseType)
         with UserTypeSeq[WColImpl[A]] {
@@ -162,7 +162,7 @@ trait WColsSeq extends WColsDsl with ScalanSeq {
   }
 
   def mkWColImpl[A]
-      (wrappedValueOfBaseType: Rep[WCol[A]])(implicit eeA: Elem[A]): Rep[WColImpl[A]] =
+      (wrappedValueOfBaseType: Rep[Col[A]])(implicit eeA: Elem[A]): Rep[WColImpl[A]] =
       new SeqWColImpl[A](wrappedValueOfBaseType)
   def unmkWColImpl[A](p: Rep[WCol[A]]) = p match {
     case p: WColImpl[A] @unchecked =>
@@ -192,7 +192,7 @@ trait WColsExp extends WColsDsl with ScalanExp {
   }
 
   case class ExpWColImpl[A]
-      (override val wrappedValueOfBaseType: Rep[WCol[A]])
+      (override val wrappedValueOfBaseType: Rep[Col[A]])
       (implicit eeA: Elem[A])
     extends WColImpl[A](wrappedValueOfBaseType) with UserTypeDef[WColImpl[A]] {
     lazy val selfType = element[WColImpl[A]]
@@ -208,7 +208,7 @@ trait WColsExp extends WColsDsl with ScalanExp {
   }
 
   def mkWColImpl[A]
-    (wrappedValueOfBaseType: Rep[WCol[A]])(implicit eeA: Elem[A]): Rep[WColImpl[A]] =
+    (wrappedValueOfBaseType: Rep[Col[A]])(implicit eeA: Elem[A]): Rep[WColImpl[A]] =
     new ExpWColImpl[A](wrappedValueOfBaseType)
   def unmkWColImpl[A](p: Rep[WCol[A]]) = p.elem.asInstanceOf[Elem[_]] match {
     case _: WColImplElem[A] @unchecked =>
