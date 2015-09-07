@@ -1,5 +1,4 @@
 package scalanizer.linalgebra
 
-trait LinearAlgebra extends Vecs
-with Matrs
+trait LinearAlgebra extends  Matrs
 with LinearAlgebraOps

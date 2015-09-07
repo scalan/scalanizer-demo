@@ -15,7 +15,7 @@ trait LinearAlgebraOps { self: LinearAlgebra =>
   case class LA() extends LinearAlgebraOp {
     def mvm[T: ClassTag](matrix: Matr[T], vector: Vec[T])
                         (n: Num[T], m: NumMonoid[T]): Vec[T] = {
-      DenseVec(matrix.rows.map{ r: Vec[T] => r.dot(vector)(n, m) })
+      new DenseVec(matrix.rows.map{ r: Vec[T] => r.dot(vector)(n, m) })
     }
   }
 
@@ -27,8 +27,8 @@ trait LinearAlgebraOps { self: LinearAlgebra =>
       val width = m(0).length
 
       val vCol = Col(v)
+      val vector = new DenseVec(vCol)
       //      val matrix = DenseMatr[Double](Col(m.map(r => DenseVec(Col(r)))), width)
-      //      val vector = DenseVec(Col(v))
       //
       //      LA().mvm(matrix, vector)(doubleNumer, plusMonoid).items.arr
       v
