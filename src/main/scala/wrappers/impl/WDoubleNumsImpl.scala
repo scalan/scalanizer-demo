@@ -135,6 +135,8 @@ trait WDoubleNumsSeq extends WDoubleNumsDsl with ScalanSeq {
   self: WrappersDslSeq =>
   lazy val WDoubleNum: Rep[WDoubleNumCompanionAbs] = new WDoubleNumCompanionAbs with UserTypeSeq[WDoubleNumCompanionAbs] {
     lazy val selfType = element[WDoubleNumCompanionAbs]
+    override def apply: Rep[WDoubleNum] =
+      WDoubleNumImpl(DoubleNum.apply)
   }
 
     // override proxy if we deal with TypeWrapper
@@ -172,6 +174,11 @@ trait WDoubleNumsExp extends WDoubleNumsDsl with ScalanExp {
   lazy val WDoubleNum: Rep[WDoubleNumCompanionAbs] = new WDoubleNumCompanionAbs with UserTypeDef[WDoubleNumCompanionAbs] {
     lazy val selfType = element[WDoubleNumCompanionAbs]
     override def mirror(t: Transformer) = this
+
+    def apply: Rep[WDoubleNum] =
+      methodCallEx[WDoubleNum](self,
+        this.getClass.getMethod("apply"),
+        List())
   }
 
   implicit lazy val doubleNumElement: Elem[DoubleNum] = new ExpBaseElemEx[DoubleNum, WDoubleNum](element[WDoubleNum])(weakTypeTag[DoubleNum], DefaultOfDoubleNum)
@@ -217,5 +224,16 @@ trait WDoubleNumsExp extends WDoubleNumsDsl with ScalanExp {
   }
 
   object WDoubleNumCompanionMethods {
+    object apply {
+      def unapply(d: Def[_]): Option[Unit] = d match {
+        case MethodCall(receiver, method, _, _) if receiver.elem == WDoubleNumCompanionElem && method.getName == "apply" =>
+          Some(()).asInstanceOf[Option[Unit]]
+        case _ => None
+      }
+      def unapply(exp: Exp[_]): Option[Unit] = exp match {
+        case Def(d) => unapply(d)
+        case _ => None
+      }
+    }
   }
 }

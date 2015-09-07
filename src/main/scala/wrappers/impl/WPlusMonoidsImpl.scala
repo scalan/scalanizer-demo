@@ -137,6 +137,8 @@ trait WPlusMonoidsSeq extends WPlusMonoidsDsl with ScalanSeq {
   self: WrappersDslSeq =>
   lazy val WPlusMonoid: Rep[WPlusMonoidCompanionAbs] = new WPlusMonoidCompanionAbs with UserTypeSeq[WPlusMonoidCompanionAbs] {
     lazy val selfType = element[WPlusMonoidCompanionAbs]
+    override def apply[A]( n: Rep[WNum[A]])(implicit emA: Elem[A]): Rep[WPlusMonoid[A]] =
+      WPlusMonoidImpl(PlusMonoid.apply[A](n)(emA.classTag))
   }
 
     // override proxy if we deal with TypeWrapper
@@ -177,6 +179,11 @@ trait WPlusMonoidsExp extends WPlusMonoidsDsl with ScalanExp {
   lazy val WPlusMonoid: Rep[WPlusMonoidCompanionAbs] = new WPlusMonoidCompanionAbs with UserTypeDef[WPlusMonoidCompanionAbs] {
     lazy val selfType = element[WPlusMonoidCompanionAbs]
     override def mirror(t: Transformer) = this
+
+    def apply[A]( n: Rep[WNum[A]])(implicit emA: Elem[A]): Rep[WPlusMonoid[A]] =
+      methodCallEx[WPlusMonoid[A]](self,
+        this.getClass.getMethod("apply", classOf[AnyRef], classOf[AnyRef]),
+        List(n.asInstanceOf[AnyRef], emA.asInstanceOf[AnyRef]))
   }
 
   implicit def plusMonoidElement[A:Elem]: Elem[PlusMonoid[A]] = {
@@ -225,5 +232,16 @@ trait WPlusMonoidsExp extends WPlusMonoidsDsl with ScalanExp {
   }
 
   object WPlusMonoidCompanionMethods {
+    object apply {
+      def unapply(d: Def[_]): Option[(Rep[WNum[A]], Elem[A]) forSome {type A}] = d match {
+        case MethodCall(receiver, method, Seq(n, emA, _*), _) if receiver.elem == WPlusMonoidCompanionElem && method.getName == "apply" =>
+          Some((n, emA)).asInstanceOf[Option[(Rep[WNum[A]], Elem[A]) forSome {type A}]]
+        case _ => None
+      }
+      def unapply(exp: Exp[_]): Option[(Rep[WNum[A]], Elem[A]) forSome {type A}] = exp match {
+        case Def(d) => unapply(d)
+        case _ => None
+      }
+    }
   }
 }

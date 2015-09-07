@@ -12,7 +12,9 @@ package wrappers {
       implicit def eeT: Elem[T];
       def wrappedValueOfBaseType: Rep[DenseVec[T]]
     };
-    trait WDenseVecCompanion extends ExCompanion1[WDenseVec];
+    trait WDenseVecCompanion extends ExCompanion1[WDenseVec] {
+      @External def apply[T](items: Rep[WCol[T]])(implicit emT: Elem[T]): Rep[WDenseVec[T]]
+    };
     def DefaultOfDenseVec[T]: Default[DenseVec[T]] = Default.defaultVal(null)
   }
 

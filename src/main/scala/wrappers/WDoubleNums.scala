@@ -11,7 +11,9 @@ package wrappers {
     trait WDoubleNum extends TypeWrapper[DoubleNum, WDoubleNum] { self =>
       def wrappedValueOfBaseType: Rep[DoubleNum]
     };
-    trait WDoubleNumCompanion extends ExCompanion0[WDoubleNum];
+    trait WDoubleNumCompanion extends ExCompanion0[WDoubleNum] {
+      @External def apply: Rep[WDoubleNum]
+    };
     def DefaultOfDoubleNum: Default[DoubleNum] = Default.defaultVal(null)
   }
 

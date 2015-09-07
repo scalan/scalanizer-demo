@@ -12,7 +12,9 @@ package wrappers {
       implicit def eeA: Elem[A];
       def wrappedValueOfBaseType: Rep[PlusMonoid[A]]
     };
-    trait WPlusMonoidCompanion extends ExCompanion1[WPlusMonoid];
+    trait WPlusMonoidCompanion extends ExCompanion1[WPlusMonoid] {
+      @External def apply[A](n: Rep[WNum[A]])(implicit emA: Elem[A]): Rep[WPlusMonoid[A]]
+    };
     def DefaultOfPlusMonoid[A]: Default[PlusMonoid[A]] = Default.defaultVal(null)
   }
 
