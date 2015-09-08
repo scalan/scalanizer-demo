@@ -137,8 +137,9 @@ trait WPlusMonoidsSeq extends WPlusMonoidsDsl with ScalanSeq {
   self: WrappersDslSeq =>
   lazy val WPlusMonoid: Rep[WPlusMonoidCompanionAbs] = new WPlusMonoidCompanionAbs with UserTypeSeq[WPlusMonoidCompanionAbs] {
     lazy val selfType = element[WPlusMonoidCompanionAbs]
+
     override def apply[A]( n: Rep[WNum[A]])(implicit emA: Elem[A]): Rep[WPlusMonoid[A]] =
-      WPlusMonoidImpl(PlusMonoid.apply[A](n)(emA.classTag))
+      WPlusMonoidImpl(new PlusMonoid[A](n))
   }
 
     // override proxy if we deal with TypeWrapper
@@ -181,9 +182,7 @@ trait WPlusMonoidsExp extends WPlusMonoidsDsl with ScalanExp {
     override def mirror(t: Transformer) = this
 
     def apply[A]( n: Rep[WNum[A]])(implicit emA: Elem[A]): Rep[WPlusMonoid[A]] =
-      methodCallEx[WPlusMonoid[A]](self,
-        this.getClass.getMethod("apply", classOf[AnyRef], classOf[AnyRef]),
-        List(n.asInstanceOf[AnyRef], emA.asInstanceOf[AnyRef]))
+      newObjEx(classOf[WPlusMonoid[A]], List(n.asRep[Any]/*, emA.asRep[Any]*/))
   }
 
   implicit def plusMonoidElement[A:Elem]: Elem[PlusMonoid[A]] = {

@@ -137,8 +137,9 @@ trait WDenseVecsSeq extends WDenseVecsDsl with ScalanSeq {
   self: WrappersDslSeq =>
   lazy val WDenseVec: Rep[WDenseVecCompanionAbs] = new WDenseVecCompanionAbs with UserTypeSeq[WDenseVecCompanionAbs] {
     lazy val selfType = element[WDenseVecCompanionAbs]
+
     override def apply[T]( items: Rep[WCol[T]])(implicit emT: Elem[T]): Rep[WDenseVec[T]] =
-      WDenseVecImpl(DenseVec.apply[T](items)(emT.classTag))
+      WDenseVecImpl(new DenseVec[T](items)(emT.classTag))
   }
 
     // override proxy if we deal with TypeWrapper
@@ -181,9 +182,7 @@ trait WDenseVecsExp extends WDenseVecsDsl with ScalanExp {
     override def mirror(t: Transformer) = this
 
     def apply[T]( items: Rep[WCol[T]])(implicit emT: Elem[T]): Rep[WDenseVec[T]] =
-      methodCallEx[WDenseVec[T]](self,
-        this.getClass.getMethod("apply", classOf[AnyRef], classOf[AnyRef]),
-        List(items.asInstanceOf[AnyRef], emT.asInstanceOf[AnyRef]))
+      newObjEx(classOf[WDenseVec[T]], List(items.asRep[Any]/*, emT.asRep[Any]*/))
   }
 
   implicit def denseVecElement[T:Elem]: Elem[DenseVec[T]] = {

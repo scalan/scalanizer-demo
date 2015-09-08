@@ -135,8 +135,9 @@ trait WDoubleNumsSeq extends WDoubleNumsDsl with ScalanSeq {
   self: WrappersDslSeq =>
   lazy val WDoubleNum: Rep[WDoubleNumCompanionAbs] = new WDoubleNumCompanionAbs with UserTypeSeq[WDoubleNumCompanionAbs] {
     lazy val selfType = element[WDoubleNumCompanionAbs]
+
     override def apply: Rep[WDoubleNum] =
-      WDoubleNumImpl(DoubleNum.apply)
+      WDoubleNumImpl(new DoubleNum)
   }
 
     // override proxy if we deal with TypeWrapper
@@ -176,9 +177,7 @@ trait WDoubleNumsExp extends WDoubleNumsDsl with ScalanExp {
     override def mirror(t: Transformer) = this
 
     def apply: Rep[WDoubleNum] =
-      methodCallEx[WDoubleNum](self,
-        this.getClass.getMethod("apply"),
-        List())
+      newObjEx(classOf[WDoubleNum], List())
   }
 
   implicit lazy val doubleNumElement: Elem[DoubleNum] = new ExpBaseElemEx[DoubleNum, WDoubleNum](element[WDoubleNum])(weakTypeTag[DoubleNum], DefaultOfDoubleNum)

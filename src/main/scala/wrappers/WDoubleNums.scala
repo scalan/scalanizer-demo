@@ -12,7 +12,7 @@ package wrappers {
       def wrappedValueOfBaseType: Rep[DoubleNum]
     };
     trait WDoubleNumCompanion extends ExCompanion0[WDoubleNum] {
-      @External def apply: Rep[WDoubleNum]
+      @Constructor def apply: Rep[WDoubleNum]
     };
     def DefaultOfDoubleNum: Default[DoubleNum] = Default.defaultVal(null)
   }
