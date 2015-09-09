@@ -29,7 +29,7 @@ trait LinearAlgebraOps { self: LinearAlgebra =>
 
       val vCol = Col(v)
       val vector = new DenseVec(vCol)
-      //      val matrix = DenseMatr[Double](Col(m.map(r => DenseVec(Col(r)))), width)
+      val matrix = new DenseMatr[Double](Col(m.map(r => new DenseVec(Col(r)))), width)
       //
       //      LA().mvm(matrix, vector)(doubleNumer, plusMonoid).items.arr
       v
