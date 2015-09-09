@@ -138,7 +138,7 @@ trait WPlusMonoidsSeq extends WPlusMonoidsDsl with ScalanSeq {
   lazy val WPlusMonoid: Rep[WPlusMonoidCompanionAbs] = new WPlusMonoidCompanionAbs with UserTypeSeq[WPlusMonoidCompanionAbs] {
     lazy val selfType = element[WPlusMonoidCompanionAbs]
 
-    override def apply[A]( n: Rep[WNum[A]])(implicit emA: Elem[A]): Rep[WPlusMonoid[A]] =
+    override def apply[A:Elem]( n: Rep[WNum[A]]): Rep[WPlusMonoid[A]] =
       WPlusMonoidImpl(new PlusMonoid[A](n))
   }
 
@@ -181,8 +181,8 @@ trait WPlusMonoidsExp extends WPlusMonoidsDsl with ScalanExp {
     lazy val selfType = element[WPlusMonoidCompanionAbs]
     override def mirror(t: Transformer) = this
 
-    def apply[A]( n: Rep[WNum[A]])(implicit emA: Elem[A]): Rep[WPlusMonoid[A]] =
-      newObjEx(classOf[WPlusMonoid[A]], List(n.asRep[Any]/*, emA.asRep[Any]*/))
+    def apply[A:Elem]( n: Rep[WNum[A]]): Rep[WPlusMonoid[A]] =
+      newObjEx(classOf[WPlusMonoid[A]], List(n.asRep[Any]))
   }
 
   implicit def plusMonoidElement[A:Elem]: Elem[PlusMonoid[A]] = {

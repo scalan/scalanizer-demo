@@ -182,7 +182,7 @@ trait WDenseVecsExp extends WDenseVecsDsl with ScalanExp {
     override def mirror(t: Transformer) = this
 
     def apply[T]( items: Rep[WCol[T]])(implicit emT: Elem[T]): Rep[WDenseVec[T]] =
-      newObjEx(classOf[WDenseVec[T]], List(items.asRep[Any]/*, emT.asRep[Any]*/))
+      newObjEx(classOf[WDenseVec[T]], List(items.asRep[Any], emT))
   }
 
   implicit def denseVecElement[T:Elem]: Elem[DenseVec[T]] = {
