@@ -28,8 +28,9 @@ trait LinearAlgebraOps { self: LinearAlgebra =>
       val width = m(0).length
 
       val vCol = Col(v)
-      val vector = new DenseVec(vCol)
-      val matrix = new DenseMatr[Double](Col(m.map(r => new DenseVec(Col(r)))), width)
+      val vector: Vec[Double] = new DenseVec(vCol)
+      val vLen = vector.length
+      //val matrix = new DenseMatr[Double](Col(m.map(r => new DenseVec(Col(r)))), width)
       //
       //      LA().mvm(matrix, vector)(doubleNumer, plusMonoid).items.arr
       v
