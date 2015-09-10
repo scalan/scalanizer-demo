@@ -66,6 +66,10 @@ trait WColsAbs extends WCols with ScalanDsl {
 
   // default wrapper implementation
   abstract class WColImpl[T](val wrappedValueOfBaseType: Rep[Col[T]])(implicit val eeT: Elem[T]) extends WCol[T] {
+    def arr: Rep[Array[T]] =
+      methodCallEx[Array[T]](self,
+        this.getClass.getMethod("arr"),
+        List())
   }
   trait WColImplCompanion
   // elem for concrete class
@@ -156,6 +160,8 @@ trait WColsSeq extends WColsDsl with ScalanSeq {
     extends WColImpl[T](wrappedValueOfBaseType)
         with UserTypeSeq[WColImpl[T]] {
     lazy val selfType = element[WColImpl[T]]
+    override def arr: Rep[Array[T]] =
+      wrappedValueOfBaseType.arr
   }
   lazy val WColImpl = new WColImplCompanionAbs with UserTypeSeq[WColImplCompanionAbs] {
     lazy val selfType = element[WColImplCompanionAbs]
@@ -221,6 +227,18 @@ trait WColsExp extends WColsDsl with ScalanExp {
     object wrappedValueOfBaseType {
       def unapply(d: Def[_]): Option[Rep[WCol[T]] forSome {type T}] = d match {
         case MethodCall(receiver, method, _, _) if receiver.elem.isInstanceOf[WColElem[_, _]] && method.getName == "wrappedValueOfBaseType" =>
+          Some(receiver).asInstanceOf[Option[Rep[WCol[T]] forSome {type T}]]
+        case _ => None
+      }
+      def unapply(exp: Exp[_]): Option[Rep[WCol[T]] forSome {type T}] = exp match {
+        case Def(d) => unapply(d)
+        case _ => None
+      }
+    }
+
+    object arr {
+      def unapply(d: Def[_]): Option[Rep[WCol[T]] forSome {type T}] = d match {
+        case MethodCall(receiver, method, _, _) if receiver.elem.isInstanceOf[WColElem[_, _]] && method.getName == "arr" =>
           Some(receiver).asInstanceOf[Option[Rep[WCol[T]] forSome {type T}]]
         case _ => None
       }

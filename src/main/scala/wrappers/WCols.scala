@@ -10,7 +10,8 @@ package wrappers {
   trait WCols extends Base with TypeWrappers { self: WrappersDsl =>
     trait WCol[T] extends TypeWrapper[Col[T], WCol[T]] { self =>
       implicit def eeT: Elem[T];
-      def wrappedValueOfBaseType: Rep[Col[T]]
+      def wrappedValueOfBaseType: Rep[Col[T]];
+      @External def arr: Rep[Array[T]]
     };
     trait WColCompanion extends ExCompanion1[WCol] {
       @External def apply[T](arr: Rep[Array[T]])(implicit emT: Elem[T]): Rep[WCol[T]]
