@@ -1,7 +1,7 @@
 package scalanizer
 
 import org.scalatest._
-import scalanizer.linalgebra.LinearAlgebra
+import scalanizer.linalgebra.{LA, LinearAlgebra}
 import scala.util.Random
 
 class LinearAlgebraTests extends FunSuite with LinearAlgebra {
