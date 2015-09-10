@@ -37,6 +37,7 @@ object LA {
     val la = new LA()
     val monoidName = plusMonoid.opName
     val vres = la.mvm(matrix, vector)(doubleNumer, plusMonoid)
+    val items = vres.items
     //vres.items.arr
     v
   }

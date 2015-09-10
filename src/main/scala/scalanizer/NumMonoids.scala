@@ -1,17 +1,17 @@
 package scalanizer
 
-trait NumMonoid[A] {
-  def n: Num[A]
+trait NumMonoid[T] {
+  def n: Num[T]
   def opName: String
-  def zero: A
-  def append: (A, A) => A
+  def zero: T
+  def append: (T, T) => T
   def isCommutative: Boolean
 }
 
-class PlusMonoid[A](val n: Num[A]) extends NumMonoid[A] {
+class PlusMonoid[T](val n: Num[T]) extends NumMonoid[T] {
   def opName = "+"
   def zero = n.zero
-  def append = (a0: A, a1: A) => n.plus(a0, a1)
+  def append = (a0: T, a1: T) => n.plus(a0, a1)
   def isCommutative: Boolean = true
 }
 

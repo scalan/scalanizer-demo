@@ -66,6 +66,11 @@ trait WVecsAbs extends WVecs with ScalanDsl {
 
   // default wrapper implementation
   abstract class WVecImpl[T](val wrappedValueOfBaseType: Rep[Vec[T]])(implicit val eeT: Elem[T]) extends WVec[T] {
+    def items: Rep[WCol[T]] =
+      methodCallEx[WCol[T]](self,
+        this.getClass.getMethod("items"),
+        List())
+
     def length: Rep[Int] =
       methodCallEx[Int](self,
         this.getClass.getMethod("length"),
@@ -158,6 +163,9 @@ trait WVecsSeq extends WVecsDsl with ScalanSeq {
     extends WVecImpl[T](wrappedValueOfBaseType)
         with UserTypeSeq[WVecImpl[T]] {
     lazy val selfType = element[WVecImpl[T]]
+    override def items: Rep[WCol[T]] =
+      wrappedValueOfBaseType.items
+
     override def length: Rep[Int] =
       wrappedValueOfBaseType.length
   }
@@ -220,6 +228,18 @@ trait WVecsExp extends WVecsDsl with ScalanExp {
     object wrappedValueOfBaseType {
       def unapply(d: Def[_]): Option[Rep[WVec[T]] forSome {type T}] = d match {
         case MethodCall(receiver, method, _, _) if receiver.elem.isInstanceOf[WVecElem[_, _]] && method.getName == "wrappedValueOfBaseType" =>
+          Some(receiver).asInstanceOf[Option[Rep[WVec[T]] forSome {type T}]]
+        case _ => None
+      }
+      def unapply(exp: Exp[_]): Option[Rep[WVec[T]] forSome {type T}] = exp match {
+        case Def(d) => unapply(d)
+        case _ => None
+      }
+    }
+
+    object items {
+      def unapply(d: Def[_]): Option[Rep[WVec[T]] forSome {type T}] = d match {
+        case MethodCall(receiver, method, _, _) if receiver.elem.isInstanceOf[WVecElem[_, _]] && method.getName == "items" =>
           Some(receiver).asInstanceOf[Option[Rep[WVec[T]] forSome {type T}]]
         case _ => None
       }

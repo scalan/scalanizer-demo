@@ -4,14 +4,14 @@ import scalanizer._
 import scala.collection.generic.CanBuildFrom
 import scala.reflect.ClassTag
 
-trait Col[A] {
-  def arr: Array[A]
+trait Col[T] {
+  def arr: Array[T]
   def length: Int
-  def apply(i: Int): A
-  def map[B: ClassTag](f: A => B): Col[B] =
-    Col((arr: Array[A]).map(f)(implicitly[CanBuildFrom[Array[A], B, Array[B]]]))
-  def reduce(implicit m: NumMonoid[A]): A = (arr: Array[A]).reduce(m.append)
-  def zip[B](ys: Col[B]): PairCol[A, B] = new PairCol(this, ys)
+  def apply(i: Int): T
+  def map[B: ClassTag](f: T => B): Col[B] =
+    Col((arr: Array[T]).map(f)(implicitly[CanBuildFrom[Array[T], B, Array[B]]]))
+  def reduce(implicit m: NumMonoid[T]): T = (arr: Array[T]).reduce(m.append)
+  def zip[B](ys: Col[B]): PairCol[T, B] = new PairCol(this, ys)
 }
 
 object Col {

@@ -11,6 +11,7 @@ package wrappers {
     trait WVec[T] extends TypeWrapper[Vec[T], WVec[T]] { self =>
       implicit def eeT: Elem[T];
       def wrappedValueOfBaseType: Rep[Vec[T]];
+      @External def items: Rep[WCol[T]];
       @External def length: Rep[Int]
     };
     trait WVecCompanion extends ExCompanion1[WVec];
