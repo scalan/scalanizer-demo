@@ -24,17 +24,20 @@ object LA {
   def ddmvm(m: Array[Array[Double]], v: Array[Double]): Array[Double] = {
     val doubleNumer: Num[Double] = new DoubleNum()
     val zero = doubleNumer.zero
-    val plusMonoid = new PlusMonoid(doubleNumer)
+    val plusMonoid: NumMonoid[Double] = new PlusMonoid(doubleNumer)
     val width = m(0).length
 
     val vCol = Col(v)
     val vector: Vec[Double] = new DenseVec(vCol)
     val vLen = vector.length
 
-    val matrix = new DenseMatr[Double](Col(m.map(r => new DenseVec(Col(r)))), width)
+    val matrix: Matr[Double] = new DenseMatr[Double](Col(m.map(r => new DenseVec(Col(r)))), width)
+    val matrixNumRows = matrix.numRows
 
     val la = new LA()
-    //LA().mvm(matrix, vector)(doubleNumer, plusMonoid).items.arr
+    val monoidName = plusMonoid.opName
+    val vres = la.mvm(matrix, vector)(doubleNumer, plusMonoid)
+    //vres.items.arr
     v
   }
 }
