@@ -132,48 +132,6 @@ trait WDenseVecsAbs extends WDenseVecs with ScalanDsl {
   def unmkWDenseVecImpl[T](p: Rep[WDenseVec[T]]): Option[(Rep[DenseVec[T]])]
 }
 
-// Seq -----------------------------------
-trait WDenseVecsSeq extends WDenseVecsDsl with ScalanSeq {
-  self: WrappersDslSeq =>
-  lazy val WDenseVec: Rep[WDenseVecCompanionAbs] = new WDenseVecCompanionAbs with UserTypeSeq[WDenseVecCompanionAbs] {
-    lazy val selfType = element[WDenseVecCompanionAbs]
-
-    override def apply[T]( items: Rep[WCol[T]])(implicit emT: Elem[T]): Rep[WDenseVec[T]] =
-      WDenseVecImpl(new DenseVec[T](items)(emT.classTag))
-  }
-
-    // override proxy if we deal with TypeWrapper
-  //override def proxyDenseVec[T:Elem](p: Rep[DenseVec[T]]): WDenseVec[T] =
-  //  proxyOpsEx[DenseVec[T],WDenseVec[T], SeqWDenseVecImpl[T]](p, bt => SeqWDenseVecImpl(bt))
-
-    implicit def denseVecElement[T:Elem]: Elem[DenseVec[T]] = {
-     implicit val wT = element[T].tag;
-     new SeqBaseElemEx[DenseVec[T], WDenseVec[T]](element[WDenseVec[T]])(weakTypeTag[DenseVec[T]], DefaultOfDenseVec[T])
-  }
-
-  case class SeqWDenseVecImpl[T]
-      (override val wrappedValueOfBaseType: Rep[DenseVec[T]])
-      (implicit eeT: Elem[T])
-    extends WDenseVecImpl[T](wrappedValueOfBaseType)
-        with UserTypeSeq[WDenseVecImpl[T]] {
-    lazy val selfType = element[WDenseVecImpl[T]]
-  }
-  lazy val WDenseVecImpl = new WDenseVecImplCompanionAbs with UserTypeSeq[WDenseVecImplCompanionAbs] {
-    lazy val selfType = element[WDenseVecImplCompanionAbs]
-  }
-
-  def mkWDenseVecImpl[T]
-      (wrappedValueOfBaseType: Rep[DenseVec[T]])(implicit eeT: Elem[T]): Rep[WDenseVecImpl[T]] =
-      new SeqWDenseVecImpl[T](wrappedValueOfBaseType)
-  def unmkWDenseVecImpl[T](p: Rep[WDenseVec[T]]) = p match {
-    case p: WDenseVecImpl[T] @unchecked =>
-      Some((p.wrappedValueOfBaseType))
-    case _ => None
-  }
-
-  implicit def wrapDenseVecToWDenseVec[T:Elem](v: DenseVec[T]): WDenseVec[T] = WDenseVecImpl(v)
-}
-
 // Exp -----------------------------------
 trait WDenseVecsExp extends WDenseVecsDsl with ScalanExp {
   self: WrappersDslExp =>

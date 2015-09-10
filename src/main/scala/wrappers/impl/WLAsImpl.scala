@@ -134,47 +134,6 @@ trait WLAsAbs extends WLAs with ScalanDsl {
   def unmkWLAImpl(p: Rep[WLA]): Option[(Rep[LA])]
 }
 
-// Seq -----------------------------------
-trait WLAsSeq extends WLAsDsl with ScalanSeq {
-  self: WrappersDslSeq =>
-  lazy val WLA: Rep[WLACompanionAbs] = new WLACompanionAbs with UserTypeSeq[WLACompanionAbs] {
-    lazy val selfType = element[WLACompanionAbs]
-
-    override def apply: Rep[WLA] =
-      WLAImpl(new LA)
-  }
-
-    // override proxy if we deal with TypeWrapper
-  //override def proxyLA(p: Rep[LA]): WLA =
-  //  proxyOpsEx[LA,WLA, SeqWLAImpl](p, bt => SeqWLAImpl(bt))
-
-    implicit lazy val lAElement: Elem[LA] = new SeqBaseElemEx[LA, WLA](element[WLA])(weakTypeTag[LA], DefaultOfLA)
-
-  case class SeqWLAImpl
-      (override val wrappedValueOfBaseType: Rep[LA])
-
-    extends WLAImpl(wrappedValueOfBaseType)
-        with UserTypeSeq[WLAImpl] {
-    lazy val selfType = element[WLAImpl]
-    override def mvm[T]( matrix: Rep[WMatr[T]], vector: Rep[WVec[T]])( n: Rep[WNum[T]], m: Rep[WNumMonoid[T]])(implicit emT: Elem[T]): Rep[WVec[T]] =
-      wrappedValueOfBaseType.mvm[T](matrix, vector)(n, m)(emT.classTag)
-  }
-  lazy val WLAImpl = new WLAImplCompanionAbs with UserTypeSeq[WLAImplCompanionAbs] {
-    lazy val selfType = element[WLAImplCompanionAbs]
-  }
-
-  def mkWLAImpl
-      (wrappedValueOfBaseType: Rep[LA]): Rep[WLAImpl] =
-      new SeqWLAImpl(wrappedValueOfBaseType)
-  def unmkWLAImpl(p: Rep[WLA]) = p match {
-    case p: WLAImpl @unchecked =>
-      Some((p.wrappedValueOfBaseType))
-    case _ => None
-  }
-
-  implicit def wrapLAToWLA(v: LA): WLA = WLAImpl(v)
-}
-
 // Exp -----------------------------------
 trait WLAsExp extends WLAsDsl with ScalanExp {
   self: WrappersDslExp =>

@@ -136,49 +136,6 @@ trait WColsAbs extends WCols with ScalanDsl {
   def unmkWColImpl[T](p: Rep[WCol[T]]): Option[(Rep[Col[T]])]
 }
 
-// Seq -----------------------------------
-trait WColsSeq extends WColsDsl with ScalanSeq {
-  self: WrappersDslSeq =>
-  lazy val WCol: Rep[WColCompanionAbs] = new WColCompanionAbs with UserTypeSeq[WColCompanionAbs] {
-    lazy val selfType = element[WColCompanionAbs]
-    override def apply[T]( arr: Rep[Array[T]])(implicit emT: Elem[T]): Rep[WCol[T]] =
-      WColImpl(Col.apply[T](arr)(emT.classTag))
-  }
-
-    // override proxy if we deal with TypeWrapper
-  //override def proxyCol[T:Elem](p: Rep[Col[T]]): WCol[T] =
-  //  proxyOpsEx[Col[T],WCol[T], SeqWColImpl[T]](p, bt => SeqWColImpl(bt))
-
-    implicit def colElement[T:Elem]: Elem[Col[T]] = {
-     implicit val wT = element[T].tag;
-     new SeqBaseElemEx[Col[T], WCol[T]](element[WCol[T]])(weakTypeTag[Col[T]], DefaultOfCol[T])
-  }
-
-  case class SeqWColImpl[T]
-      (override val wrappedValueOfBaseType: Rep[Col[T]])
-      (implicit eeT: Elem[T])
-    extends WColImpl[T](wrappedValueOfBaseType)
-        with UserTypeSeq[WColImpl[T]] {
-    lazy val selfType = element[WColImpl[T]]
-    override def arr: Rep[Array[T]] =
-      wrappedValueOfBaseType.arr
-  }
-  lazy val WColImpl = new WColImplCompanionAbs with UserTypeSeq[WColImplCompanionAbs] {
-    lazy val selfType = element[WColImplCompanionAbs]
-  }
-
-  def mkWColImpl[T]
-      (wrappedValueOfBaseType: Rep[Col[T]])(implicit eeT: Elem[T]): Rep[WColImpl[T]] =
-      new SeqWColImpl[T](wrappedValueOfBaseType)
-  def unmkWColImpl[T](p: Rep[WCol[T]]) = p match {
-    case p: WColImpl[T] @unchecked =>
-      Some((p.wrappedValueOfBaseType))
-    case _ => None
-  }
-
-  implicit def wrapColToWCol[T:Elem](v: Col[T]): WCol[T] = WColImpl(v)
-}
-
 // Exp -----------------------------------
 trait WColsExp extends WColsDsl with ScalanExp {
   self: WrappersDslExp =>

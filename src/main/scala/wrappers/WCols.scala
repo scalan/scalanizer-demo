@@ -23,10 +23,6 @@ package wrappers {
     
   }
 
-  trait WColsDslSeq extends WColsSeq { self: WrappersDslSeq =>
-    
-  }
-
   trait WColsDslExp extends WColsExp { self: WrappersDslExp =>
     
   }

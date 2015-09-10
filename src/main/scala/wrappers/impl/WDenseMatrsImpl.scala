@@ -132,48 +132,6 @@ trait WDenseMatrsAbs extends WDenseMatrs with ScalanDsl {
   def unmkWDenseMatrImpl[T](p: Rep[WDenseMatr[T]]): Option[(Rep[DenseMatr[T]])]
 }
 
-// Seq -----------------------------------
-trait WDenseMatrsSeq extends WDenseMatrsDsl with ScalanSeq {
-  self: WrappersDslSeq =>
-  lazy val WDenseMatr: Rep[WDenseMatrCompanionAbs] = new WDenseMatrCompanionAbs with UserTypeSeq[WDenseMatrCompanionAbs] {
-    lazy val selfType = element[WDenseMatrCompanionAbs]
-
-    override def apply[T]( rows: Rep[WCol[WVec[T]]], numColumns: Rep[Int])(implicit emT: Elem[T]): Rep[WDenseMatr[T]] =
-      WDenseMatrImpl(new DenseMatr[T](rows.map(_.wrappedValueOfBaseType).wrappedValueOfBaseType, numColumns)(emT.classTag))
-  }
-
-    // override proxy if we deal with TypeWrapper
-  //override def proxyDenseMatr[T:Elem](p: Rep[DenseMatr[T]]): WDenseMatr[T] =
-  //  proxyOpsEx[DenseMatr[T],WDenseMatr[T], SeqWDenseMatrImpl[T]](p, bt => SeqWDenseMatrImpl(bt))
-
-    implicit def denseMatrElement[T:Elem]: Elem[DenseMatr[T]] = {
-     implicit val wT = element[T].tag;
-     new SeqBaseElemEx[DenseMatr[T], WDenseMatr[T]](element[WDenseMatr[T]])(weakTypeTag[DenseMatr[T]], DefaultOfDenseMatr[T])
-  }
-
-  case class SeqWDenseMatrImpl[T]
-      (override val wrappedValueOfBaseType: Rep[DenseMatr[T]])
-      (implicit eeT: Elem[T])
-    extends WDenseMatrImpl[T](wrappedValueOfBaseType)
-        with UserTypeSeq[WDenseMatrImpl[T]] {
-    lazy val selfType = element[WDenseMatrImpl[T]]
-  }
-  lazy val WDenseMatrImpl = new WDenseMatrImplCompanionAbs with UserTypeSeq[WDenseMatrImplCompanionAbs] {
-    lazy val selfType = element[WDenseMatrImplCompanionAbs]
-  }
-
-  def mkWDenseMatrImpl[T]
-      (wrappedValueOfBaseType: Rep[DenseMatr[T]])(implicit eeT: Elem[T]): Rep[WDenseMatrImpl[T]] =
-      new SeqWDenseMatrImpl[T](wrappedValueOfBaseType)
-  def unmkWDenseMatrImpl[T](p: Rep[WDenseMatr[T]]) = p match {
-    case p: WDenseMatrImpl[T] @unchecked =>
-      Some((p.wrappedValueOfBaseType))
-    case _ => None
-  }
-
-  implicit def wrapDenseMatrToWDenseMatr[T:Elem](v: DenseMatr[T]): WDenseMatr[T] = WDenseMatrImpl(v)
-}
-
 // Exp -----------------------------------
 trait WDenseMatrsExp extends WDenseMatrsDsl with ScalanExp {
   self: WrappersDslExp =>

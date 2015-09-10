@@ -21,10 +21,6 @@ package wrappers {
     
   }
 
-  trait WMatrsDslSeq extends WMatrsSeq { self: WrappersDslSeq =>
-    
-  }
-
   trait WMatrsDslExp extends WMatrsExp { self: WrappersDslExp =>
     
   }

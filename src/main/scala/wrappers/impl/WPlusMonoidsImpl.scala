@@ -132,48 +132,6 @@ trait WPlusMonoidsAbs extends WPlusMonoids with ScalanDsl {
   def unmkWPlusMonoidImpl[T](p: Rep[WPlusMonoid[T]]): Option[(Rep[PlusMonoid[T]])]
 }
 
-// Seq -----------------------------------
-trait WPlusMonoidsSeq extends WPlusMonoidsDsl with ScalanSeq {
-  self: WrappersDslSeq =>
-  lazy val WPlusMonoid: Rep[WPlusMonoidCompanionAbs] = new WPlusMonoidCompanionAbs with UserTypeSeq[WPlusMonoidCompanionAbs] {
-    lazy val selfType = element[WPlusMonoidCompanionAbs]
-
-    override def apply[T:Elem]( n: Rep[WNum[T]]): Rep[WPlusMonoid[T]] =
-      WPlusMonoidImpl(new PlusMonoid[T](n))
-  }
-
-    // override proxy if we deal with TypeWrapper
-  //override def proxyPlusMonoid[T:Elem](p: Rep[PlusMonoid[T]]): WPlusMonoid[T] =
-  //  proxyOpsEx[PlusMonoid[T],WPlusMonoid[T], SeqWPlusMonoidImpl[T]](p, bt => SeqWPlusMonoidImpl(bt))
-
-    implicit def plusMonoidElement[T:Elem]: Elem[PlusMonoid[T]] = {
-     implicit val wT = element[T].tag;
-     new SeqBaseElemEx[PlusMonoid[T], WPlusMonoid[T]](element[WPlusMonoid[T]])(weakTypeTag[PlusMonoid[T]], DefaultOfPlusMonoid[T])
-  }
-
-  case class SeqWPlusMonoidImpl[T]
-      (override val wrappedValueOfBaseType: Rep[PlusMonoid[T]])
-      (implicit eeT: Elem[T])
-    extends WPlusMonoidImpl[T](wrappedValueOfBaseType)
-        with UserTypeSeq[WPlusMonoidImpl[T]] {
-    lazy val selfType = element[WPlusMonoidImpl[T]]
-  }
-  lazy val WPlusMonoidImpl = new WPlusMonoidImplCompanionAbs with UserTypeSeq[WPlusMonoidImplCompanionAbs] {
-    lazy val selfType = element[WPlusMonoidImplCompanionAbs]
-  }
-
-  def mkWPlusMonoidImpl[T]
-      (wrappedValueOfBaseType: Rep[PlusMonoid[T]])(implicit eeT: Elem[T]): Rep[WPlusMonoidImpl[T]] =
-      new SeqWPlusMonoidImpl[T](wrappedValueOfBaseType)
-  def unmkWPlusMonoidImpl[T](p: Rep[WPlusMonoid[T]]) = p match {
-    case p: WPlusMonoidImpl[T] @unchecked =>
-      Some((p.wrappedValueOfBaseType))
-    case _ => None
-  }
-
-  implicit def wrapPlusMonoidToWPlusMonoid[T:Elem](v: PlusMonoid[T]): WPlusMonoid[T] = WPlusMonoidImpl(v)
-}
-
 // Exp -----------------------------------
 trait WPlusMonoidsExp extends WPlusMonoidsDsl with ScalanExp {
   self: WrappersDslExp =>

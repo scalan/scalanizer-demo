@@ -22,10 +22,6 @@ package wrappers {
     
   }
 
-  trait WVecsDslSeq extends WVecsSeq { self: WrappersDslSeq =>
-    
-  }
-
   trait WVecsDslExp extends WVecsExp { self: WrappersDslExp =>
     
   }

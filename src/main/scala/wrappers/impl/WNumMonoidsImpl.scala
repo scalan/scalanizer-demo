@@ -136,47 +136,6 @@ trait WNumMonoidsAbs extends WNumMonoids with ScalanDsl {
   def unmkWNumMonoidImpl[T](p: Rep[WNumMonoid[T]]): Option[(Rep[NumMonoid[T]])]
 }
 
-// Seq -----------------------------------
-trait WNumMonoidsSeq extends WNumMonoidsDsl with ScalanSeq {
-  self: WrappersDslSeq =>
-  lazy val WNumMonoid: Rep[WNumMonoidCompanionAbs] = new WNumMonoidCompanionAbs with UserTypeSeq[WNumMonoidCompanionAbs] {
-    lazy val selfType = element[WNumMonoidCompanionAbs]
-  }
-
-    // override proxy if we deal with TypeWrapper
-  //override def proxyNumMonoid[T:Elem](p: Rep[NumMonoid[T]]): WNumMonoid[T] =
-  //  proxyOpsEx[NumMonoid[T],WNumMonoid[T], SeqWNumMonoidImpl[T]](p, bt => SeqWNumMonoidImpl(bt))
-
-    implicit def numMonoidElement[T:Elem]: Elem[NumMonoid[T]] = {
-     implicit val wT = element[T].tag;
-     new SeqBaseElemEx[NumMonoid[T], WNumMonoid[T]](element[WNumMonoid[T]])(weakTypeTag[NumMonoid[T]], DefaultOfNumMonoid[T])
-  }
-
-  case class SeqWNumMonoidImpl[T]
-      (override val wrappedValueOfBaseType: Rep[NumMonoid[T]])
-      (implicit eeT: Elem[T])
-    extends WNumMonoidImpl[T](wrappedValueOfBaseType)
-        with UserTypeSeq[WNumMonoidImpl[T]] {
-    lazy val selfType = element[WNumMonoidImpl[T]]
-    override def opName: Rep[String] =
-      wrappedValueOfBaseType.opName
-  }
-  lazy val WNumMonoidImpl = new WNumMonoidImplCompanionAbs with UserTypeSeq[WNumMonoidImplCompanionAbs] {
-    lazy val selfType = element[WNumMonoidImplCompanionAbs]
-  }
-
-  def mkWNumMonoidImpl[T]
-      (wrappedValueOfBaseType: Rep[NumMonoid[T]])(implicit eeT: Elem[T]): Rep[WNumMonoidImpl[T]] =
-      new SeqWNumMonoidImpl[T](wrappedValueOfBaseType)
-  def unmkWNumMonoidImpl[T](p: Rep[WNumMonoid[T]]) = p match {
-    case p: WNumMonoidImpl[T] @unchecked =>
-      Some((p.wrappedValueOfBaseType))
-    case _ => None
-  }
-
-  implicit def wrapNumMonoidToWNumMonoid[T:Elem](v: NumMonoid[T]): WNumMonoid[T] = WNumMonoidImpl(v)
-}
-
 // Exp -----------------------------------
 trait WNumMonoidsExp extends WNumMonoidsDsl with ScalanExp {
   self: WrappersDslExp =>

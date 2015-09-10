@@ -21,10 +21,6 @@ package wrappers {
     
   }
 
-  trait WNumMonoidsDslSeq extends WNumMonoidsSeq { self: WrappersDslSeq =>
-    
-  }
-
   trait WNumMonoidsDslExp extends WNumMonoidsExp { self: WrappersDslExp =>
     
   }

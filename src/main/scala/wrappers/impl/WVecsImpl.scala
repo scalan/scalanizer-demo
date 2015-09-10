@@ -141,50 +141,6 @@ trait WVecsAbs extends WVecs with ScalanDsl {
   def unmkWVecImpl[T](p: Rep[WVec[T]]): Option[(Rep[Vec[T]])]
 }
 
-// Seq -----------------------------------
-trait WVecsSeq extends WVecsDsl with ScalanSeq {
-  self: WrappersDslSeq =>
-  lazy val WVec: Rep[WVecCompanionAbs] = new WVecCompanionAbs with UserTypeSeq[WVecCompanionAbs] {
-    lazy val selfType = element[WVecCompanionAbs]
-  }
-
-    // override proxy if we deal with TypeWrapper
-  //override def proxyVec[T:Elem](p: Rep[Vec[T]]): WVec[T] =
-  //  proxyOpsEx[Vec[T],WVec[T], SeqWVecImpl[T]](p, bt => SeqWVecImpl(bt))
-
-    implicit def vecElement[T:Elem]: Elem[Vec[T]] = {
-     implicit val wT = element[T].tag;
-     new SeqBaseElemEx[Vec[T], WVec[T]](element[WVec[T]])(weakTypeTag[Vec[T]], DefaultOfVec[T])
-  }
-
-  case class SeqWVecImpl[T]
-      (override val wrappedValueOfBaseType: Rep[Vec[T]])
-      (implicit eeT: Elem[T])
-    extends WVecImpl[T](wrappedValueOfBaseType)
-        with UserTypeSeq[WVecImpl[T]] {
-    lazy val selfType = element[WVecImpl[T]]
-    override def items: Rep[WCol[T]] =
-      wrappedValueOfBaseType.items
-
-    override def length: Rep[Int] =
-      wrappedValueOfBaseType.length
-  }
-  lazy val WVecImpl = new WVecImplCompanionAbs with UserTypeSeq[WVecImplCompanionAbs] {
-    lazy val selfType = element[WVecImplCompanionAbs]
-  }
-
-  def mkWVecImpl[T]
-      (wrappedValueOfBaseType: Rep[Vec[T]])(implicit eeT: Elem[T]): Rep[WVecImpl[T]] =
-      new SeqWVecImpl[T](wrappedValueOfBaseType)
-  def unmkWVecImpl[T](p: Rep[WVec[T]]) = p match {
-    case p: WVecImpl[T] @unchecked =>
-      Some((p.wrappedValueOfBaseType))
-    case _ => None
-  }
-
-  implicit def wrapVecToWVec[T:Elem](v: Vec[T]): WVec[T] = WVecImpl(v)
-}
-
 // Exp -----------------------------------
 trait WVecsExp extends WVecsDsl with ScalanExp {
   self: WrappersDslExp =>

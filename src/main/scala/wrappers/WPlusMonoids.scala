@@ -22,10 +22,6 @@ package wrappers {
     
   }
 
-  trait WPlusMonoidsDslSeq extends WPlusMonoidsSeq { self: WrappersDslSeq =>
-    
-  }
-
   trait WPlusMonoidsDslExp extends WPlusMonoidsExp { self: WrappersDslExp =>
     
   }

@@ -136,47 +136,6 @@ trait WNumsAbs extends WNums with ScalanDsl {
   def unmkWNumImpl[T](p: Rep[WNum[T]]): Option[(Rep[Num[T]])]
 }
 
-// Seq -----------------------------------
-trait WNumsSeq extends WNumsDsl with ScalanSeq {
-  self: WrappersDslSeq =>
-  lazy val WNum: Rep[WNumCompanionAbs] = new WNumCompanionAbs with UserTypeSeq[WNumCompanionAbs] {
-    lazy val selfType = element[WNumCompanionAbs]
-  }
-
-    // override proxy if we deal with TypeWrapper
-  //override def proxyNum[T:Elem](p: Rep[Num[T]]): WNum[T] =
-  //  proxyOpsEx[Num[T],WNum[T], SeqWNumImpl[T]](p, bt => SeqWNumImpl(bt))
-
-    implicit def numElement[T:Elem]: Elem[Num[T]] = {
-     implicit val wT = element[T].tag;
-     new SeqBaseElemEx[Num[T], WNum[T]](element[WNum[T]])(weakTypeTag[Num[T]], DefaultOfNum[T])
-  }
-
-  case class SeqWNumImpl[T]
-      (override val wrappedValueOfBaseType: Rep[Num[T]])
-      (implicit eeT: Elem[T])
-    extends WNumImpl[T](wrappedValueOfBaseType)
-        with UserTypeSeq[WNumImpl[T]] {
-    lazy val selfType = element[WNumImpl[T]]
-    override def zero: Rep[T] =
-      wrappedValueOfBaseType.zero
-  }
-  lazy val WNumImpl = new WNumImplCompanionAbs with UserTypeSeq[WNumImplCompanionAbs] {
-    lazy val selfType = element[WNumImplCompanionAbs]
-  }
-
-  def mkWNumImpl[T]
-      (wrappedValueOfBaseType: Rep[Num[T]])(implicit eeT: Elem[T]): Rep[WNumImpl[T]] =
-      new SeqWNumImpl[T](wrappedValueOfBaseType)
-  def unmkWNumImpl[T](p: Rep[WNum[T]]) = p match {
-    case p: WNumImpl[T] @unchecked =>
-      Some((p.wrappedValueOfBaseType))
-    case _ => None
-  }
-
-  implicit def wrapNumToWNum[T:Elem](v: Num[T]): WNum[T] = WNumImpl(v)
-}
-
 // Exp -----------------------------------
 trait WNumsExp extends WNumsDsl with ScalanExp {
   self: WrappersDslExp =>

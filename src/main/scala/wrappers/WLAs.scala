@@ -22,10 +22,6 @@ package wrappers {
     
   }
 
-  trait WLAsDslSeq extends WLAsSeq { self: WrappersDslSeq =>
-    
-  }
-
   trait WLAsDslExp extends WLAsExp { self: WrappersDslExp =>
     
   }

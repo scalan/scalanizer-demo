@@ -21,10 +21,6 @@ package wrappers {
     
   }
 
-  trait WDoubleNumsDslSeq extends WDoubleNumsSeq { self: WrappersDslSeq =>
-    
-  }
-
   trait WDoubleNumsDslExp extends WDoubleNumsExp { self: WrappersDslExp =>
     
   }
