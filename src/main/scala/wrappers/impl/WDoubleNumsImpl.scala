@@ -137,7 +137,7 @@ trait WDoubleNumsExp extends WDoubleNumsDsl with ScalanExp {
     lazy val selfType = element[WDoubleNumCompanionAbs]
     override def mirror(t: Transformer) = this
 
-    def apply: Rep[WDoubleNum] =
+    def apply(): Rep[WDoubleNum] =
       newObjEx(classOf[WDoubleNum], List())
   }
 

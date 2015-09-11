@@ -128,7 +128,7 @@ package scalanizer.linalgebra {
         trait LinearAlgebraOpCompanion;
         trait LACompanion {
           def ddmvm(m: Rep[Array[Array[Double]]], v: Rep[Array[Double]]): Rep[Array[Double]] = {
-            val doubleNumer: Rep[WNum[Double]] = WDoubleNum();
+            val doubleNumer: Rep[WNum[Double]] = WDoubleNum()
             v
           }
         }
