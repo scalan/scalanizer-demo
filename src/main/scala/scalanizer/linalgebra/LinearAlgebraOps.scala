@@ -15,23 +15,24 @@ trait LinearAlgebraOps {self: LinearAlgebra =>
     @HotSpot(CppKernel)
     def ddmvm(m: Array[Array[Double]], v: Array[Double]): Array[Double] = {
       val doubleNumer: Num[Double] = new DoubleNum()
-      val zero = doubleNumer.zero
-      val plusMonoid: NumMonoid[Double] = new PlusMonoid(doubleNumer)
-      val width = m(0).length
-
-      val vCol = Col(v)
-      val vector: Vec[Double] = new DenseVec(vCol)
-      val vLen = vector.length
-
-      val matrix: Matr[Double] = new DenseMatr[Double](Col(m.map(r => new DenseVec(Col(r)))), width)
-      val matrixNumRows = matrix.numRows
-
-      val la = new BaseMatrOp()
-      val monoidName = plusMonoid.opName
-      val vres = la.mvm(matrix, vector)(doubleNumer, plusMonoid)
-      val items = vres.items
-
-      items.arr
+//      val zero = doubleNumer.zero
+//      val plusMonoid: NumMonoid[Double] = new PlusMonoid(doubleNumer)
+//      val width = m(0).length
+//
+//      val vCol = Col(v)
+//      val vector: Vec[Double] = new DenseVec(vCol)
+//      val vLen = vector.length
+//
+//      val matrix: Matr[Double] = new DenseMatr[Double](Col(m.map(r => new DenseVec(Col(r)))), width)
+//      val matrixNumRows = matrix.numRows
+//
+//      val la = new BaseMatrOp()
+//      val monoidName = plusMonoid.opName
+//      val vres = la.mvm(matrix, vector)(doubleNumer, plusMonoid)
+//      val items = vres.items
+//
+//      items.arr
+      v
     }
   }
 
