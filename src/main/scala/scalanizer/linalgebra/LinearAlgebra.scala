@@ -1,3 +1,3 @@
 package scalanizer.linalgebra
 
-trait LinearAlgebra
+trait LinearAlgebra extends LinearAlgebraOps
