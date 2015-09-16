@@ -15,27 +15,14 @@ trait LinearAlgebraOps {self: LinearAlgebra =>
     @HotSpot(CppKernel)
     def ddmvm(m: Array[Array[Double]], v: Array[Double]): Array[Double] = {
       val doubleNumer = new DoubleNum()
-      val zero = doubleNumer.zero
-      val doubleNumer1: Num[Double] = doubleNumer
-      val zero1 = doubleNumer1.zero
-
-      val plusMonoid: NumMonoid[Double] = new PlusMonoid(doubleNumer)
+      val plusMonoid = new PlusMonoid(doubleNumer)
       val width = m(0).length
+      val vector = new DenseVec(Col(v))
+      val matrix = new DenseMatr[Double](Col(m.map(r => new DenseVec(Col(r)))), width)
+      val cbf = Array.canBuildFrom[Double].apply(v)
+      val b = cbf.clear()
 
-      val vCol = Col(v)
-      val vector: Vec[Double] = new DenseVec(vCol)
-      val vLen = vector.length
-
-      val matrix: Matr[Double] = new DenseMatr[Double](Col(m.map(r => new DenseVec(Col(r)))), width)
-      val matrixNumRows = matrix.numRows
-
-      val la = new BaseMatrOp()
-      val monoidName = plusMonoid.opName
-      val vres = la.mvm(matrix, vector)(doubleNumer, plusMonoid)
-      val items = vres.items
-
-      items.arr
-//      v
+      new BaseMatrOp().mvm(matrix, vector)(doubleNumer, plusMonoid).items.arr
     }
   }
 
