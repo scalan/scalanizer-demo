@@ -8,7 +8,7 @@ package wrappers {
   import scalanizer.PlusMonoid
 
   trait WPlusMonoids extends Base with TypeWrappers { self: WrappersDsl =>
-    trait WPlusMonoid[T] extends TypeWrapper[PlusMonoid[T], WPlusMonoid[T]] { self =>
+    trait WPlusMonoid[T] extends TypeWrapper[PlusMonoid[T], WPlusMonoid[T]] with WNumMonoid[T] { self =>
       implicit def eeT: Elem[T];
       def wrappedValueOfBaseType: Rep[PlusMonoid[T]]
     };

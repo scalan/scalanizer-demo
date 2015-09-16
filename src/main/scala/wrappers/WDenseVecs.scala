@@ -8,7 +8,7 @@ package wrappers {
   import scalanizer.linalgebra.DenseVec
 
   trait WDenseVecs extends Base with TypeWrappers { self: WrappersDsl =>
-    trait WDenseVec[T] extends TypeWrapper[DenseVec[T], WDenseVec[T]] { self =>
+    trait WDenseVec[T] extends TypeWrapper[DenseVec[T], WDenseVec[T]] with WVec[T] { self =>
       implicit def eeT: Elem[T];
       def wrappedValueOfBaseType: Rep[DenseVec[T]]
     };

@@ -65,6 +65,10 @@ trait WDoubleNumsAbs extends WDoubleNums with ScalanDsl {
 
   // default wrapper implementation
   abstract class WDoubleNumImpl(val wrappedValueOfBaseType: Rep[DoubleNum]) extends WDoubleNum {
+    def zero: Rep[Double] =
+      methodCallEx[Double](self,
+        this.getClass.getMethod("zero"),
+        List())
   }
   trait WDoubleNumImplCompanion
   // elem for concrete class
@@ -137,7 +141,7 @@ trait WDoubleNumsExp extends WDoubleNumsDsl with ScalanExp {
     lazy val selfType = element[WDoubleNumCompanionAbs]
     override def mirror(t: Transformer) = this
 
-    def apply(): Rep[WDoubleNum] =
+    def apply: Rep[WDoubleNum] =
       newObjEx(classOf[WDoubleNum], List())
   }
 
@@ -173,6 +177,18 @@ trait WDoubleNumsExp extends WDoubleNumsDsl with ScalanExp {
     object wrappedValueOfBaseType {
       def unapply(d: Def[_]): Option[Rep[WDoubleNum]] = d match {
         case MethodCall(receiver, method, _, _) if receiver.elem.isInstanceOf[WDoubleNumElem[_]] && method.getName == "wrappedValueOfBaseType" =>
+          Some(receiver).asInstanceOf[Option[Rep[WDoubleNum]]]
+        case _ => None
+      }
+      def unapply(exp: Exp[_]): Option[Rep[WDoubleNum]] = exp match {
+        case Def(d) => unapply(d)
+        case _ => None
+      }
+    }
+
+    object zero {
+      def unapply(d: Def[_]): Option[Rep[WDoubleNum]] = d match {
+        case MethodCall(receiver, method, _, _) if receiver.elem.isInstanceOf[WDoubleNumElem[_]] && method.getName == "zero" =>
           Some(receiver).asInstanceOf[Option[Rep[WDoubleNum]]]
         case _ => None
       }

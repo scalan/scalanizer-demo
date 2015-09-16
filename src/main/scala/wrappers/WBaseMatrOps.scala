@@ -8,7 +8,7 @@ package wrappers {
   import scalanizer.linalgebra.BaseMatrOp
 
   trait WBaseMatrOps extends Base with TypeWrappers { self: WrappersDsl =>
-    trait WBaseMatrOp extends TypeWrapper[BaseMatrOp, WBaseMatrOp] { self =>
+    trait WBaseMatrOp extends TypeWrapper[BaseMatrOp, WBaseMatrOp] with WMatrOp { self =>
       def wrappedValueOfBaseType: Rep[BaseMatrOp];
       @External def mvm[T](matrix: Rep[WMatr[T]], vector: Rep[WVec[T]])(n: Rep[WNum[T]], m: Rep[WNumMonoid[T]])(implicit emT: Elem[T]): Rep[WVec[T]]
     };
