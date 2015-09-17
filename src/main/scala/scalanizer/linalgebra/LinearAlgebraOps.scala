@@ -1,5 +1,6 @@
 package scalanizer.linalgebra
 
+import scala.collection.mutable
 import scalanizer._
 import scalanizer.collections._
 import scala.reflect.ClassTag
@@ -19,10 +20,9 @@ trait LinearAlgebraOps {self: LinearAlgebra =>
       val width = m(0).length
       val vector = new DenseVec(Col(v))
       val matrix = new DenseMatr[Double](Col(m.map(r => new DenseVec(Col(r)))), width)
-      val cbf = Array.canBuildFrom[Double].apply(v)
-      val b = cbf.clear()
 
       new BaseMatrOp().mvm(matrix, vector)(doubleNumer, plusMonoid).items.arr
+      v
     }
   }
 
