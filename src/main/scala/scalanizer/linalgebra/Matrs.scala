@@ -4,23 +4,25 @@ import scalanizer._
 import scalanizer.collections._
 import scala.reflect.ClassTag
 
-trait Matr[T] {
-  implicit def ctT: ClassTag[T]
-  def numColumns: Int
-  def numRows: Int
-  def rows: Col[Vec[T]]
-  def columns(implicit n: Num[T]): Col[Vec[T]]
-}
+trait Matrs {self: LinearAlgebra =>
 
-class DenseMatr[T](val rows: Col[Vec[T]], val numColumns: Int)
-                  (implicit val ctT: ClassTag[T])
-  extends Matr[T] {
+  trait Matr[T] {
+    implicit def ctT: ClassTag[T]
+    def numColumns: Int
+    def numRows: Int
+    def rows: Col[Vec[T]]
+    def columns(implicit n: Num[T]): Col[Vec[T]]
+  }
 
-  def numRows = rows.length
-  def columns(implicit n: Num[T]): Col[Vec[T]] = {
-    Col((Array.range(0, numColumns, 1): Array[Int]).map { (j: Int) =>
-      new DenseVec(rows.map((vec: Vec[T]) => vec(j))): Vec[T]
-    })
+  class DenseMatr[T](val rows: Col[Vec[T]], val numColumns: Int)
+                    (implicit val ctT: ClassTag[T])
+    extends Matr[T] {
+    def numRows = rows.length
+    def columns(implicit n: Num[T]): Col[Vec[T]] = {
+      Col((Array.range(0, numColumns, 1): Array[Int]).map { (j: Int) =>
+        new DenseVec(rows.map((vec: Vec[T]) => vec(j))): Vec[T]
+      })
+    }
   }
 }
 
