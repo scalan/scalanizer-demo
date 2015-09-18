@@ -3,8 +3,9 @@ package scalanizer.collections
 import scalanizer._
 import scala.collection.generic.CanBuildFrom
 import scala.reflect.ClassTag
+import scalanizer.linalgebra.LinearAlgebra
 
-trait Cols extends NumMonoids {
+trait Cols {self: LinearAlgebra =>
   trait Col[A] {
     def arr: Array[A]
     def length: Int

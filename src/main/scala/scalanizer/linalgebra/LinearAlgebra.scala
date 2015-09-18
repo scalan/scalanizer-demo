@@ -1,9 +1,10 @@
 package scalanizer.linalgebra
 
-import scalanizer.NumMonoids
+import scalanizer.{Nums, NumMonoids}
 import scalanizer.collections.Cols
 
-trait LinearAlgebra extends NumMonoids
+trait LinearAlgebra extends Nums
+with NumMonoids
 with Cols
 with Vecs
 with Matrs

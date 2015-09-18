@@ -1,6 +1,8 @@
 package scalanizer
 
-trait Nums {
+import scalanizer.linalgebra.LinearAlgebra
+
+trait Nums {self: LinearAlgebra =>
   trait Num[T] {
     def zero: T
     def one: T

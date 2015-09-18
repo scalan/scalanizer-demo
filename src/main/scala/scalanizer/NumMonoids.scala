@@ -1,6 +1,8 @@
 package scalanizer
 
-trait NumMonoids extends Nums {
+import scalanizer.linalgebra.LinearAlgebra
+
+trait NumMonoids {self: LinearAlgebra =>
   trait NumMonoid[T] {
     def n: Num[T]
     def opName: String
