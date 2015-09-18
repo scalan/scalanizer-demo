@@ -1,6 +1,8 @@
 package scalanizer.linalgebra {
 package implOfLinearAlgebra {
 
+import wrappers._
+
 object StagedEvaluation {
 
   import scalan._
@@ -12,7 +14,7 @@ object StagedEvaluation {
   import scalanizer.linalgebra.implOfMatrOps.StagedEvaluation._
   import scalanizer.linalgebra.implOfLinearAlgebraOps.StagedEvaluation._
 
-  trait LinearAlgebraDsl extends Scalan
+  trait LinearAlgebraDsl extends Scalan with WrappersDsl
   with NumsDsl
   with NumMonoidsDsl
   with ColsDsl
@@ -21,9 +23,11 @@ object StagedEvaluation {
   with MatrOpsDsl
   with LinearAlgebraOpsDsl
 
-  trait LinearAlgebraDslSeq extends ScalanSeq with LinearAlgebraDsl
+  trait LinearAlgebraDslSeq extends ScalanSeq with WrappersDslSeq
+  with LinearAlgebraDsl
 
-  trait LinearAlgebraDslExp extends ScalanExp with LinearAlgebraDsl
+  trait LinearAlgebraDslExp extends ScalanExp with WrappersDslExp
+  with LinearAlgebraDsl
   with NumsDslExp
   with NumMonoidsDslExp
   with ColsDslExp
