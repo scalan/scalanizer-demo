@@ -148,13 +148,18 @@ trait WArraysExp extends WArraysDsl with ScalanExp {
     lazy val selfType = element[WArrayCompanionAbs]
     override def mirror(t: Transformer) = this
 
-    def canBuildFrom[T](implicit emT: Elem[T]): Rep[WCanBuildFrom[WArray[_$4] forSome {type _$4},T,WArray[T]]] =
-      methodCallEx[WCanBuildFrom[WArray[_$4] forSome {type _$4},T,WArray[T]]](self,
+    def canBuildFrom[T](implicit emT: Elem[T]): Rep[WCanBuildFrom[WArray[_$4] forSome {type _$4},T,WArray[T]]] = {
+      val wtag = weakTypeTag[WArray[_]]
+      val defaultOfWArray: Default[WArray[_]] = Default.defaultVal(null)
+      implicit val warrElem: Elem[WArray[_]] = new BaseElem[WArray[_]]()(wtag, defaultOfWArray)
+
+      methodCallEx[WCanBuildFrom[WArray[_$4] forSome {type _$4}, T, WArray[T]]](self,
         this.getClass.getMethod("canBuildFrom", classOf[AnyRef]),
         List(emT.asInstanceOf[AnyRef]))
+    }
   }
 
-  implicit def arrayElement[T:Elem]: Elem[Array[T]] = {
+  implicit override def arrayElement[T:Elem]: Elem[Array[T]] = {
      implicit val wT = element[T].tag;
      new ExpBaseElemEx[Array[T], WArray[T]](element[WArray[T]])(weakTypeTag[Array[T]], DefaultOfArray[T])
   }
