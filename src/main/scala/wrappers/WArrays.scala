@@ -15,6 +15,7 @@ package wrappers {
       @External def length: Rep[Int]
     };
     trait WArrayCompanion extends ExCompanion1[WArray] {
+      @External def range(start: Rep[Int], end: Rep[Int], step: Rep[Int]): Rep[WArray[Int]];
       @External def canBuildFrom[T](implicit emT: Elem[T]): Rep[WCanBuildFrom[(WArray[_$4] forSome { 
         type _$4
       }), T, WArray[T]]]

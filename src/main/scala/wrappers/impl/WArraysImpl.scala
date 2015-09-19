@@ -148,6 +148,11 @@ trait WArraysExp extends WArraysDsl with ScalanExp {
     lazy val selfType = element[WArrayCompanionAbs]
     override def mirror(t: Transformer) = this
 
+    def range( start: Rep[Int], end: Rep[Int], step: Rep[Int]): Rep[WArray[Int]] =
+      methodCallEx[WArray[Int]](self,
+        this.getClass.getMethod("range", classOf[AnyRef], classOf[AnyRef], classOf[AnyRef]),
+        List(start.asInstanceOf[AnyRef], end.asInstanceOf[AnyRef], step.asInstanceOf[AnyRef]))
+
     def canBuildFrom[T](implicit emT: Elem[T]): Rep[WCanBuildFrom[WArray[_$4] forSome {type _$4},T,WArray[T]]] = {
       val wtag = weakTypeTag[WArray[_]]
       val defaultOfWArray: Default[WArray[_]] = Default.defaultVal(null)
@@ -229,6 +234,18 @@ trait WArraysExp extends WArraysDsl with ScalanExp {
   }
 
   object WArrayCompanionMethods {
+    object range {
+      def unapply(d: Def[_]): Option[(Rep[Int], Rep[Int], Rep[Int])] = d match {
+        case MethodCall(receiver, method, Seq(start, end, step, _*), _) if receiver.elem == WArrayCompanionElem && method.getName == "range" =>
+          Some((start, end, step)).asInstanceOf[Option[(Rep[Int], Rep[Int], Rep[Int])]]
+        case _ => None
+      }
+      def unapply(exp: Exp[_]): Option[(Rep[Int], Rep[Int], Rep[Int])] = exp match {
+        case Def(d) => unapply(d)
+        case _ => None
+      }
+    }
+
     object canBuildFrom {
       def unapply(d: Def[_]): Option[Elem[T] forSome {type T}] = d match {
         case MethodCall(receiver, method, Seq(emT, _*), _) if receiver.elem == WArrayCompanionElem && method.getName == "canBuildFrom" =>

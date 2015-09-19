@@ -66,6 +66,16 @@ trait WArrayOpssAbs extends WArrayOpss with ScalanDsl {
 
   // default wrapper implementation
   abstract class WArrayOpsImpl[T](val wrappedValueOfBaseType: Rep[ArrayOps[T]])(implicit val eeT: Elem[T]) extends WArrayOps[T] {
+    def zip[A1, B, That]( that: Rep[WGenIterable[B]])( bf: Rep[WCanBuildFrom[WArray[T],(A1, B),That]])(implicit emA1: Elem[A1], emB: Elem[B], emThat: Elem[That]): Rep[That] =
+      methodCallEx[That](self,
+        this.getClass.getMethod("zip", classOf[AnyRef], classOf[AnyRef], classOf[AnyRef], classOf[AnyRef], classOf[AnyRef]),
+        List(that.asInstanceOf[AnyRef], bf.asInstanceOf[AnyRef], emA1.asInstanceOf[AnyRef], emB.asInstanceOf[AnyRef], emThat.asInstanceOf[AnyRef]))
+
+    def reduce[A1]( op: Rep[((A1, A1)) => A1])(implicit emA1: Elem[A1]): Rep[A1] =
+      methodCallEx[A1](self,
+        this.getClass.getMethod("reduce", classOf[AnyRef], classOf[AnyRef]),
+        List(op.asInstanceOf[AnyRef], emA1.asInstanceOf[AnyRef]))
+
     def map[B, That]( f: Rep[T => B])( bf: Rep[WCanBuildFrom[WArray[T],B,That]])(implicit emB: Elem[B], emThat: Elem[That]): Rep[That] =
       methodCallEx[That](self,
         this.getClass.getMethod("map", classOf[AnyRef], classOf[AnyRef], classOf[AnyRef], classOf[AnyRef]),
@@ -187,6 +197,20 @@ trait WArrayOpssExp extends WArrayOpssDsl with ScalanExp {
         case _ => None
       }
     }
+
+    object zip {
+      def unapply(d: Def[_]): Option[(Rep[WArrayOps[T]], Rep[WGenIterable[B]], Rep[WCanBuildFrom[WArray[T],(A1, B),That]], Elem[A1], Elem[B], Elem[That]) forSome {type T; type A1; type B; type That}] = d match {
+        case MethodCall(receiver, method, Seq(that, bf, emA1, emB, emThat, _*), _) if receiver.elem.isInstanceOf[WArrayOpsElem[_, _]] && method.getName == "zip" =>
+          Some((receiver, that, bf, emA1, emB, emThat)).asInstanceOf[Option[(Rep[WArrayOps[T]], Rep[WGenIterable[B]], Rep[WCanBuildFrom[WArray[T],(A1, B),That]], Elem[A1], Elem[B], Elem[That]) forSome {type T; type A1; type B; type That}]]
+        case _ => None
+      }
+      def unapply(exp: Exp[_]): Option[(Rep[WArrayOps[T]], Rep[WGenIterable[B]], Rep[WCanBuildFrom[WArray[T],(A1, B),That]], Elem[A1], Elem[B], Elem[That]) forSome {type T; type A1; type B; type That}] = exp match {
+        case Def(d) => unapply(d)
+        case _ => None
+      }
+    }
+
+    // WARNING: Cannot generate matcher for method `reduce`: Method has function arguments op
 
     // WARNING: Cannot generate matcher for method `map`: Method has function arguments f
   }
