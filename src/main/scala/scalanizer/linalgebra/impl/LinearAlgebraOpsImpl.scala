@@ -2,10 +2,10 @@
 //  package implOfLinearAlgebraOps {
 //    object StagedEvaluation {
 //      import scalan._;
+//      import scalanizer.linalgebra.implOfLinearAlgebra.StagedEvaluation._;
 //      import scalan.compilation.KernelTypes._;
 //      import scala.reflect.runtime.universe._;
 //      import scala.reflect._;
-//      import scalanizer.linalgebra.implOfLinearAlgebra.StagedEvaluation._
 //      import scalan.common.Default;
 //      trait LinearAlgebraOpsAbs extends LinearAlgebraOps with ScalanDsl { self: LinearAlgebraDsl =>
 //        implicit def proxyLinearAlgebraOp(p: Rep[LinearAlgebraOp]): LinearAlgebraOp = proxyOps[LinearAlgebraOp](p)(scala.reflect.classTag[LinearAlgebraOp]);

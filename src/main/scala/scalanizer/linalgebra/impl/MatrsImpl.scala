@@ -43,7 +43,7 @@
 //        };
 //        def Matr: Rep[MatrCompanionAbs];
 //        implicit def proxyMatrCompanion(p: Rep[MatrCompanion]): MatrCompanion = proxyOps[MatrCompanion](p);
-//        class DenseMatrElem[T](val iso: Iso[DenseMatrData[T], DenseMatr[T]])(implicit ctT: ClassTag[T], eeT: Elem[T]) extends MatrElem[T, DenseMatr[T]] with ConcreteElem[DenseMatrData[T], DenseMatr[T]] {
+//        class DenseMatrElem[T](val iso: Iso[DenseMatrData[T], DenseMatr[T]])(implicit eeT: Elem[T]) extends MatrElem[T, DenseMatr[T]] with ConcreteElem[DenseMatrData[T], DenseMatr[T]] {
 //          override def convertMatr(x: Rep[Matr[T]]) = DenseMatr(x.rows, x.numColumns);
 //          override def getDefaultRep = super[ConcreteElem].getDefaultRep;
 //          override lazy val tag = {
@@ -52,7 +52,7 @@
 //          }
 //        };
 //        type DenseMatrData[T] = scala.Tuple2[Col[Vec[T]], Int];
-//        class DenseMatrIso[T](implicit ctT: ClassTag[T], eeT: Elem[T]) extends Iso[DenseMatrData[T], DenseMatr[T]]()(pairElement(implicitly[Elem[Col[Vec[T]]]], implicitly[Elem[Int]])) {
+//        class DenseMatrIso[T](implicit eeT: Elem[T]) extends Iso[DenseMatrData[T], DenseMatr[T]]()(pairElement(implicitly[Elem[Col[Vec[T]]]], implicitly[Elem[Int]])) {
 //          override def from(p: Rep[DenseMatr[T]]) = scala.Tuple2(p.rows, p.numColumns);
 //          override def to(p: Rep[scala.Tuple2[Col[Vec[T]], Int]]) = {
 //            val x$1 = (p: @scala.unchecked) match {
@@ -67,8 +67,8 @@
 //        };
 //        abstract class DenseMatrCompanionAbs extends CompanionBase[DenseMatrCompanionAbs] with DenseMatrCompanion {
 //          override def toString = "DenseMatr";
-//          def apply[T](p: Rep[DenseMatrData[T]])(implicit ctT: ClassTag[T], eeT: Elem[T]): Rep[DenseMatr[T]] = isoDenseMatr(ctT, eeT).to(p);
-//          def apply[T](rows: Rep[Col[Vec[T]]], numColumns: Rep[Int])(implicit ctT: ClassTag[T], eeT: Elem[T]): Rep[DenseMatr[T]] = mkDenseMatr(rows, numColumns)
+//          def apply[T](p: Rep[DenseMatrData[T]])(implicit eeT: Elem[T]): Rep[DenseMatr[T]] = isoDenseMatr(eeT).to(p);
+//          def apply[T](rows: Rep[Col[Vec[T]]], numColumns: Rep[Int])(implicit eeT: Elem[T]): Rep[DenseMatr[T]] = mkDenseMatr(rows, numColumns)
 //        };
 //        object DenseMatrMatcher {
 //          def unapply[T](p: Rep[Matr[T]]) = unmkDenseMatr(p)
@@ -80,11 +80,11 @@
 //          protected def getDefaultRep = DenseMatr
 //        };
 //        implicit def proxyDenseMatr[T](p: Rep[DenseMatr[T]]): DenseMatr[T] = proxyOps[DenseMatr[T]](p);
-//        implicit class ExtendedDenseMatr[T](p: Rep[DenseMatr[T]])(implicit ctT: ClassTag[T], eeT: Elem[T]) {
-//          def toData: Rep[DenseMatrData[T]] = isoDenseMatr(ctT, eeT).from(p)
+//        implicit class ExtendedDenseMatr[T](p: Rep[DenseMatr[T]])(implicit eeT: Elem[T]) {
+//          def toData: Rep[DenseMatrData[T]] = isoDenseMatr(eeT).from(p)
 //        };
-//        implicit def isoDenseMatr[T](implicit ctT: ClassTag[T], eeT: Elem[T]): Iso[DenseMatrData[T], DenseMatr[T]] = new DenseMatrIso[T]();
-//        def mkDenseMatr[T](rows: Rep[Col[Vec[T]]], numColumns: Rep[Int])(implicit ctT: ClassTag[T], eeT: Elem[T]): Rep[DenseMatr[T]];
+//        implicit def isoDenseMatr[T](implicit eeT: Elem[T]): Iso[DenseMatrData[T], DenseMatr[T]] = new DenseMatrIso[T]();
+//        def mkDenseMatr[T](rows: Rep[Col[Vec[T]]], numColumns: Rep[Int])(implicit eeT: Elem[T]): Rep[DenseMatr[T]];
 //        def unmkDenseMatr[T](p: Rep[Matr[T]]): Option[scala.Tuple2[Rep[Col[Vec[T]]], Rep[Int]]]
 //      };
 //      trait MatrsExp extends MatrsDsl with ScalanExp { self: LinearAlgebraDslExp =>
@@ -95,7 +95,7 @@
 //          };
 //          new $anon()
 //        };
-//        case class ExpDenseMatr[T](override val rows: Rep[Col[Vec[T]]], override val numColumns: Rep[Int])(implicit ctT: ClassTag[T], eeT: Elem[T]) extends DenseMatr[T](rows, numColumns) with UserTypeDef[DenseMatr[T]] {
+//        case class ExpDenseMatr[T](override val rows: Rep[Col[Vec[T]]], override val numColumns: Rep[Int])(implicit eeT: Elem[T]) extends DenseMatr[T](rows, numColumns) with UserTypeDef[DenseMatr[T]] {
 //          lazy val selfType = element[DenseMatr[T]];
 //          override def mirror(t: Transformer) = ExpDenseMatr[T](t(rows), t(numColumns))
 //        };
@@ -153,7 +153,7 @@
 //          }
 //        };
 //        object DenseMatrCompanionMethods;
-//        def mkDenseMatr[T](rows: Rep[Col[Vec[T]]], numColumns: Rep[Int])(implicit ctT: ClassTag[T], eeT: Elem[T]): Rep[DenseMatr[T]] = new ExpDenseMatr[T](rows, numColumns);
+//        def mkDenseMatr[T](rows: Rep[Col[Vec[T]]], numColumns: Rep[Int])(implicit eeT: Elem[T]): Rep[DenseMatr[T]] = new ExpDenseMatr[T](rows, numColumns);
 //        def unmkDenseMatr[T](p: Rep[Matr[T]]) = p.elem.asInstanceOf[(Elem[_$8] forSome {
 //          type _$8
 //        })] match {
@@ -264,7 +264,7 @@
 //          def rows: Rep[Col[Vec[T]]];
 //          def columns(implicit n: Rep[Num[T]]): Rep[Col[Vec[T]]]
 //        };
-//        abstract class DenseMatr[T](val rows: Rep[Col[Vec[T]]], val numColumns: Rep[Int])(implicit val ctT: Rep[ClassTag[T]], val eeT: Elem[T]) extends Matr[T] {
+//        abstract class DenseMatr[T](val rows: Rep[Col[Vec[T]]], val numColumns: Rep[Int])(implicit val eeT: Elem[T]) extends Matr[T] {
 //          def numRows: Rep[Int] = DenseMatr.this.rows.length;
 //          def columns(implicit n: Rep[Num[T]]): Rep[Col[Vec[T]]] = Matrs.this.Col.apply[Vec[T]](scala.this.Predef.intArrayOps(((scala.Array.range(toRep(0), DenseMatr.this.numColumns, toRep(1))): Rep[Array[Int]])).map[Vec[T], Array[Vec[T]]](fun(((j: Rep[Int]) => ((DenseVec(DenseMatr.this.rows.map[T](fun(((vec: Rep[Vec[T]]) => vec.apply(j))))(DenseMatr.this.ctT))(DenseMatr.this.ctT)): Rep[Vec[T]]))))(scala.this.Array.canBuildFrom[Vec[T]](((ClassTag.apply[Vec[T]](toRep(classOf[scalanizer.linalgebra.Vecs$Vec]))): Rep[ClassTag[Vec[T]]]))))(((ClassTag.apply[Vec[T]](toRep(classOf[scalanizer.linalgebra.Vecs$Vec]))): Rep[ClassTag[Vec[T]]]))
 //        };

@@ -2,9 +2,9 @@ package scalanizer {
   package implOfNums {
     object StagedEvaluation {
       import scalan._;
+      import scalanizer.linalgebra.implOfLinearAlgebra.StagedEvaluation._;
       import scala.reflect.runtime.universe._;
       import scala.reflect._;
-      import scalanizer.linalgebra.implOfLinearAlgebra.StagedEvaluation._
       import scalan.common.Default;
       trait NumsAbs extends Nums with ScalanDsl { self: LinearAlgebraDsl =>
         implicit def proxyNum[T](p: Rep[Num[T]]): Num[T] = proxyOps[Num[T]](p)(scala.reflect.classTag[Num[T]]);

@@ -42,7 +42,7 @@
 //        };
 //        def Vec: Rep[VecCompanionAbs];
 //        implicit def proxyVecCompanion(p: Rep[VecCompanion]): VecCompanion = proxyOps[VecCompanion](p);
-//        class DenseVecElem[T](val iso: Iso[DenseVecData[T], DenseVec[T]])(implicit ctT: ClassTag[T], eeT: Elem[T]) extends VecElem[T, DenseVec[T]] with ConcreteElem[DenseVecData[T], DenseVec[T]] {
+//        class DenseVecElem[T](val iso: Iso[DenseVecData[T], DenseVec[T]])(implicit eeT: Elem[T]) extends VecElem[T, DenseVec[T]] with ConcreteElem[DenseVecData[T], DenseVec[T]] {
 //          override def convertVec(x: Rep[Vec[T]]) = DenseVec(x.items);
 //          override def getDefaultRep = super[ConcreteElem].getDefaultRep;
 //          override lazy val tag = {
@@ -51,7 +51,7 @@
 //          }
 //        };
 //        type DenseVecData[T] = Col[T];
-//        class DenseVecIso[T](implicit ctT: ClassTag[T], eeT: Elem[T]) extends Iso[DenseVecData[T], DenseVec[T]] {
+//        class DenseVecIso[T](implicit eeT: Elem[T]) extends Iso[DenseVecData[T], DenseVec[T]] {
 //          override def from(p: Rep[DenseVec[T]]) = p.items;
 //          override def to(p: Rep[Col[T]]) = {
 //            val items = p;
@@ -62,7 +62,7 @@
 //        };
 //        abstract class DenseVecCompanionAbs extends CompanionBase[DenseVecCompanionAbs] with DenseVecCompanion {
 //          override def toString = "DenseVec";
-//          def apply[T](items: Rep[Col[T]])(implicit ctT: ClassTag[T], eeT: Elem[T]): Rep[DenseVec[T]] = mkDenseVec(items)
+//          def apply[T](items: Rep[Col[T]])(implicit eeT: Elem[T]): Rep[DenseVec[T]] = mkDenseVec(items)
 //        };
 //        object DenseVecMatcher {
 //          def unapply[T](p: Rep[Vec[T]]) = unmkDenseVec(p)
@@ -74,11 +74,11 @@
 //          protected def getDefaultRep = DenseVec
 //        };
 //        implicit def proxyDenseVec[T](p: Rep[DenseVec[T]]): DenseVec[T] = proxyOps[DenseVec[T]](p);
-//        implicit class ExtendedDenseVec[T](p: Rep[DenseVec[T]])(implicit ctT: ClassTag[T], eeT: Elem[T]) {
-//          def toData: Rep[DenseVecData[T]] = isoDenseVec(ctT, eeT).from(p)
+//        implicit class ExtendedDenseVec[T](p: Rep[DenseVec[T]])(implicit eeT: Elem[T]) {
+//          def toData: Rep[DenseVecData[T]] = isoDenseVec(eeT).from(p)
 //        };
-//        implicit def isoDenseVec[T](implicit ctT: ClassTag[T], eeT: Elem[T]): Iso[DenseVecData[T], DenseVec[T]] = new DenseVecIso[T]();
-//        def mkDenseVec[T](items: Rep[Col[T]])(implicit ctT: ClassTag[T], eeT: Elem[T]): Rep[DenseVec[T]];
+//        implicit def isoDenseVec[T](implicit eeT: Elem[T]): Iso[DenseVecData[T], DenseVec[T]] = new DenseVecIso[T]();
+//        def mkDenseVec[T](items: Rep[Col[T]])(implicit eeT: Elem[T]): Rep[DenseVec[T]];
 //        def unmkDenseVec[T](p: Rep[Vec[T]]): Option[Rep[Col[T]]]
 //      };
 //      trait VecsExp extends VecsDsl with ScalanExp { self: LinearAlgebraDslExp =>
@@ -89,7 +89,7 @@
 //          };
 //          new $anon()
 //        };
-//        case class ExpDenseVec[T](override val items: Rep[Col[T]])(implicit ctT: ClassTag[T], eeT: Elem[T]) extends DenseVec[T](items) with UserTypeDef[DenseVec[T]] {
+//        case class ExpDenseVec[T](override val items: Rep[Col[T]])(implicit eeT: Elem[T]) extends DenseVec[T](items) with UserTypeDef[DenseVec[T]] {
 //          lazy val selfType = element[DenseVec[T]];
 //          override def mirror(t: Transformer) = ExpDenseVec[T](t(items))
 //        };
@@ -169,7 +169,7 @@
 //          }
 //        };
 //        object DenseVecCompanionMethods;
-//        def mkDenseVec[T](items: Rep[Col[T]])(implicit ctT: ClassTag[T], eeT: Elem[T]): Rep[DenseVec[T]] = new ExpDenseVec[T](items);
+//        def mkDenseVec[T](items: Rep[Col[T]])(implicit eeT: Elem[T]): Rep[DenseVec[T]] = new ExpDenseVec[T](items);
 //        def unmkDenseVec[T](p: Rep[Vec[T]]) = p.elem.asInstanceOf[(Elem[_$11] forSome {
 //          type _$11
 //        })] match {
@@ -281,7 +281,7 @@
 //          def map[R](f: Rep[scala.Function1[T, R]])(implicit emR: Elem[R]): Rep[Vec[R]];
 //          def dot(other: Rep[Vec[T]])(implicit n: Rep[Num[T]], m: Rep[NumMonoid[T]]): Rep[T]
 //        };
-//        abstract class DenseVec[T](val items: Rep[Col[T]])(implicit val ctT: Rep[ClassTag[T]], val eeT: Elem[T]) extends Vec[T] {
+//        abstract class DenseVec[T](val items: Rep[Col[T]])(implicit val eeT: Elem[T]) extends Vec[T] {
 //          def length: Rep[Int] = DenseVec.this.items.length;
 //          def apply(i: Rep[Int]): Rep[T] = DenseVec.this.items.apply(i);
 //          def map[R](f: Rep[scala.Function1[T, R]])(implicit emR: Elem[R]): Rep[Vec[R]] = DenseVec(DenseVec.this.items.map[R](f)(evidence$2))(evidence$2);

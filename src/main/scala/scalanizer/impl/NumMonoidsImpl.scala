@@ -3,7 +3,7 @@ package scalanizer {
     object StagedEvaluation {
       import scalan._;
       import scalanizer.implOfNums.StagedEvaluation._;
-      import scalanizer.linalgebra.implOfLinearAlgebra.StagedEvaluation._
+      import scalanizer.linalgebra.implOfLinearAlgebra.StagedEvaluation._;
       import scala.reflect.runtime.universe._;
       import scala.reflect._;
       import scalan.common.Default;
