@@ -18,7 +18,7 @@ trait WPredefsAbs extends WPredefs with ScalanDsl {
   }
 
   // TypeWrapper proxy
-  //implicit def proxyPredef(p: Rep[Predef]): WPredef =
+  //implicit def proxyPredef(p: Rep[Predef.type]): WPredef =
   //  proxyOps[WPredef](p.asRep[WPredef])
 
   implicit def unwrapValueOfWPredef(w: Rep[WPredef]): Rep[Predef.type] = w.wrappedValueOfBaseType
