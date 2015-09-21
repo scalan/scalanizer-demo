@@ -266,7 +266,7 @@
 //        };
 //        abstract class DenseMatr[T](val rows: Rep[Col[Vec[T]]], val numColumns: Rep[Int])(implicit val eeT: Elem[T]) extends Matr[T] {
 //          def numRows: Rep[Int] = DenseMatr.this.rows.length;
-//          def columns(implicit n: Rep[Num[T]]): Rep[Col[Vec[T]]] = Matrs.this.Col.apply[Vec[T]](scala.this.Predef.intArrayOps(((scala.Array.range(toRep(0), DenseMatr.this.numColumns, toRep(1))): Rep[Array[Int]])).map[Vec[T], Array[Vec[T]]](fun(((j: Rep[Int]) => ((DenseVec(DenseMatr.this.rows.map[T](fun(((vec: Rep[Vec[T]]) => vec.apply(j))))(DenseMatr.this.ctT))(DenseMatr.this.ctT)): Rep[Vec[T]]))))(scala.this.Array.canBuildFrom[Vec[T]](((ClassTag.apply[Vec[T]](toRep(classOf[scalanizer.linalgebra.Vecs$Vec]))): Rep[ClassTag[Vec[T]]]))))(((ClassTag.apply[Vec[T]](toRep(classOf[scalanizer.linalgebra.Vecs$Vec]))): Rep[ClassTag[Vec[T]]]))
+//          def columns(implicit n: Rep[Num[T]]): Rep[Col[Vec[T]]] = Matrs.this.Col.apply[Vec[T]](WPredef.intArrayOps(((WArray.range(toRep(0), DenseMatr.this.numColumns, toRep(1))): Rep[WArray[Int]])).map[Vec[T], WArray[Vec[T]]](fun(((j: Rep[Int]) => ((DenseVec(DenseMatr.this.rows.map[T](fun(((vec: Rep[Vec[T]]) => vec.apply(j))))(DenseMatr.this.ctT))(DenseMatr.this.ctT)): Rep[Vec[T]]))))(WArray.canBuildFrom[Vec[T]](((ClassTag.apply[Vec[T]](toRep(classOf[scalanizer.linalgebra.Vecs$Vec]))): Rep[ClassTag[Vec[T]]]))))(((ClassTag.apply[Vec[T]](toRep(classOf[scalanizer.linalgebra.Vecs$Vec]))): Rep[ClassTag[Vec[T]]]))
 //        };
 //        trait MatrCompanion;
 //        trait DenseMatrCompanion

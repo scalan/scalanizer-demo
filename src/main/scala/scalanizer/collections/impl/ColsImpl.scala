@@ -421,17 +421,17 @@
 //          object apply {
 //            def unapply(d: (Def[_$42] forSome {
 //              type _$42
-//            })): Option[(scala.Tuple2[Rep[Array[T]], Elem[T]] forSome {
+//            })): Option[(scala.Tuple2[Rep[WArray[T]], Elem[T]] forSome {
 //              type T
 //            })] = d match {
-//              case MethodCall((receiver @ _), (method @ _), Seq((arr @ _), (emT @ _), _*), _) if __equal(receiver.elem, ColCompanionElem).&&(__equal(method.getName, "apply")) => Some(scala.Tuple2(arr, emT)).asInstanceOf[Option[(scala.Tuple2[Rep[Array[T]], Elem[T]] forSome {
+//              case MethodCall((receiver @ _), (method @ _), Seq((arr @ _), (emT @ _), _*), _) if __equal(receiver.elem, ColCompanionElem).&&(__equal(method.getName, "apply")) => Some(scala.Tuple2(arr, emT)).asInstanceOf[Option[(scala.Tuple2[Rep[WArray[T]], Elem[T]] forSome {
 //                type T
 //              })]]
 //              case _ => None
 //            };
 //            def unapply(exp: (Exp[_$43] forSome {
 //              type _$43
-//            })): Option[(scala.Tuple2[Rep[Array[T]], Elem[T]] forSome {
+//            })): Option[(scala.Tuple2[Rep[WArray[T]], Elem[T]] forSome {
 //              type T
 //            })] = exp match {
 //              case Def((d @ _)) => unapply(d)
@@ -441,17 +441,17 @@
 //          object fromArray {
 //            def unapply(d: (Def[_$44] forSome {
 //              type _$44
-//            })): Option[(scala.Tuple2[Rep[Array[T]], Elem[T]] forSome {
+//            })): Option[(scala.Tuple2[Rep[WArray[T]], Elem[T]] forSome {
 //              type T
 //            })] = d match {
-//              case MethodCall((receiver @ _), (method @ _), Seq((arr @ _), (emT @ _), _*), _) if __equal(receiver.elem, ColCompanionElem).&&(__equal(method.getName, "fromArray")) => Some(scala.Tuple2(arr, emT)).asInstanceOf[Option[(scala.Tuple2[Rep[Array[T]], Elem[T]] forSome {
+//              case MethodCall((receiver @ _), (method @ _), Seq((arr @ _), (emT @ _), _*), _) if __equal(receiver.elem, ColCompanionElem).&&(__equal(method.getName, "fromArray")) => Some(scala.Tuple2(arr, emT)).asInstanceOf[Option[(scala.Tuple2[Rep[WArray[T]], Elem[T]] forSome {
 //                type T
 //              })]]
 //              case _ => None
 //            };
 //            def unapply(exp: (Exp[_$45] forSome {
 //              type _$45
-//            })): Option[(scala.Tuple2[Rep[Array[T]], Elem[T]] forSome {
+//            })): Option[(scala.Tuple2[Rep[WArray[T]], Elem[T]] forSome {
 //              type T
 //            })] = exp match {
 //              case Def((d @ _)) => unapply(d)
@@ -466,22 +466,22 @@
 //          def arr: Rep[WArray[A]];
 //          def length: Rep[Int];
 //          def apply(i: Rep[Int]): Rep[A];
-//          def map[B](f: Rep[scala.Function1[A, B]])(implicit emB: Elem[B]): Rep[Col[B]] = Cols.this.Col.apply[B](scala.this.Predef.genericArrayOps[A](((Col.this.arr): Rep[Array[A]])).map[B, Array[B]](f)(scala.this.Predef.implicitly[CanBuildFrom[Array[A], B, Array[B]]](scala.this.Array.canBuildFrom[B](evidence$1))))(evidence$1);
-//          def reduce(implicit m: Rep[NumMonoid[A]]): Rep[A] = scala.this.Predef.genericArrayOps[A](((Col.this.arr): Rep[Array[A]])).reduce[A](m.append);
+//          def map[B](f: Rep[scala.Function1[A, B]])(implicit emB: Elem[B]): Rep[Col[B]] = Cols.this.Col.apply[B](WPredef.genericArrayOps[A](((Col.this.arr): Rep[WArray[A]])).map[B, WArray[B]](f)(WPredef.implicitly[WCanBuildFrom[WArray[A], B, WArray[B]]](WArray.canBuildFrom[B](evidence$1))))(evidence$1);
+//          def reduce(implicit m: Rep[NumMonoid[A]]): Rep[A] = WPredef.genericArrayOps[A](((Col.this.arr): Rep[WArray[A]])).reduce[A](m.append);
 //          def zip[B](ys: Rep[Col[B]])(implicit emB: Elem[B]): Rep[PairCol[A, B]] = PairCol(this, ys)
 //        };
 //        abstract class ColOverArray[A](val arr: Rep[WArray[A]])(implicit val eeA: Elem[A]) extends Col[A] {
-//          def length: Rep[Int] = array_length(ColOverArray.this.arr);
-//          def apply(i: Rep[Int]): Rep[A] = array_apply(ColOverArray.this.arr, i)
+//          def length: Rep[Int] = ((ColOverArray.this.arr): Rep[WArray[A]]).length;
+//          def apply(i: Rep[Int]): Rep[A] = ((ColOverArray.this.arr): Rep[WArray[A]]).apply(i)
 //        };
 //        abstract class PairCol[A, B](val as: Rep[Col[A]], val bs: Rep[Col[B]])(implicit val eeA: Elem[scala.Tuple2[A, B]], val ecA: Elem[A], val ecB: Elem[B]) extends Col[scala.Tuple2[A, B]] {
-//          def arr: Rep[Array[scala.Tuple2[A, B]]] = scala.this.Predef.genericArrayOps[A](PairCol.this.as.arr).zip[A, B, Array[scala.Tuple2[A, B]]](scala.this.Predef.genericWrapArray[B](PairCol.this.bs.arr))(scala.this.Array.canBuildFrom[scala.Tuple2[A, B]](((ClassTag.apply[scala.Tuple2[A, B]](toRep(classOf[scala.Tuple2]))): Rep[ClassTag[scala.Tuple2[A, B]]])));
+//          def arr: Rep[WArray[scala.Tuple2[A, B]]] = WPredef.genericArrayOps[A](PairCol.this.as.arr).zip[A, B, WArray[scala.Tuple2[A, B]]](WPredef.genericWrapArray[B](PairCol.this.bs.arr))(WArray.canBuildFrom[scala.Tuple2[A, B]](((ClassTag.apply[scala.Tuple2[A, B]](toRep(classOf[scala.Tuple2]))): Rep[ClassTag[scala.Tuple2[A, B]]])));
 //          def length: Rep[Int] = PairCol.this.as.length;
 //          def apply(i: Rep[Int]): Rep[scala.Tuple2[A, B]] = scala.Tuple2.apply[A, B](PairCol.this.as.apply(i), PairCol.this.bs.apply(i))
 //        };
 //        trait ColCompanion {
-//          def apply[T](arr: Rep[Array[T]])(implicit emT: Elem[T]): Rep[Col[T]] = Col.this.fromArray[T](arr)(evidence$2);
-//          def fromArray[T](arr: Rep[Array[T]])(implicit emT: Elem[T]): Rep[Col[T]] = ColOverArray(arr)(evidence$3)
+//          def apply[T](arr: Rep[WArray[T]])(implicit emT: Elem[T]): Rep[Col[T]] = Col.this.fromArray[T](arr)(evidence$2);
+//          def fromArray[T](arr: Rep[WArray[T]])(implicit emT: Elem[T]): Rep[Col[T]] = ColOverArray(arr)(evidence$3)
 //        };
 //        trait ColOverArrayCompanion;
 //        trait PairColCompanion
