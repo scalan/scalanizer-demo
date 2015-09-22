@@ -480,7 +480,7 @@
 //          def apply(i: Rep[Int]): Rep[scala.Tuple2[A, B]] = scala.Tuple2.apply[A, B](PairCol.this.as.apply(i), PairCol.this.bs.apply(i))
 //        };
 //        trait ColCompanion {
-//          def apply[T](arr: Rep[WArray[T]])(implicit emT: Elem[T]): Rep[Col[T]] = Col.this.fromArray[T](arr)(evidence$2);
+//          def apply[T](arr: Rep[WArray[T]])(implicit emT: Elem[T]): Rep[Col[T]] = ColCompanion.this.fromArray[T](arr)(evidence$2);
 //          def fromArray[T](arr: Rep[WArray[T]])(implicit emT: Elem[T]): Rep[Col[T]] = ColOverArray(arr)(evidence$3)
 //        };
 //        trait ColOverArrayCompanion;
