@@ -10,20 +10,19 @@ trait Cols {self: LinearAlgebra =>
     def arr: Array[A]
     def length: Int
     def apply(i: Int): A
-    def map[B: ClassTag](f: A => B): Col[B] =
-      Col((arr: Array[A]).map(f)(implicitly[CanBuildFrom[Array[A], B, Array[B]]]))
-    def reduce(implicit m: NumMonoid[A]): A = (arr: Array[A]).reduce(m.append)
+    def map[B: ClassTag](f: A => B): Col[B] = Col(arr.map(f))
+    def reduce(implicit m: NumMonoid[A]): A = arr.reduce(m.append)
     def zip[B](ys: Col[B]): PairCol[A, B] = new PairCol(this, ys)
   }
 
   object Col {
-    def apply[T: ClassTag](arr: Array[T]): Col[T] = fromArray(arr)
-    def fromArray[T: ClassTag](arr: Array[T]): Col[T] = new ColOverArray(arr)
+    def apply[T](arr: Array[T]): Col[T] = fromArray(arr)
+    def fromArray[T](arr: Array[T]): Col[T] = new ColOverArray(arr)
   }
 
-  class ColOverArray[A: ClassTag](val arr: Array[A]) extends Col[A] {
-    def length = (arr: Array[A]).length
-    def apply(i: Int) = (arr: Array[A]).apply(i)
+  class ColOverArray[A](val arr: Array[A]) extends Col[A] {
+    def length = arr.length
+    def apply(i: Int) = arr(i)
   }
 
   class PairCol[A, B](val as: Col[A], val bs: Col[B]) extends Col[(A, B)] {
