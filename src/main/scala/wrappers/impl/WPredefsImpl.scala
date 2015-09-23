@@ -152,11 +152,6 @@ trait WPredefsExp extends WPredefsDsl with ScalanExp {
         this.getClass.getMethod("genericWrapArray", classOf[AnyRef], classOf[AnyRef]),
         List(xs.asInstanceOf[AnyRef], emT.asInstanceOf[AnyRef]))
 
-    def implicitly[T]( e: Rep[T])(implicit emT: Elem[T]): Rep[T] =
-      methodCallEx[T](self,
-        this.getClass.getMethod("implicitly", classOf[AnyRef], classOf[AnyRef]),
-        List(e.asInstanceOf[AnyRef], emT.asInstanceOf[AnyRef]))
-
     def genericArrayOps[T]( xs: Rep[WArray[T]])(implicit emT: Elem[T]): Rep[WArrayOps[T]] =
       methodCallEx[WArrayOps[T]](self,
         this.getClass.getMethod("genericArrayOps", classOf[AnyRef], classOf[AnyRef]),
@@ -237,18 +232,6 @@ trait WPredefsExp extends WPredefsDsl with ScalanExp {
         case _ => None
       }
       def unapply(exp: Exp[_]): Option[(Rep[WArray[T]], Elem[T]) forSome {type T}] = exp match {
-        case Def(d) => unapply(d)
-        case _ => None
-      }
-    }
-
-    object implicitly {
-      def unapply(d: Def[_]): Option[(Rep[T], Elem[T]) forSome {type T}] = d match {
-        case MethodCall(receiver, method, Seq(e, emT, _*), _) if receiver.elem == WPredefCompanionElem && method.getName == "implicitly" =>
-          Some((e, emT)).asInstanceOf[Option[(Rep[T], Elem[T]) forSome {type T}]]
-        case _ => None
-      }
-      def unapply(exp: Exp[_]): Option[(Rep[T], Elem[T]) forSome {type T}] = exp match {
         case Def(d) => unapply(d)
         case _ => None
       }

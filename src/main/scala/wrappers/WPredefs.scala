@@ -15,7 +15,6 @@ package wrappers {
       @External def intArrayOps(xs: Rep[WArray[Int]]): Rep[WArrayOps[Int]];
       @External def refArrayOps[T](xs: Rep[WArray[T]])(implicit emT: Elem[T]): Rep[WArrayOps[T]];
       @External def genericWrapArray[T](xs: Rep[WArray[T]])(implicit emT: Elem[T]): Rep[WWrappedArray[T]];
-      @External def implicitly[T](e: Rep[T])(implicit emT: Elem[T]): Rep[T];
       @External def genericArrayOps[T](xs: Rep[WArray[T]])(implicit emT: Elem[T]): Rep[WArrayOps[T]]
     };
     def DefaultOfPredef: Default[Predef.type] = Default.defaultVal(null)
