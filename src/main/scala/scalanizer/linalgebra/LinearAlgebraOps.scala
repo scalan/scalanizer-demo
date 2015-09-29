@@ -18,7 +18,7 @@ trait LinearAlgebraOps {self: LinearAlgebra =>
       val plusMonoid = new PlusMonoid(doubleNumer)
       val width = m(0).length
       val vector = new DenseVec(Col(v))
-      val matrix = new DenseMatr[Double](Col(m.map(r => new DenseVec(Col(r)))), width)
+      val matrix = new DenseMatr[Double](Col(m.map(r => new DenseVec(Col(r)): Vec[Double])), width)
 
       new BaseMatrOp().mvm(matrix, vector)(doubleNumer, plusMonoid).items.arr
     }

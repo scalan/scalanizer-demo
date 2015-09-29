@@ -131,7 +131,7 @@ package scalanizer.linalgebra {
             val plusMonoid: Rep[PlusMonoid[Double]] = PlusMonoid(doubleNumer);
             val width: Rep[Int] = m.apply(toRep(0)).length;
             val vector: Rep[DenseVec[Double]] = DenseVec(LinearAlgebraOps.this.Col.apply[Double](v))(((self.DoubleElement): Elem[Double]));
-            val matrix: Rep[DenseMatr[Double]] = DenseMatr(LinearAlgebraOps.this.Col.apply[Vec[Double]](WPredef.refArrayOps[WArray[Double]](m).map[DenseVec[Double], WArray[Vec[Double]]](fun(((r: Rep[WArray[Double]]) => DenseVec(LinearAlgebraOps.this.Col.apply[Double](r))(((self.DoubleElement): Elem[Double])))))(WArray.canBuildFrom[Vec[Double]](((element[Vec[Double]]): Elem[Vec[Double]])).asRep[WCanBuildFrom[WArray[WArray[Double]], DenseVec[Double], WArray[Vec[Double]]]])), width)(((self.DoubleElement): Elem[Double]));
+            val matrix: Rep[DenseMatr[Double]] = DenseMatr(LinearAlgebraOps.this.Col.apply[Vec[Double]](WPredef.refArrayOps[WArray[Double]](m).map[Vec[Double], WArray[Vec[Double]]](fun(((r: Rep[WArray[Double]]) => ((DenseVec(LinearAlgebraOps.this.Col.apply[Double](r))(((self.DoubleElement): Elem[Double]))): Rep[Vec[Double]]))))(WArray.canBuildFrom[Vec[Double]](((element[Vec[Double]]): Elem[Vec[Double]])).asRep[WCanBuildFrom[WArray[WArray[Double]], Vec[Double], WArray[Vec[Double]]]])), width)(((self.DoubleElement): Elem[Double]));
             BaseMatrOp().mvm[Double](matrix, vector)(doubleNumer, plusMonoid)(((self.DoubleElement): Elem[Double])).items.arr
           }
         }
