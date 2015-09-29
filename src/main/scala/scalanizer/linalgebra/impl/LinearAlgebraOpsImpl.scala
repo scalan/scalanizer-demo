@@ -147,7 +147,18 @@ package scalanizer.linalgebra {
 
     object HotSpotKernels {
       import java.io.File;
-      import scalan.compilation.GraphVizConfig
+      import scalan.compilation.GraphVizConfig;
+      lazy val ddmvmKernel = {
+        val ctx = HotSpotManager.getScalanContextUni;
+        val compilerOutput = ctx.buildExecutable(new File("./it-out/".+("ddmvm")), "ddmvm", ctx.ddmvmWrapper, GraphVizConfig.default)(ctx.CompilerConfig(Some("2.11.2"), Seq.empty));
+        val x$1 = (ctx.loadMethod(compilerOutput): @scala.unchecked) match {
+          case scala.Tuple2((cls @ _), (method @ _)) => scala.Tuple2(cls, method)
+        };
+        val cls = x$1._1;
+        val method = x$1._2;
+        val instance = cls.newInstance().asInstanceOf[scala.Function1[scala.Tuple2[Array[Array[Double]], Array[Double]], Array[Double]]];
+        instance
+      }
     }
 
     object HotSpotManager {
@@ -165,7 +176,13 @@ package scalanizer.linalgebra {
       import scalan.compilation.lms.uni.LmsCompilerUni;
       lazy val scalanContextUni = new ScalanUni();
       def getScalanContextUni = scalanContextUni;
-      class ScalanUni extends LinearAlgebraDslExp with LmsCompilerUni with CoreBridge with ScalanCommunityDslExp with EffectfulCompiler with CommunityMethodMappingDSL
+      class ScalanUni extends LinearAlgebraDslExp with LmsCompilerUni with CoreBridge with ScalanCommunityDslExp with EffectfulCompiler with CommunityMethodMappingDSL {
+        lazy val ddmvmWrapper = fun(((in: Rep[scala.Tuple2[WArray[WArray[Double]], WArray[Double]]]) => {
+          val m: Rep[WArray[WArray[Double]]] = in._1;
+          val v: Rep[WArray[Double]] = in._2;
+          LA.ddmvm(m, v)
+        }))
+      }
     }
   }
 }
