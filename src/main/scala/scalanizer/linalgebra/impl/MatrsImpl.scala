@@ -266,21 +266,7 @@ package scalanizer.linalgebra {
         };
         abstract class DenseMatr[T](val rows: Rep[Col[Vec[T]]], val numColumns: Rep[Int])(implicit val eeT: Elem[T]) extends Matr[T] {
           def numRows: Rep[Int] = DenseMatr.this.rows.length;
-          def columns(implicit n: Rep[Num[T]]): Rep[Col[Vec[T]]] = {
-            Matrs.this.Col.apply[Vec[T]](
-              WPredef.intArrayOps(((WArray.range(toRep(0), DenseMatr.this.numColumns, toRep(1))): Rep[WArray[Int]])).
-                map[Vec[T], WArray[Vec[T]]](
-                  fun(((j: Rep[Int]) =>
-                    (
-                      (DenseVec(DenseMatr.this.rows.map[T](
-                        fun(((vec: Rep[Vec[T]]) => vec.apply(j)))
-                      )(DenseMatr.this.eeT))(DenseMatr.this.eeT)): Rep[Vec[T]]))
-                  )
-                )(
-                  (WArray.canBuildFrom[Vec[T]]).asRep[WCanBuildFrom[WArray[Int],Vec[T],WArray[Vec[T]]]]
-                )
-            )
-          }
+          def columns(implicit n: Rep[Num[T]]): Rep[Col[Vec[T]]] = Matrs.this.Col.apply[Vec[T]](WPredef.intArrayOps(((WArray.range(toRep(0), DenseMatr.this.numColumns, toRep(1))): Rep[WArray[Int]])).map[Vec[T], WArray[Vec[T]]](fun(((j: Rep[Int]) => ((DenseVec(DenseMatr.this.rows.map[T](fun(((vec: Rep[Vec[T]]) => vec.apply(j))))(Predef.implicitly[Elem[T]]))(Predef.implicitly[Elem[T]])): Rep[Vec[T]]))))(WArray.canBuildFrom[Vec[T]](((element[Vec[T]]): Elem[Vec[T]])).asRep[WCanBuildFrom[WArray[Int], Vec[T], WArray[Vec[T]]]]))
         };
         trait MatrCompanion;
         trait DenseMatrCompanion

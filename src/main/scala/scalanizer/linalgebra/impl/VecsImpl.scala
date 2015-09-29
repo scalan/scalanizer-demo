@@ -284,8 +284,8 @@ package scalanizer.linalgebra {
         abstract class DenseVec[T](val items: Rep[Col[T]])(implicit val eeT: Elem[T]) extends Vec[T] {
           def length: Rep[Int] = DenseVec.this.items.length;
           def apply(i: Rep[Int]): Rep[T] = DenseVec.this.items.apply(i);
-          def map[R](f: Rep[scala.Function1[T, R]])(implicit emR: Elem[R]): Rep[Vec[R]] = DenseVec(DenseVec.this.items.map[R](f));
-          def dot(other: Rep[Vec[T]])(implicit n: Rep[Num[T]], m: Rep[NumMonoid[T]]): Rep[T] = other.items.zip[T](DenseVec.this.items).map[T](fun(((v: Rep[scala.Tuple2[T, T]]) => n.times(v._1, v._2))))(DenseVec.this.eeT).reduce(m)
+          def map[R](f: Rep[scala.Function1[T, R]])(implicit emR: Elem[R]): Rep[Vec[R]] = DenseVec(DenseVec.this.items.map[R](f)(Predef.implicitly[Elem[R]]))(Predef.implicitly[Elem[R]]);
+          def dot(other: Rep[Vec[T]])(implicit n: Rep[Num[T]], m: Rep[NumMonoid[T]]): Rep[T] = other.items.zip[T](DenseVec.this.items).map[T](fun(((v: Rep[scala.Tuple2[T, T]]) => n.times(v._1, v._2))))(Predef.implicitly[Elem[T]]).reduce(m)
         };
         trait VecCompanion;
         trait DenseVecCompanion

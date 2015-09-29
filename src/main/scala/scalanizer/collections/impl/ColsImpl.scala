@@ -466,15 +466,7 @@ package scalanizer.collections {
           def arr: Rep[WArray[A]];
           def length: Rep[Int];
           def apply(i: Rep[Int]): Rep[A];
-          def map[B](f: Rep[scala.Function1[A, B]])(implicit emB: Elem[B]): Rep[Col[B]] = {
-            Cols.this.Col.apply[B](
-              WPredef.genericArrayOps[A](Col.this.arr).map[B, WArray[B]](
-                f
-              )(
-                  (WArray.canBuildFrom[B]).asRep[WCanBuildFrom[WArray[A],B,WArray[B]]]
-              )
-            )
-          };
+          def map[B](f: Rep[scala.Function1[A, B]])(implicit emB: Elem[B]): Rep[Col[B]] = Cols.this.Col.apply[B](WPredef.genericArrayOps[A](Col.this.arr).map[B, WArray[B]](f)(WArray.canBuildFrom[B](Predef.implicitly[Elem[B]]).asRep[WCanBuildFrom[WArray[A], B, WArray[B]]]));
           def reduce(implicit m: Rep[NumMonoid[A]]): Rep[A] = WPredef.genericArrayOps[A](Col.this.arr).reduce[A](m.append);
           def zip[B](ys: Rep[Col[B]])(implicit emB: Elem[B]): Rep[PairCol[A, B]] = PairCol(this, ys)
         };
@@ -483,17 +475,7 @@ package scalanizer.collections {
           def apply(i: Rep[Int]): Rep[A] = ColOverArray.this.arr.apply(i)
         };
         abstract class PairCol[A, B](val as: Rep[Col[A]], val bs: Rep[Col[B]])(implicit val eeA: Elem[scala.Tuple2[A, B]], val ecA: Elem[A], val ecB: Elem[B]) extends Col[scala.Tuple2[A, B]] {
-          def arr: Rep[WArray[scala.Tuple2[A, B]]] = {
-            WPredef.genericArrayOps[A](
-              PairCol.this.as.arr).zip[A, B, WArray[scala.Tuple2[A, B]]](
-                ???
-//                WPredef.genericWrapArray[B](
-//                  PairCol.this.bs.arr
-//                )
-              )(
-                (WArray.canBuildFrom[scala.Tuple2[A, B]]).asRep[WCanBuildFrom[WArray[A],(A,B), WArray[(A,B)]]]
-              )
-          };
+          def arr: Rep[WArray[scala.Tuple2[A, B]]] = WPredef.genericArrayOps[A](PairCol.this.as.arr).zip[A, B, WArray[scala.Tuple2[A, B]]](/*WPredef.genericWrapArray[B](PairCol.this.bs.arr)*/???)(WArray.canBuildFrom[scala.Tuple2[A, B]](((element[scala.Tuple2[A, B]]): Elem[scala.Tuple2[A, B]])).asRep[WCanBuildFrom[WArray[A], scala.Tuple2[A, B], WArray[scala.Tuple2[A, B]]]]);
           def length: Rep[Int] = PairCol.this.as.length;
           def apply(i: Rep[Int]): Rep[scala.Tuple2[A, B]] = Pair[A, B](PairCol.this.as.apply(i), PairCol.this.bs.apply(i))
         };

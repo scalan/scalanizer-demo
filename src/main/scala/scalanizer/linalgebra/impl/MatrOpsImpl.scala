@@ -158,7 +158,7 @@ package scalanizer.linalgebra {
           def mvm[T](matrix: Rep[Matr[T]], vector: Rep[Vec[T]])(n: Rep[Num[T]], m: Rep[NumMonoid[T]])(implicit emT: Elem[T]): Rep[Vec[T]]
         };
         abstract class BaseMatrOp extends MatrOp {
-          def mvm[T](matrix: Rep[Matr[T]], vector: Rep[Vec[T]])(n: Rep[Num[T]], m: Rep[NumMonoid[T]])(implicit emT: Elem[T]): Rep[Vec[T]] = DenseVec(matrix.rows.map[T](fun(((r: Rep[Vec[T]]) => r.dot(vector)(n, m)))))
+          def mvm[T](matrix: Rep[Matr[T]], vector: Rep[Vec[T]])(n: Rep[Num[T]], m: Rep[NumMonoid[T]])(implicit emT: Elem[T]): Rep[Vec[T]] = DenseVec(matrix.rows.map[T](fun(((r: Rep[Vec[T]]) => r.dot(vector)(n, m))))(Predef.implicitly[Elem[T]]))(Predef.implicitly[Elem[T]])
         };
         trait MatrOpCompanion;
         trait BaseMatrOpCompanion
