@@ -13,7 +13,7 @@ object ScalanParadiseRootBuild extends Build {
       "-language:existentials",
       "-language:postfixOps"
     ),
-    addCompilerPlugin("com.huawei" %% "scalanizer" % "0.0.3" classifier "assembly")
+    addCompilerPlugin("com.huawei" %% "scalanizer" % "0.0.4-SNAPSHOT" classifier "assembly")
   )
 
   lazy val scalanizerSample = Project(
