@@ -2,8 +2,8 @@
 *.log
 
 # Scalan specific
-test-out
-
+test-out/
+it-out/
 # sbt specific
 .cache/
 .history/

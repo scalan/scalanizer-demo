@@ -1,9 +1,9 @@
 package wrappers {
   import scalan._
 
-  trait WrappersDsl extends ScalanCommunityDsl with WCanBuildFromsDsl with WArrayOpssDsl with WWrappedArraysDsl with WGenIterablesDsl with WPredefsDsl with WArraysDsl
+  trait WrappersDsl extends ScalanDsl with WCanBuildFromsDsl with WArrayOpssDsl with WWrappedArraysDsl with WGenIterablesDsl with WPredefsDsl with WArraysDsl
 
-  trait WrappersDslSeq extends WrappersDsl with ScalanCommunityDslSeq
+  trait WrappersDslStd extends ScalanDslStd with WrappersDsl
 
-  trait WrappersDslExp extends WrappersDsl with ScalanCommunityDslExp with WCanBuildFromsDslExp with WArrayOpssDslExp with WWrappedArraysDslExp with WGenIterablesDslExp with WPredefsDslExp with WArraysDslExp
+  trait WrappersDslExp extends ScalanDslExp with WrappersDsl with WCanBuildFromsDslExp with WArrayOpssDslExp with WWrappedArraysDslExp with WGenIterablesDslExp with WPredefsDslExp with WArraysDslExp
 }

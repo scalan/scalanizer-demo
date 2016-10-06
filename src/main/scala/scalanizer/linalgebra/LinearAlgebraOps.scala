@@ -4,7 +4,7 @@ import scalanizer._
 import scalanizer.collections._
 import scala.reflect.ClassTag
 import scalan.HotSpot
-import scalan.compilation.KernelTypes._
+import scalan.compilation.KernelType._
 
 trait LinearAlgebraOps {self: LinearAlgebra =>
 
@@ -12,7 +12,7 @@ trait LinearAlgebraOps {self: LinearAlgebra =>
   class LA extends LinearAlgebraOp
 
   object LA {
-    @HotSpot(CppKernel)
+    @HotSpot(Cpp)
     def ddmvm(m: Array[Array[Double]], v: Array[Double]): Array[Double] = {
       val doubleNumer = new DoubleNum()
       val plusMonoid = new PlusMonoid(doubleNumer)

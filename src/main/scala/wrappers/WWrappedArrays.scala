@@ -1,8 +1,6 @@
 package wrappers {
   import scalan._
 
-  import scalan.common.Default
-
   import impl._
 
   import scala.collection.mutable.WrappedArray
@@ -10,10 +8,9 @@ package wrappers {
   trait WWrappedArrays extends Base with TypeWrappers { self: WrappersDsl =>
     trait WWrappedArray[T] extends TypeWrapper[WrappedArray[T], WWrappedArray[T]] { self =>
       implicit def eeT: Elem[T];
-      def wrappedValueOfBaseType: Rep[WrappedArray[T]]
+      def wrappedValue: Rep[WrappedArray[T]]
     };
-    trait WWrappedArrayCompanion extends ExCompanion1[WWrappedArray];
-    def DefaultOfWrappedArray[T]: Default[WrappedArray[T]] = Default.defaultVal(null)
+    trait WWrappedArrayCompanion extends ExCompanion1[WWrappedArray]
   }
 
   trait WWrappedArraysDsl extends WWrappedArraysAbs { self: WrappersDsl =>

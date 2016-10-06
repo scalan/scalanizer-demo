@@ -1,7 +1,7 @@
 import sbt._
 import sbt.Keys._
 
-object ScalanParadiseRootBuild extends Build {
+object ScalanizerDemoRootBuild extends Build {
   val buildSettings = Seq(
     organization := "com.huawei.scalan",
     scalaVersion := "2.11.2",
@@ -11,9 +11,10 @@ object ScalanParadiseRootBuild extends Build {
       "-language:higherKinds",
       "-language:implicitConversions",
       "-language:existentials",
-      "-language:postfixOps"
-    ),
-    addCompilerPlugin("com.huawei" %% "scalanizer" % "0.0.4-SNAPSHOT" classifier "assembly")
+      "-language:postfixOps",
+      "-Xplugin:/Users/slesarenko/.ivy2/local/com.huawei.scalan/scalanizer_2.11/0.0.4-SNAPSHOT/jars/scalanizer_2.11-assembly.jar"
+    )//,
+//    addCompilerPlugin("com.huawei.scalan" %% "scalanizer" % "0.0.4-SNAPSHOT" classifier "assembly")
   )
 
   lazy val scalanizerSample = Project(
@@ -21,8 +22,10 @@ object ScalanParadiseRootBuild extends Build {
     base = file(".")
   ).settings(
       buildSettings,
+      unmanagedBase := file("/Users/slesarenko/.ivy2/local/com.huawei.scalan/scalanizer_2.11/0.0.4-SNAPSHOT/jars/"),
       libraryDependencies ++= Seq(
-        "com.huawei.scalan" %% "scalan-lms-backend" % "0.2.9-SNAPSHOT",
+//        "com.huawei.scalan" %% "scalanizer" % "0.0.4-SNAPSHOT" ,
+        "com.huawei.scalan" %% "scalan-lms-backend-core" % "0.3.0-SNAPSHOT",
         "org.scalatest" %% "scalatest" % "2.2.1" % "test"
       ),
       scalaOrganization := "org.scala-lang.virtualized",

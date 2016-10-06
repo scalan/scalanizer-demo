@@ -1,6 +1,6 @@
 package scalan
 
 import scala.annotation.StaticAnnotation
-import scalan.compilation.KernelTypes
+import scalan.compilation.KernelType
 
-class HotSpot(kernel: KernelTypes.KernelType = KernelTypes.ScalaKernel) extends StaticAnnotation
+class HotSpot(kernel: KernelType = KernelType.Scala) extends StaticAnnotation
