@@ -8,10 +8,15 @@ import scalan.compilation.KernelType._
 
 trait LinearAlgebraOps {self: LinearAlgebra =>
 
+  // This is declared in order to satisfy SEntityModuleDef requirements
   trait LinearAlgebraOp
   class LA extends LinearAlgebraOp
-
   object LA {
+    @HotSpot(kernel = Scala)
+    def ddmvm(v: Array[Double]): Int = {
+      val c = Col.fromArray(v)
+      c.length
+    }
     @HotSpot(Cpp)
     def ddmvm(m: Array[Array[Double]], v: Array[Double]): Array[Double] = {
       val doubleNumer = new DoubleNum()
