@@ -14,7 +14,6 @@ object ScalanizerDemoRootBuild extends Build {
       "-language:postfixOps"
 //      , "-Xplugin:/Users/slesarenko/.ivy2/local/com.huawei.scalan/scalanizer_2.11/0.0.4-SNAPSHOT/jars/scalanizer_2.11-assembly.jar"
     )//,
-//    addCompilerPlugin("com.huawei.scalan" %% "scalanizer" % "0.0.4-SNAPSHOT" classifier "assembly")
   )
 
   lazy val scalanizerSample = Project(

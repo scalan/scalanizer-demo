@@ -267,18 +267,7 @@ package scalanizer.collections {
     object HotSpotKernels {
       import java.io.File;
       import scalan.compilation.GraphVizConfig;
-      lazy val ddmvmKernel = {
-         ???
-//        val ctx = HotSpotManager.getScalanContext;
-//        val compilerOutput = ctx.buildExecutable(new File("./it-out/".+("ddmvm")), "ddmvm", ctx.ddmvmWrapper, GraphVizConfig.default)(ctx.CompilerConfig(Some("2.11.2"), Seq.empty));
-//        val x$1 = (ctx.loadMethod(compilerOutput): @scala.unchecked) match {
-//          case scala.Tuple2((cls @ _), (method @ _)) => scala.Tuple2(cls, method)
-//        };
-//        val cls = x$1._1;
-//        val method = x$1._2;
-//        val instance = cls.newInstance().asInstanceOf[scala.Function1[Array[Double], Int]];
-//        instance
-      }
+      lazy val ddmvmKernel = ???
     }
 
     object HotSpotManager {

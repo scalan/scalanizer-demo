@@ -97,7 +97,7 @@ trait WArraysAbs extends ScalanDsl with WArrays {
     override lazy val typeArgs = TypeArgs("T" -> eeT)
     override lazy val eTo: Elem[_] = this
     override def convertWArray(x: Rep[WArray[T]]) = WArrayImpl(x.wrappedValue)
-    override def getDefaultRep = ??? //WArrayImpl(DefaultOfArray[T])
+    override def getDefaultRep = WArrayImpl(DefaultOfArray[T])
     override lazy val tag = {
       implicit val tagT = eeT.tag
       weakTypeTag[WArrayImpl[T]]
@@ -242,6 +242,5 @@ object WArrays_Module extends scalan.ModuleInfo {
 }
 }
 
-//trait WArraysDsl extends impl.WArraysAbs {self: WrappersDsl =>}
-//trait WArraysDslStd extends impl.WArraysStd {self: WrappersDslStd =>}
-//trait WArraysDslExp extends impl.WArraysExp {self: WrappersDslExp =>}
+trait WArraysDsl extends impl.WArraysAbs {self: WrappersDsl =>}
+trait WArraysDslExp extends impl.WArraysExp {self: WrappersDslExp =>}

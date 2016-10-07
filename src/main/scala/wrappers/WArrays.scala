@@ -12,14 +12,7 @@ package wrappers {
       @External def apply(i: Rep[Int]): Rep[T];
       @External def length: Rep[Int]
     };
-    trait WArrayCompanion extends ExCompanion1[WArray]
-  }
-
-  trait WArraysDsl extends WArraysAbs { self: WrappersDsl =>
-    
-  }
-
-  trait WArraysDslExp extends WArraysExp { self: WrappersDslExp =>
-    
+    trait WArrayCompanion extends ExCompanion1[WArray];
+    def DefaultOfArray[T](implicit eT: Elem[T]): Rep[Array[T]] = toRep(null.asInstanceOf[Array[T]])
   }
 }
