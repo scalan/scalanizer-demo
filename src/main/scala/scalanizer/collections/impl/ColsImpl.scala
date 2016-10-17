@@ -1,8 +1,11 @@
 package scalanizer.collections {
   package implOfCols {
     import scalan._
+
     import scalanizer.linalgebra.implOfLinearAlgebra.StagedEvaluation._
+
     import scala.reflect.runtime.universe._
+
     import scala.reflect._
 
     object StagedEvaluation {
@@ -263,22 +266,22 @@ package scalanizer.collections {
 
     object HotSpotKernels {
       import java.io.File;
-      import scalan.compilation.{KernelStore,KernelType};
-      lazy val ddmvmKernel: (Array[Double]) => Int = {
-        val methodName = "ddmvm"
-        val kernelsDir = new File(s"./test-out/$methodName")
-        val ctx = HotSpotManager.scalanContext
-        val store      = KernelStore.open(ctx, kernelsDir)
-        val k = store.createKernel(methodName, KernelType.Scala, ctx.ddmvmWrapper)
-        k
+      import scalan.compilation.{KernelStore, KernelType};
+      lazy val ddmvmKernel: scala.Function1[Array[Double], Int] = {
+        val methodName = "ddmvm";
+        val kernelsDir = new File("./test-out/".+("ddmvm"));
+        val ctx = HotSpotManager.scalanContext;
+        val store = KernelStore.open(ctx, kernelsDir);
+        val k = store.createKernel(methodName, KernelType.Scala, ctx.ddmvmWrapper);
+        k.asInstanceOf[scala.Function1[Array[Double], Int]]
       }
     }
 
     object HotSpotManager {
-      import scalanizer.linalgebra.implOfLinearAlgebra.StagedEvaluation._
-      val scalanContext: Scalan = new Scalan
+      import scalanizer.linalgebra.implOfLinearAlgebra.StagedEvaluation._;
+      val scalanContext: Scalan = new Scalan();
       class Scalan extends LinearAlgebraDslExp {
-        lazy val ddmvmWrapper: Rep[Array[Double] => Int] = ???
+        lazy val ddmvmWrapper: Rep[scala.Function1[WArray[Double], Int]] = ???
       }
     }
   }
