@@ -258,7 +258,7 @@ package scalanizer.collections {
       trait ColsDsl extends ColsAbs { self: LinearAlgebraDsl =>
         
       };
-      trait ColsDslExp extends ColsExp { self: LinearAlgebraDslExp =>
+      trait ColsDslExp extends ColsExp with ColsStaging { self: LinearAlgebraDslExp =>
         
       };
       val serializedMetaAst = "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"
@@ -281,7 +281,10 @@ package scalanizer.collections {
       import scalanizer.linalgebra.implOfLinearAlgebra.StagedEvaluation._;
       val scalanContext: Scalan = new Scalan();
       class Scalan extends LinearAlgebraDslExp {
-        lazy val ddmvmWrapper: Rep[scala.Function1[WArray[Double], Int]] = ???
+        lazy val ddmvmWrapper: Rep[scala.Function1[Array[Double], Int]] = {
+           val f = fun { in: Rep[WArray[Double]] => in.length }
+           fun { in: Rep[Array[Double]] => f(WArrayImpl(in)) }
+        }
       }
     }
   }

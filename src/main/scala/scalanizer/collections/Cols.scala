@@ -3,7 +3,7 @@ package scalanizer.collections
 import scalanizer._
 import scala.collection.generic.CanBuildFrom
 import scala.reflect.ClassTag
-import scalan.HotSpot
+import scalan.{HotSpot}
 import scalan.compilation.KernelType
 import scalanizer.linalgebra.LinearAlgebra
 
@@ -41,3 +41,4 @@ trait Cols {self: LinearAlgebra =>
 //    def apply(i: Int) = (as(i), bs(i))
 //  }
 }
+

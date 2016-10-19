@@ -18,6 +18,10 @@ class LinearAlgebraTests extends FunSuite with LinearAlgebra {
     }
   }
 
+  test("ddmvm") {
+    val len = Col.ddmvm(Array(10, 20))
+    assertResult(2)(len)
+  }
 //  test("ddmvm") {
 //    val rows = 10000
 //    val cols = rows;

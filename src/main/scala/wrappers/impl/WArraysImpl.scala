@@ -22,8 +22,8 @@ trait WArraysAbs extends ScalanDsl with WArrays {
 
   implicit def unwrapValueOfWArray[T](w: Rep[WArray[T]]): Rep[Array[T]] = w.wrappedValue
 
-  implicit override def arrayElement[T:Elem]: Elem[Array[T]] =
-    element[WArray[T]].asInstanceOf[WrapperElem[_, _]].baseElem.asInstanceOf[Elem[Array[T]]]
+//  implicit override def arrayElement[T:Elem]: Elem[Array[T]] =
+//    element[WArray[T]].asInstanceOf[WrapperElem[_, _]].baseElem.asInstanceOf[Elem[Array[T]]]
 
   // familyElem
   class WArrayElem[T, To <: WArray[T]](implicit _eeT: Elem[T])
