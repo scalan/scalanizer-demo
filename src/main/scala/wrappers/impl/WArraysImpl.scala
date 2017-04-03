@@ -22,16 +22,15 @@ trait WArraysAbs extends ScalanDsl with WArrays {
 
   implicit def unwrapValueOfWArray[T](w: Rep[WArray[T]]): Rep[Array[T]] = w.wrappedValue
 
-//  implicit override def arrayElement[T:Elem]: Elem[Array[T]] =
-//    element[WArray[T]].asInstanceOf[WrapperElem[_, _]].baseElem.asInstanceOf[Elem[Array[T]]]
+  implicit def arrayElement[T:Elem]: Elem[Array[T]] =
+    element[WArray[T]].asInstanceOf[WrapperElem[_, _]].baseElem.asInstanceOf[Elem[Array[T]]]
 
   // familyElem
   class WArrayElem[T, To <: WArray[T]](implicit _eeT: Elem[T])
     extends WrapperElem[Array[T], To] {
     def eeT = _eeT
     lazy val parent: Option[Elem[_]] = None
-    lazy val typeArgs = TypeArgs("T" -> eeT)
-    override def isEntityType = true
+    lazy val typeArgs = TypeArgs("T" -> (eeT -> scalan.util.Invariant))
     override lazy val tag = {
       implicit val tagT = eeT.tag
       weakTypeTag[WArray[T]].asInstanceOf[WeakTypeTag[To]]
@@ -43,7 +42,7 @@ trait WArraysAbs extends ScalanDsl with WArrays {
     }
 
     def convertWArray(x: Rep[WArray[T]]): Rep[To] = {
-      x.selfType1 match {
+      x.elem match {
         case _: WArrayElem[_, _] => x.asRep[To]
         case e => !!!(s"Expected $x to have WArrayElem[_, _], but got $e", x)
       }
@@ -94,7 +93,7 @@ trait WArraysAbs extends ScalanDsl with WArrays {
     extends WArrayElem[T, WArrayImpl[T]]
     with ConcreteElem[WArrayImplData[T], WArrayImpl[T]] {
     override lazy val parent: Option[Elem[_]] = Some(wArrayElement(element[T]))
-    override lazy val typeArgs = TypeArgs("T" -> eeT)
+    override lazy val typeArgs = TypeArgs("T" -> (eeT -> scalan.util.Invariant))
     override lazy val eTo: Elem[_] = this
     override def convertWArray(x: Rep[WArray[T]]) = WArrayImpl(x.wrappedValue)
     override def getDefaultRep = WArrayImpl(DefaultOfArray[T])
@@ -123,13 +122,12 @@ trait WArraysAbs extends ScalanDsl with WArrays {
     def productElement(n: Int) = eeT
   }
   case class WArrayImplIsoElem[T](eeT: Elem[T]) extends Elem[WArrayImplIso[T]] {
-    def isEntityType = true
     def getDefaultRep = reifyObject(new WArrayImplIso[T]()(eeT))
     lazy val tag = {
       implicit val tagT = eeT.tag
       weakTypeTag[WArrayImplIso[T]]
     }
-    lazy val typeArgs = TypeArgs("T" -> eeT)
+    lazy val typeArgs = TypeArgs("T" -> (eeT -> scalan.util.Invariant))
   }
   // 4) constructor and deconstructor
   class WArrayImplCompanionAbs extends CompanionDef[WArrayImplCompanionAbs] {
@@ -186,8 +184,9 @@ trait WArraysExp extends ScalanExp with WArraysDsl {
   }
 
   def mkWArrayImpl[T]
-    (wrappedValue: Rep[Array[T]])(implicit eeT: Elem[T]): Rep[WArrayImpl[T]] =
+    (wrappedValue: Rep[Array[T]])(implicit eeT: Elem[T]): Rep[WArrayImpl[T]] = {
     new ExpWArrayImpl[T](wrappedValue)
+  }
   def unmkWArrayImpl[T](p: Rep[WArray[T]]) = p.elem.asInstanceOf[Elem[_]] match {
     case _: WArrayImplElem[T] @unchecked =>
       Some((p.asRep[WArrayImpl[T]].wrappedValue))
@@ -238,7 +237,7 @@ trait WArraysExp extends ScalanExp with WArraysDsl {
 }
 
 object WArrays_Module extends scalan.ModuleInfo {
-  val dump = "H4sIAAAAAAAAALVVz48URRR+PbuzPb8Cu+AGTCS7roMmBmaACyR7WncHxAy7G3oDZCBrarprhobq6rKqZunxwJFEvRkTExMPGI9EY7x5NzEe/Ac8e0KN4SAJCYSq6l8zAwNycA6V6uo37331fd97fe8vKAoObwsXEUQbAZao4Zj9mpB1p0WlL4cXQm9A8Abu7b7/zaOrwSeHCjDfgbnrSGwI0oFyvGlFLNs70mtDGVEXCxlyIeHNtqnQdENCsCv9kDb9IBhI1CW42faFXG3DbDf0hh/BbbDaMO+G1OVYYmedICGwSM5LWCPys+eyeR5usbwGbepbNEduscORLxV8VWM+jr+ImTOkIR0GEvYl0LaYhqViqjhi6g7nA0ZMmZk22H7AQi7TqraqcD300sdZitQBHGjfQHuoqar2m47kPu3rZAy5N1Efb6oQHT6r7iAw6e0MGU6SV4X0xupFDACUKqcMsEbOWSPjrKE5qzuY+4j4HyP9cpuH0RDinzUDEDGV4thLUqQZcIt69U+vuVcfOtWgoP8caSi2ATSnEi1NcYiRR3H7y8XPxYNzd08XoNKBii/WukJy5MpRGyR0VRGloTSYMwYR7ysFV6YpaKqsqZgJm5TdMGCIqkwJlzUlFPFdX+pgfVZL5JnCvS0ZTkOtiFnZfZen3Nd4aR0Rsn3/9eNH/2xdKUBhvERZpXRUM/A0qYS5y2uco2GSXK/7JVg7hmG9lKN8tV9QPKPhnft/ez+fgGuFjLyk1n/TS6U4cOarn47i7e8KUOoYe58lqG+U0+xsYOF2oBTuYR6f23uI6N1z1bM93EMDIhNOR8mYUWRIWJ7amQxrplaN4630+tXYtJshxfWz2/V/nV+/uKc9yaEWv4lb9Yl/+vHv+3rS2FVC7RZHjGHvEiIDnJJcfAXi9XLEBC2O/OGwZSXIzHsJMxjvpKlmWwQHo9n18toz6SVUYgfoHs/LaJ2OTPOZ8SU95Fz48vul3QIUP4BiTwkg2lDshgPqpYZXg1LiSL6XnlnjAiiDI46C1B/xeFgGAyLD+Szil/oonak/3Lmz+M+3Hx40fV/q+jJArH7iFbo+bdL/sathXP+qjrxszBKjm9PLUi7gwqSibz3XMOWREbmYRWgDV2KbOmGAF1Ye+Lt3P5OmU61o/Cux1b2hpvKqyfOGyXNyAmutFa2nZJychLUwZYBMADJaqwbZH3twfZTc2AMsv/Wqgr8yRXMnYVnJfvvh15vv/vbjH2b6VbReqllp9oHMxYlMblu1itZI74/nUE9lEHIvqlA7GZcSSrcSmRJsej03oWaqpPqETvBx3mR+CvwGwfLjCAAA"
+  val dump = "H4sIAAAAAAAAALVVv28cRRR+d/b5fpnENrJFCgdjbYSAZC8gQZBcIGOfUeBiW1krgSMCze3OXSbM7g677+w9inSkgA5RIVFEUFpIiAbRIyGK/APUFChOhFIkFREzs7/OFx8hRbYY7c6+/d6b7/ve2/07UAoDWAptwolnuhSJaen71RAN64Lv9Dldp92tg89P/vXd6ftFmG3D1FUSroe8DdX4phmJ7N5CpwWzG8xzmh4yHBiuhkAwW3GOhsrROCqHMfTVSguqxLNpiH4QIrwQf9ywfc6pjcz3Gsx1+0g6nDZaLEQZP9nxncGncB2KLZixfc8OKFJrjZMwpGGyX6EKnmXPVf082BJ5jkcL3AkIQ1mfzDETx1+kwhp4vjdwEY4lpW0JVZaMqdNISCLOu4LrNJMtKDNX+AGmWcsyw1XfSR8nPSI3YK51jeyShszaa1gYMK+nwASxPyE9uilDVHhJniGkvLszEDQBr4foHMoXCQAQUtXXdGVmTpqZkWYq0gyLBoxw9hlRL7cDPxpAfBUmACIFcfoxECkCbXqO8cUV+8MHVt0tqo8jVUtFV1SWQM+PcZjWR5L728Wvwnvv3DxXhFobaixc7YQYEBuHfZDwVSee56OuOaOQBD0p4fI4CXWWVRkz4pOq7buCeBIpIXNaKsWZzVAFq71nEn3GkF9GQdPQYiQK2XnHdZQ20xrhfPv2iTOnDprvFzMLJCmqEtKSLRWkoAhTl1eDgAwScLXOIBR2NMNqqUX5WvmP5BkNL96+6/x6Fq4UoZCQl+T6f3pJiLk3v/nlFN3+oQiVtvb3Bic9rZxiZ52Gdhsq/i4N4v3yLuHq7kj1yg7tkj7HhNNhMiYkGQhLY1tTUMXUirZ8IT1+PTbtpu9RY2PbuG/9/vW+8mQA0/GbuFcfsnP//HGsi9quCNN7ARGCOpcI79OU5NITEK+WkzpoYeiDE4VCUpl+jzBB6U4KNdnk1B1GV8v8I/AItdgBqsnzNEqnxXE+07784MAxn7u7uFeEqXeh1JUChC0odfy+56SGl5MSaYRvp3sjbpQGJwFxswG6S2TDy4ZEWEhF6SPjjUvJfiyFvJZAF5qdZT5VZyGpWH1mnvdiQDRe+Xl/j916aUOrMXz4x1oync8/3rgx//f3Hz+rR0ilw9Alwjj7BAMk7fenOCDgsJXqKvKy9l1cXVktS7kX5kbNYRzpvdrQtF3IIhTbtdjxlu/S2eV77KObX6Ju+kJ0+I+z1bkmB/yKxlnUOK+P1DrdjNZSMl4dLWtuzCwaKUhbQvba8djOa8PkxlYR+anfkuUvj9HcSliWsl9/8O3my7d++lMP0prSS/a9l/1sc3FiW1Vk1ymN1L2Zl/pGVkJuWRlaTiYvQmUvkSmpTa3vjaiZKil/xyN8XNDI/wIRsQijbgkAAA=="
 }
 }
 

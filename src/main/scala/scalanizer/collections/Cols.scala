@@ -1,10 +1,7 @@
 package scalanizer.collections
 
-import scalanizer._
-import scala.collection.generic.CanBuildFrom
-import scala.reflect.ClassTag
-import scalan.{HotSpot}
-import scalan.compilation.KernelType
+import scalan.meta.ScalanAst.KernelType
+import scalan.meta.scalanizer.HotSpot
 import scalanizer.linalgebra.LinearAlgebra
 
 trait Cols {self: LinearAlgebra =>
@@ -22,9 +19,9 @@ trait Cols {self: LinearAlgebra =>
     def fromArray[T](arr: Array[T]): Col[T] = new ColOverArray(arr)
     @HotSpot(KernelType.Scala)
     def ddmvm(v: Array[Double]): Int = {
-      scalanizer.collections.implOfCols.HotSpotKernels.ddmvmKernel(v)
-//      val c = Col.fromArray(v)
-//      c.length
+//      scalanizer.collections.implOfCols.HotSpotKernels.ddmvmKernel(v)
+      val c = Col.fromArray(v)
+      c.length
     }
   }
 

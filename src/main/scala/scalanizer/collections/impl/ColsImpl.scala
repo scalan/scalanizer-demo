@@ -30,8 +30,7 @@ package scalanizer.collections {
           lazy val parent: Option[(Elem[_$1] forSome { 
             type _$1
           })] = None;
-          lazy val typeArgs = TypeArgs("A".->(eeA));
-          override def isEntityType = true;
+          lazy val typeArgs = TypeArgs("A".->(eeA.->(scalan.util.Invariant)));
           override lazy val tag = {
             implicit val tagA = eeA.tag;
             weakTypeTag[Col[A]].asInstanceOf[WeakTypeTag[To]]
@@ -43,7 +42,7 @@ package scalanizer.collections {
             val conv = fun(((x: Rep[Col[A]]) => convertCol(x)));
             tryConvert(element[Col[A]], this, x, conv)
           };
-          def convertCol(x: Rep[Col[A]]): Rep[To] = x.selfType1 match {
+          def convertCol(x: Rep[Col[A]]): Rep[To] = x.elem match {
             case ((_): ColElem[(_), (_)]) => x.asRep[To]
             case (e @ _) => !!!(StringContext("Expected ", " to have ColElem[_, _], but got ", "").s(x, e), x)
           };
@@ -67,7 +66,7 @@ package scalanizer.collections {
           override lazy val parent: Option[(Elem[_$3] forSome { 
             type _$3
           })] = Some(colElement(element[A]));
-          override lazy val typeArgs = TypeArgs("A".->(eeA));
+          override lazy val typeArgs = TypeArgs("A".->(eeA.->(scalan.util.Invariant)));
           override def convertCol(x: Rep[Col[A]]) = ColOverArray(x.arr);
           override def getDefaultRep = ColOverArray(element[WArray[A]].defaultRepValue);
           override lazy val tag = {
@@ -89,13 +88,12 @@ package scalanizer.collections {
           def productElement(n: Int) = eeA
         };
         case class ColOverArrayIsoElem[A](eeA: Elem[A]) extends Elem[ColOverArrayIso[A]] {
-          def isEntityType = true;
           def getDefaultRep = reifyObject(new ColOverArrayIso[A]()(eeA));
           lazy val tag = {
             implicit val tagA = eeA.tag;
             weakTypeTag[ColOverArrayIso[A]]
           };
-          lazy val typeArgs = TypeArgs("A".->(eeA))
+          lazy val typeArgs = TypeArgs("A".->(eeA.->(scalan.util.Invariant)))
         };
         class ColOverArrayCompanionAbs extends CompanionDef[ColOverArrayCompanionAbs] with ColOverArrayCompanion {
           def selfType = ColOverArrayCompanionElem;
@@ -253,20 +251,21 @@ package scalanizer.collections {
         object ColCompanionMethods
       };
       object Cols_Module extends scalan.ModuleInfo {
-        val dump = "H4sIAAAAAAAAALVWTYgcRRR+M7O7s7MzxDVhTQSXrMskkRBnghESWFTG3Ym69P6QjqxMwkpNd82kY3V1W1W7zHiIt4B6E1EQPEQUL0ERb54VRMSDV8+eEkVySECI+Kr6Z3rizGY92Ieiq/rV+/m+71X1zd9hUgo4Lh3CCK/5VJGabd4bUlXtJlee6q8F7g6jK7Sz/fKnf13y3zmch9kWTF0hckWyFpSil2YvTN9t5VpQItyhUgVCKnjSMhHqTsAYdZQX8Lrn+zuKtBmtW55USxZMtAO3/yZcg5wFs07AHUEVtZcZkZLKeH2a6oy8dF4y8/5GOIjB67qKeqaKi4J4CtPHGLOR/QUa2n0e8L6v4ECc2kao00KbMu2FWMMrfshMmIIFRc8PA6GSqEWMcCVwk+kEJ7gAB62rZJfUMWq3bivh8a52FhLnDdKl62iizSewBklZ52I/pLHzslTuULxeCADIyjMmsdoAs1qKWU1jVrWp8Ajz3iL646YIen2InlwBoBeii1MPcZF4oE3uVt+97Fy6Z5f9vN7c06kUTUJT6OjoGIUYehDbHy68L++8dONsHmZaMOPJRlsqQRyVlUEMV5lwHiiTc4ogEV1kcHEcgyZKA20ekEnJCfyQcPQUY1lBopjneEob67VKTM8Y7IsqpIlpDnFP610YU6/R0jJhbPPW408fu918LQ/54RAldGljM4jEqYLCcsBiz3p8REGuYeDVQ6k3GIt7RE4xOHHrD/f703A5nyIXB9ofWeji4LmPvz1GN7/Mw3TLaPs8I11Dm4ZmhUqnBdPBLhXRenGXMP02krqiSztkh6kY0CwSBURCwcLYtgyphmnJyD2XlF+OFLsecFo9v1m9a//4wU0tSAGV6EvUp397Z+//eqCjjFYRYSJEgu3UVkMI0t834DORXzvw6aOLd7ztG+8pA22uN9zTG+2r2ENLZt8Te6CcHDdfX78+9+dnrx8yLTHd9pRPwurp/9AQiX7/T8GnqEStPjeY62EeoZ1D8W6gFgyoy9nw85l9GbSP5HIw8DuP5FDaSHiYaDLqR8Z6OJQlREElG8vsTjU9Pw5tUw8/bK999NXR7TxMrsJkB8UqLZhsBzvcTYDCG0XRnnoxWcsNA4XAEEH8FBjzLMCgzpEaypR9AoYVV0AJPLCy32OglDl8M4yYeTUO9nDiNJgj+Ar1+HwWXD0++++C9TA6v3OD3VWkpjaGmhXqMCKoq2826uPNG0n8zIcvbK0e2XrVNFnFNUbRl/SwGP2fsEbCJXOrPbXHrYZG1aYf4l8Lvpz57rlf3v7pi8/NKTFACGWoqVDwWJQ53n8i402mlS2OqcyOmwopvnbvk/WTP3/zm7kHZnR74snF01+FgcTS8znmftbyOCWiwbq0LQj+AGSgxgR132YIX9XD+j9p3ZrmrwkAAA=="
+        val dump = "H4sIAAAAAAAAALVWTWwbRRR+dpz4J6FKCo3aQ0KINmqBYldUqIiAkJs4qJUbR9lCwFSg8e7YnTL7w+w4tTmUEz3ADSEOSBwqQFwiJMQFcQYJIdQD1545oIYK9dCeQLyZ/fEmjdNwYA+jmdk37735vu/NzNafMBoImAsswolbdqgkZVP3q4E0zAue3eV0mbYb2x/M/vHFyXtZmGrC2GUSLAe8CcWwU+v5Sd+Udh2mVphr11zJZN9wtAsJ5XoYo6JiVPaKYaRWLdahSFyLBtITgYQnwsUVy+OcWpJ5boU5TleSFqeVOgsk2udant1/F65Btg6TludagkpqLnESBDSI5gtUuWfJuKjH/YY/iPFgghcFYRLzwxiTof069c2+67l9R8KhKLWGr9JCm3Ha8xGIc47PdZhcHfLM8T0h46h5jHDZs+NhziU4AYfrV8gmqWDUTsWUgrkd5cwn1jukQ1fRRJmP4h4CytsX+z6NnI8H0t4Rr+cDgI+sPqszKw9AKyeglRVohkkFI5y9R9TPNeH1+hB+mRGAnnJx8iEuYg+05trGh5esN++b405WLe6pXAo6ozw6enyIwjQ/CO7P6x8Hd1+5cSYLpSaUWFBtBVIQS6Z1EOE1TlzXkzrnBEIiOkjh/DAKdZQq2uzSSdHyHJ+46CkCcwKZ4sxiUhmruUcifoaAn5c+jU2zCHyy32EVpcW0RDhfu33smYXt2uvZRAJRiCK6NLGkROxUwsiSxyPPqp2UkKlqeFVT6g3awj6REwyO375j/3QKLmUhEyEXBToYWeji8POf/bBA177JQqGpxb3CSUfTpqBZpoHVhIK3SUU4n98kXPX2pC5v0zbpchkBmkZiBJGQMDe0Ln2qYFrUes/E2x8PFbvqudRYWTPumb98sqUEKWAi/BMW6j/szN+3DrWl1ioiTISIsR3bqApB+gcGvBT6NT2HTs3fZW/d+EhqaDO9nUXdaF3BGlrU62b2QTk+b769fv3IX1++/aguiUKLSYf4xqn/UBCxfv9PwSeohKU+PRirZhahPYLibaAWNKhL6fCzqXUptI9lMjDwO4vkUFqNecjVOHVCY9U8liZEwkQ6ll6daHpmGNp6P29s2+Wjd2auZmHsPIy2UaxBHUZbXte1Y6DwSpG0J8/Gc7vKFoEhgjjJTbNJ8GREoiRMxwLuSsYrr0XzoWzxm4MBFonOMOHpKGG1qnzODf1J4+nvt66ym0+uaOGmd59C8ATsFO8IqmnXzEFPlFLqHE+Rq8cLUbCHa0Dxsgf1Ov+zaZ5U+9yDuKimlvRe2J3eiwMXC4hceQjVy9TiRFBbXZXUwas8LJnTn768cf7oxqu6aCdsbRT+SQ6fvR8eF4i/qG/JE/vckmhk1Bxf9lXn9I8v/fb+r19/lZBXiGjPKT5kzDnepyLlLUh2Nj9kZ2ZUpMjztfufrz5187vf9b1SUuWOJ6GbvD0Gkk3O+0gAk3XmUiKqvENbguCLIqUHTFCdAynWV1Wz/i+pnUk8PwoAAA=="
       };
       trait ColsDsl extends ColsAbs { self: LinearAlgebraDsl =>
         
       };
-      trait ColsDslExp extends ColsExp with ColsStaging { self: LinearAlgebraDslExp =>
+      trait ColsDslExp extends ColsExp { self: LinearAlgebraDslExp =>
         
       };
-      val serializedMetaAst = "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"
+      val serializedMetaAst = "H4sIAAAAAAAAALVXW4wTVRg+nb20210Ii5EgugtiuQm2G4jBuCop7K4pKbsrXS4uBDztnHYHzlw8c7q0PGB8gBh5QyWRxAciBB42xtuDwcQY7zGK0Qdi9MH44IMBCSEGElHif85cOu12umBiH07PzJz5L9///ZeZ+QN12AwtswuYYiOpE46TOblP2zyR22aqZUqGSHHsytH+399cd0NBvZOocwrbQzadRF3OZrhi+fscV7Ood0Qz1GGDa7ya0KUIjpJZR0dK6Eg105EIvDWYRV3YKBCbm8zm6EHn5VTBpJQUuGYaKU3XyxznKUllNZvD+fa8qVafR0eQkkULCqZRYIST3BaKbZvY7v0YEeI1/7pLXlfHrJqO2QZOMKxxsA90LHDObydWrmqYRlXnaL5r2pglzIIz3aRiARAZ3aJSTXsWRTXdMhn3tEZBw5SpepftBoYbaGH2AJ7GKdBaSuU404ySEGbhwkFcIqNwRBzvAB9sQosTVYu4wrttrtbpq1gIIQuiul5alqyBlvRBSwrQEjnCNEy1w1g8HGdmpYqcX6QNoYoQsW4OEZ4EMmyoiZf3FvbczHXrini5ImyJSYuiIGhpCMNkfADcr7afsK8/fXqjguKTKK7Z6bzNGS7wIA9cvLqxYZhc2uxDiFkJQrg8LIRSSxrONPCkq2DqFjZAkgtmD0SKagWNi8Pi3jw3PiHgR7lFvKMKAO/7G5ZRkkxbMKXjl+97ZMWV4d2KTwFXRReIzEFKMU8oR21bTOpKFusCjiJpCa9Y4pXaGmuh2cdg1eWr6ucDaK+CIi5yrqI7CxaIWPjYqQsryPhbCopNSnKPUFySYRPQDBG7MIli5jRhzv3oNKZi1zR0UZUUcZlyF9AgEm2ABEfLQvPSIgKmQcn3iOd+t8PYUdMgiZHxxI3c16/OCEIy1OM8cRL1trbxn5/nF7nkKiCMGfOw7Ugzhqtz4j1nqLfJLAdu3zp6/vt3MxN7PG5nXI7JizGAiWkqqYOvKVLdEKqck4U+7z0uNyAXF+BTE6sZtRlRs6gTLreTQL3w3RMYxh2kcqZOepdf1/adPs4lWSKV+jI1lj8A9gxKQPrgvb4QJHJEVI8X9698/9KpX/9UUBtYC1WScdQXFlwZWVGw4T+Qbx3c99Ll61rQe39Ysk1p9nf9L/1468uZuOLU/3pxMQ770QaJq0Fif5hEiwihvc/dHvni8SVOCs0vlikVQpyq7YriqAeyVkRX0qnh0lcUWiegCIAwSr4dH1Dzr3z896w60WYxuV1Sx9/1s/T6j4S6h8LVjTNNh944TR799MMd1z4a7ZAaF7rpuRPTctDBoC3CgMgAaMoYnKNOSowSnxJPNoulv9YIVotlk9yu9Djnp9GDLdNIcHfNJ6tO7itfOB5euFqnIsg4G8/HrqPyeQVF565c/6VeuREJZlQ/oKNJz2eVDxGSB0JsTlsWrS7Nvn1m5KkTzyiS/MLl2ihTT+W2Ylk2sXVZpPAGYDx4wlRlVJhrij/9cj5tX4o0TZT2xrRzQul51uBUfdF007S2pgLHZvO1WZ6IdeOds7xFUjlMeGL3X+dMMxmVpajTwgzrHq5xRmwIr+f7Elk6awc8TAPxbNIjYtBFsIiff+dgYyqEdpZ++WSRK6bOzdrjaItqOyEr/bNX1OTiq32HFNS5FXUUgc42MChvlg2vJfTAkMxJhW/27jUUmDq/gRLTGGY9mMU4WuRV7TLXaGqne99pxPBbhmrO1ljA0CLXYPFWMmM48nhi7Qczh7SLa0ZkK27aYcPmEW8yf+fYsXuvndl/j2ywsbzGdWwlBu5idPQmvf9zNAx02FqAAwm6sq4Lu4VD0DqMOXPOKWFi77I0i3UksM/MXdx84XdBe3fODXJcrKwFp8RyqFHv4ZoEUQuSIdwZIgWKGVHFMEZ0qH8OKzac3LRr6+JdO2SP6VHlIeeJP4k2/wrdhq1B+cm0usUnExxKDOsWr4rNhs+e/OGFb86d9XnvlY52Me5zL13g44oFpNm+Z8vDp62i082KR26+Mfrwxfd+kzU9LhgNY7Hhf4jOquo+j+ZlNYNglqYlkmc4ECqwTvA8EMzXxPL6v8ghjIFJEAAA"
     }
 
     object HotSpotKernels {
       import java.io.File;
-      import scalan.compilation.{KernelStore, KernelType};
+      import scalan.compilation.{KernelStore};
+      import scalan.meta.ScalanAst.KernelType;
       lazy val ddmvmKernel: scala.Function1[Array[Double], Int] = {
         val methodName = "ddmvm";
         val kernelsDir = new File("./test-out/".+("ddmvm"));
@@ -281,10 +280,7 @@ package scalanizer.collections {
       import scalanizer.linalgebra.implOfLinearAlgebra.StagedEvaluation._;
       val scalanContext: Scalan = new Scalan();
       class Scalan extends LinearAlgebraDslExp {
-        lazy val ddmvmWrapper: Rep[scala.Function1[Array[Double], Int]] = {
-           val f = fun { in: Rep[WArray[Double]] => in.length }
-           fun { in: Rep[Array[Double]] => f(WArrayImpl(in)) }
-        }
+        lazy val ddmvmWrapper: Rep[scala.Function1[WArray[Double], Int]] = ???
       }
     }
   }
